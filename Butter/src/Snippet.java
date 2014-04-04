@@ -1,3 +1,5 @@
+import java.awt.Color;
+import java.awt.Dimension;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -8,42 +10,57 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.ScrollPaneConstants;
 
 public class Snippet extends JFrame {
 	public Snippet () {
+		setMinimumSize(new Dimension(600,600));
 		JPanel panel = new JPanel();
-		 try {
-	            String imageUrl = "http://maps.googleapis.com/maps/api/staticmap?center=Los+Angeles,CA&zoom=12&size=400x400&sensor=false";
-	            //String imageUrl = "http://maps.googleapis.com/maps/api/staticmap?center=Brooklyn+Bridge,New+York,NY&zoom=13&size=600x300&maptype=roadmap&markers=color:blue%7Clabel:S%7C40.702147,-74.015794&markers=color:green%7Clabel:G%7C40.711614,-74.012318&markers=color:red%7Clabel:C%7C40.718217,-73.998284&sensor=false";
-	            //  String imageUrl = "http://maps.google.com/staticmap?center=40,26&zoom=1&size=150x112&maptype=satellite&key=ABQIAAAAgb5KEVTm54vkPcAkU9xOvBR30EG5jFWfUzfYJTWEkWk2p04CHxTGDNV791-cU95kOnweeZ0SsURYSA&format=jpg";
-	            String destinationFile = "image.jpg";
-	            URL url = new URL(imageUrl);
-	            InputStream is = url.openStream();
-	            OutputStream os = new FileOutputStream(destinationFile);
+		panel.setMinimumSize(new Dimension(400,400));
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-	            byte[] b = new byte[2048];
-	            int length;
+		try {
+			String imageUrl = "http://maps.googleapis.com/maps/api/staticmap?center=Los+Angeles,CA&zoom=12&size=600x600&sensor=false";
+			//String imageUrl = "http://maps.googleapis.com/maps/api/staticmap?center=Brooklyn+Bridge,New+York,NY&zoom=13&size=600x300&maptype=roadmap&markers=color:blue%7Clabel:S%7C40.702147,-74.015794&markers=color:green%7Clabel:G%7C40.711614,-74.012318&markers=color:red%7Clabel:C%7C40.718217,-73.998284&sensor=false";
+			//  String imageUrl = "http://maps.google.com/staticmap?center=40,26&zoom=1&size=150x112&maptype=satellite&key=ABQIAAAAgb5KEVTm54vkPcAkU9xOvBR30EG5jFWfUzfYJTWEkWk2p04CHxTGDNV791-cU95kOnweeZ0SsURYSA&format=jpg";
+			String destinationFile = "image.jpg";
+			URL url = new URL(imageUrl);
+			InputStream is = url.openStream();
+			OutputStream os = new FileOutputStream(destinationFile);
 
-	            while ((length = is.read(b)) != -1) {
-	                os.write(b, 0, length);
-	            }
+			byte[] b = new byte[2048];
+			int length;
 
-	            is.close();
-	            os.close();
-	        } catch (IOException e) {
-	            e.printStackTrace();
-	            System.exit(1);
-	        }
+			while ((length = is.read(b)) != -1) {
+				os.write(b, 0, length);
+			}
 
-	        panel.add(new JLabel(new ImageIcon((new ImageIcon("image.jpg")).getImage().getScaledInstance(630, 600,
-	                java.awt.Image.SCALE_SMOOTH))));
-	        add(panel);
-	        setVisible(true);
-	        pack();
+			is.close();
+			os.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.exit(1);
+		}
+
+		JLabel picLabel = new JLabel(new ImageIcon((new ImageIcon("image.jpg")).getImage().getScaledInstance(800, 800,
+				java.awt.Image.SCALE_SMOOTH)));
+		picLabel.setBackground(Color.red);
+		picLabel.setMinimumSize(new Dimension(800,800));
+		JScrollPane jsp = new JScrollPane(picLabel);
+		jsp.setPreferredSize(new Dimension (400,400));
+
+		jsp.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+		jsp.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+
+		panel.add(jsp);
+		add(panel);
+		setVisible(true);
+		pack();
 
 	}
-    public static void main(String[] args) throws IOException {
-        //JFrame test = new JFrame("Google Maps");
-    	Snippet s = new Snippet();
-    }
+	public static void main(String[] args) throws IOException {
+		//JFrame test = new JFrame("Google Maps");
+		Snippet s = new Snippet();
+	}
 }
