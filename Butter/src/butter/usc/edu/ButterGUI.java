@@ -11,6 +11,7 @@ import java.net.URL;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -25,6 +26,10 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
+import javax.swing.JMenuBar;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
+
 public class ButterGUI extends JFrame{
 	private static final long serialVersionUID = 367534120156013938L;
 
@@ -36,9 +41,11 @@ public class ButterGUI extends JFrame{
 	
 
 	public ButterGUI () {
-		this.setMinimumSize(new Dimension(1200,700));
+		this.setMinimumSize(new Dimension(1200,720));
+		this.setResizable(false);
 		this.setLocationRelativeTo(null);
-		getContentPane().setLayout(null);
+		this.setTitle("Butter");
+		this.getContentPane().setLayout(null);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		
 		// MAP STUFF
@@ -157,11 +164,32 @@ public class ButterGUI extends JFrame{
 		exitButton.setForeground(Color.WHITE);
 		exitButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+				if (JOptionPane.showConfirmDialog(null,"Are you done using Butter?", "DON'T MELT BUTTER", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION){
+					System.exit(0);
+				}
 			}
 		});
 		
 		
+		// MENUBAR
+		JMenuBar menuBar = new JMenuBar();
+		setJMenuBar(menuBar);
+		
+		JMenu menuButter = new JMenu("Butter");
+		menuBar.add(menuButter);
+		
+		JMenuItem menuItemAbout = new JMenuItem("About");
+		menuItemAbout.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JFrame aboutFrame = new JFrame();
+				aboutFrame.setSize(new Dimension(300,200));
+				aboutFrame.setVisible(true);
+				
+				
+				
+			}
+		});
+		menuButter.add(menuItemAbout);
 		
 		
 		
