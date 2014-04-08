@@ -1,0 +1,72 @@
+[
+	{
+		"id":0,
+		"speed":30.411629,
+		"direction":"East",
+		"on\/off ramp":"Grand Avenue",
+		"freeway":"10"
+	},
+	{
+		"id":1,
+		"speed":58.10867,
+		"direction":"South",
+		"on\/off ramp":"Hoover Street,?Vermont Avenue",
+		"freeway":"405"
+	},
+	{
+		"id":2,
+		"speed":31.438362,
+		"direction":"West",
+		"on\/off ramp":"?I-110?south (Harbor Freeway) \/?SR 110?north (Harbor Freeway) \/?Pico Boulevard???San Pedro,?Pasadena,?Downtown Los Angeles",
+		"freeway":"10"
+	},
+	{
+		"id":3,
+		"speed":26.451447,
+		"direction":"East",
+		"on\/off ramp":"Boyle Avenue",
+		"freeway":"10"
+	},
+	{
+		"id":4,
+		"speed":34.055264,
+		"direction":"North",
+		"on\/off ramp":"4th Street, 5th Street",
+		"freeway":"101"
+	},
+	{
+		"id":5,
+		"speed":61.4229,
+		"direction":"North",
+		"on\/off ramp":"Robertson Boulevard???Culver City",
+		"freeway":"101"
+	},
+	{
+		"id":6,
+		"speed":32.152092,
+		"direction":"South",
+		"on\/off ramp":"Bundy Drive",
+		"freeway":"405"
+	},
+	{
+		"id":7,
+		"speed":50.552467,
+		"direction":"West",
+		"on\/off ramp":"Hoover Street,?Vermont Avenue",
+		"freeway":"10"
+	},
+	{
+		"id":8,
+		"speed":52.989067,
+		"direction":"South",
+		"on\/off ramp":"Bundy Drive",
+		"freeway":"101"
+	},
+	{
+		"id":9,
+		"speed":67.91849,
+		"direction":"East",
+		"on\/off ramp":"Los Angeles Street???Convention Center",
+		"freeway":"10"
+	}
+]

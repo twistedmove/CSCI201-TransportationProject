@@ -2,6 +2,11 @@ package butter.usc.edu;
 
 import java.io.Serializable;
 
+/**
+ * Just a object to package up longitude and latitude pairs.
+ * @author LorraineSposto
+ *
+ */
 public class Location implements Serializable {
 
 	private double latitude;

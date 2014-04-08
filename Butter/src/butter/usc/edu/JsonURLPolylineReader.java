@@ -1,3 +1,5 @@
+package butter.usc.edu;
+
 import java.io.BufferedReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -7,9 +9,11 @@ import java.io.Reader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.ParseException;
+import java.util.Vector;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.stream.JsonWriter;
 
 /**
@@ -20,6 +24,13 @@ import com.google.gson.stream.JsonWriter;
  *
  */
 public class JsonURLPolylineReader {
+	
+	/**
+	 * Gets the entire JSON from the Google Directions API as a String.
+	 * @param urlString - URL of the JSON from Directions API
+	 * @return The entire Directions journey as a String
+	 * @throws IOException
+	 */
 	public static String fetchJsonFromUrl(String urlString) throws IOException {
 	    BufferedReader reader = null;
 	    try {
@@ -48,18 +59,45 @@ public class JsonURLPolylineReader {
 		/*
 		 * Extracts the overview_polyline chunk of the JSON
 		 */
-//		System.out.println(jsonString);
+
 		String key = "\"overview_polyline\" : ";
 		if(jsonString.contains(key)) {
 			int keyIndex = jsonString.indexOf(key);
 			String polylineObject = jsonString.substring(keyIndex + key.length(), jsonString.indexOf(",", keyIndex));
-//			System.out.println(polylineObject);
 			return polylineObject;
 		} 
 		return null;
 	}
 	
-	public static OverviewPolyline toOverviewPolyline(String polyline) {
+	/**
+	 * Utilized Gson to just take the overview_polyline object from the JSON and deserialize it into the OverviewPolyline class.
+	 * @param polyline
+	 * @return
+	 * @throws JsonSyntaxException
+	 */
+	public static OverviewPolyline toOverviewPolyline(String polyline) throws JsonSyntaxException {
 		return new Gson().fromJson(polyline, OverviewPolyline.class);
+	}
+	
+
+	public static void main(String[] args) {
+		String urlString = "https://maps.googleapis.com/maps/api/directions/json?origin=Burbank,CA&destination=Los+Angeles,CA&sensor=false&key=AIzaSyDY1BXusaVvEci4wLy4Xkw4LBJqOpIpxEo";
+		try {
+			String jsonString = JsonURLPolylineReader.fetchJsonFromUrl(urlString);
+			String polyline = JsonURLPolylineReader.getPolylineObjectFromString(jsonString);
+			OverviewPolyline op = JsonURLPolylineReader.toOverviewPolyline(polyline);
+			System.out.println("POLYLINE: ");
+			System.out.println(op);
+			System.out.println("---------");
+			System.out.print("COORDINATES: ");
+			Vector<Location> polylineCoordinates = PolylineDecoder.decodePoly(op.toString());
+			System.out.println(polylineCoordinates.size());
+			for(int i=0; i < polylineCoordinates.size(); ++i) {
+				System.out.println(polylineCoordinates.get(i));
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			System.out.println(e.getMessage());
+		}
 	}
 }

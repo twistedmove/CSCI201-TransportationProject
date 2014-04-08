@@ -1,4 +1,10 @@
+package butter.usc.edu;
 
+/**
+ * Holds the polyline string extracted from Google Directions API
+ * @author LorraineSposto
+ *
+ */
 public class OverviewPolyline {
 	String points;
 	
