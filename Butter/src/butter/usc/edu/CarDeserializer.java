@@ -73,17 +73,18 @@ public class CarDeserializer {
 	            reader.close();
 	    }
 	}
-	
-//	public static void main(String[] args) {
-//		try {
-////			Vector<Car> cars = CarDeserializer.deserializeArrayFromURL("http://www-scf.usc.edu/~csci201/mahdi_project/test.json");
-//			Vector<Car> cars = CarDeserializer.deserializeArrayFromFile("test-formatted.json");
-//			for(Car c : cars) {
-//				System.out.println(c);
-//			}
-//		} catch (IOException e) {
-//			System.out.println(e.getMessage());
-//		}
-//	}
-	
+
+/*
+	public static void main(String[] args) {
+		try {
+			Vector<Car> cars = CarDeserializer.deserializeArrayFromURL("http://www-scf.usc.edu/~csci201/mahdi_project/test.json");
+			//Vector<Car> cars = CarDeserializer.deserializeArrayFromFile("test-formatted.json");
+			for(Car c : cars) {
+				System.out.println(c);
+			}
+		} catch (IOException e) {
+			System.out.println(e.getMessage());
+		}
+	}
+*/	
 }
