@@ -243,6 +243,8 @@ public class ButterGUI extends JFrame{
 	}
 	
 	class PanelDraw extends JPanel{ 
+		private static final long serialVersionUID = -8653010960482307907L;
+
 		protected void paintComponent(Graphics g) {
 			super.paintComponents(g);
 			g.clearRect(0, 0, getWidth(), getHeight() );
