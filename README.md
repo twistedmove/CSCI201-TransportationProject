@@ -11,9 +11,9 @@ Requirements
 -------
 
 
-[] GUI: Display flow of traffic
-[] GUI: Proportional time algorithm and display car and flow
-[] Vehicular data displayed on the map
+[] GUI: Display flow of traffic <br/>
+[] GUI: Proportional time algorithm and display car and flow <br/>
+[] Vehicular data displayed on the map <br/>
 > 1. Color of vehicle is based on speed (red/slow, green/fast)
 > 2. Car will move on roadway 
 
