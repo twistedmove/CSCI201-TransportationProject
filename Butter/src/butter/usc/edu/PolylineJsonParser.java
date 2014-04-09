@@ -19,6 +19,7 @@ import com.google.gson.stream.JsonToken;
  * @author LorraineSposto
  *
  */
+
 class PolylineJsonParser {
 	
 	/**
@@ -29,6 +30,7 @@ class PolylineJsonParser {
 	 * @return
 	 * @throws IOException
 	 */
+
 	public static String getPolylineString(String filename) throws IOException {
 		String polyline = "";
 		FileInputStream fileIn;

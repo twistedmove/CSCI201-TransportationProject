@@ -2,23 +2,17 @@ package butter.usc.edu;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
-import java.util.Collection;
 import java.util.Vector;
-
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import com.google.gson.stream.JsonReader;
 
 /**
  * Deserializes a JSONArray of car objects.
  * @author LorraineSposto
  *
  */
+
 public class CarDeserializer {
 
 	/**
@@ -27,6 +21,7 @@ public class CarDeserializer {
 	 * @return A vector of Cars
 	 * @throws IOException
 	 */
+
 	public static Vector<Car> deserializeArrayOfCars(String filename) throws IOException {
 		FileInputStream in;
 		Vector<Car> cars = new Vector<Car>();

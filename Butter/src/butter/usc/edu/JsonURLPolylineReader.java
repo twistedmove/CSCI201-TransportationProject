@@ -23,6 +23,7 @@ import com.google.gson.stream.JsonWriter;
  * @author LorraineSposto
  *
  */
+
 public class JsonURLPolylineReader {
 	
 	/**
@@ -31,6 +32,7 @@ public class JsonURLPolylineReader {
 	 * @return The entire Directions journey as a String
 	 * @throws IOException
 	 */
+
 	public static String fetchJsonFromUrl(String urlString) throws IOException {
 	    BufferedReader reader = null;
 	    try {
@@ -55,6 +57,7 @@ public class JsonURLPolylineReader {
 	 * @param jsonString
 	 * @return
 	 */
+
 	public static String getPolylineObjectFromString(String jsonString) {
 		/*
 		 * Extracts the overview_polyline chunk of the JSON
@@ -75,6 +78,7 @@ public class JsonURLPolylineReader {
 	 * @return
 	 * @throws JsonSyntaxException
 	 */
+
 	public static OverviewPolyline toOverviewPolyline(String polyline) throws JsonSyntaxException {
 		return new Gson().fromJson(polyline, OverviewPolyline.class);
 	}
@@ -101,3 +105,4 @@ public class JsonURLPolylineReader {
 		}
 	}
 }
+

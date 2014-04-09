@@ -2,47 +2,50 @@ package butter.usc.edu;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
+import java.util.Vector;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import javax.swing.ScrollPaneConstants;
 import javax.swing.JTextField;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
-import javax.swing.JButton;
-
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-
-import javax.swing.JMenuBar;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
 
 public class ButterGUI extends JFrame{
 	private static final long serialVersionUID = 367534120156013938L;
 
 	public JPanel mapPanel;
+	public PanelDraw mapPicPanel;
 	public JLabel picLabel;
 	private JTextField fromDestinationText;
 	private JTextField toDestinationText;
 	Image mascot;
 	ImageIcon sliced;
-	
+	private Vector<Car> allCars;
+	Image map;
 
 	public ButterGUI () {
 		this.setMinimumSize(new Dimension(1200,720));
@@ -51,10 +54,30 @@ public class ButterGUI extends JFrame{
 		this.setTitle("Butter");
 		this.getContentPane().setLayout(null);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		
+		allCars = new Vector<Car>();
 		importImage();
 		setupButterGUI();
+		//int id, double speed, String direction, String onOffRamp, String freeway) {
+	
+		Car c = new Car(1,60, "East", "Some Offramp", "Some freeway");
+		Car c1 = new Car(2,80, "East","Some Offramp", "Some freeway");
+		Car c2 = new Car(3,80, "North","Some Offramp", "Some freeway");
+		allCars.add(c);
+		allCars.add(c1);
+		allCars.add(c2);
 		
+		final int timeSlice = 250; 
+		  Timer timer = new  Timer (timeSlice, new ActionListener ()                                       {
+		    public void actionPerformed (ActionEvent e) {
+		    //	p.removeAll();
+		    	mapPanel.updateUI();
+				for (int i = 0; i < allCars.size(); i++) {
+					allCars.get(i).updateSpeed();
+				}
+				mapPanel.repaint();
+		    }
+		  });
+		  timer.start();
 		
 	}
 	
@@ -100,13 +123,18 @@ public class ButterGUI extends JFrame{
 
 				picLabel = new JLabel(new ImageIcon((new ImageIcon("map.jpg")).getImage().getScaledInstance(1440, 1440, java.awt.Image.SCALE_SMOOTH)));
 				
-				JScrollPane jsp = new JScrollPane(picLabel);
+				map = (new ImageIcon("map.jpg")).getImage().getScaledInstance(1440, 1440, java.awt.Image.SCALE_SMOOTH);
+				mapPicPanel = new PanelDraw();
+				mapPicPanel.setPreferredSize(new Dimension(1440,1440));
+				
+				JScrollPane jsp = new JScrollPane(mapPicPanel);
+				//JScrollPane jsp = new JScrollPane(picLabel);
 				jsp.setBounds(6, 5, 895, 667);
 					jsp.setPreferredSize(new Dimension (400,400));
 					jsp.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 					jsp.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
-				mapPanel.add(jsp);
+					mapPanel.add(jsp);
 		
 		// TO AND FROM SEARCH
 				JPanel destinationPanel = new JPanel();
@@ -214,6 +242,16 @@ public class ButterGUI extends JFrame{
 				this.pack();		
 	}
 	
+	class PanelDraw extends JPanel{ 
+		protected void paintComponent(Graphics g) {
+			super.paintComponents(g);
+			g.clearRect(0, 0, getWidth(), getHeight() );
+			g.drawImage(map, 0, 0, null);
+			for (int i = 0; i < allCars.size(); i++) {
+				g.fillRect(allCars.get(i).location.x, allCars.get(i).location.y, 10, 10);
+			}
+		}
+	}
 	
 	public static void main(String[] args) throws IOException {
 		try {

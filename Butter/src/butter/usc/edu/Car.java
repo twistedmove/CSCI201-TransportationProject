@@ -1,5 +1,7 @@
 package butter.usc.edu;
 
+import java.awt.Point;
+
 /**
  * Car class, so far only holding the essential values of a car as outlined in test.json
  * @author LorraineSposto
@@ -8,14 +10,18 @@ package butter.usc.edu;
 public class Car {
 	private int id;
 	private double speed;
+	private int pixToMove;
 	private String direction;
 	private String onOffRamp;
 	private String freeway;
-	
+	public Point location;
 	public static final String EAST = "East";
 	public static final String WEST = "West";
 	public static final String NORTH = "North";
 	public static final String SOUTH = "South";
+	public static final int pixelsPerMile = 57;
+	public static final int updatePerSec = 4;
+	public static final double secPerHour = 360.00;
 	
 	public Car(int id, double speed, String direction, String onOffRamp, String freeway) {
 		this.id = id;
@@ -23,8 +29,26 @@ public class Car {
 		this.direction = direction;
 		this.onOffRamp = onOffRamp;
 		this.freeway = freeway;
+		location = new Point(100,100);
+		pixToMove = (int)((speed / secPerHour) * pixelsPerMile / updatePerSec);
 	}
 
+	public void updateSpeed() {
+	//	System.out.println("update");
+		if (direction.equals(NORTH) ){
+			location.y += pixToMove;
+		}
+		if (direction.equals(SOUTH)) {
+			location.y -= pixToMove;
+		}
+		if (direction.equals(EAST)) {
+			location.x += pixToMove;
+		}
+		if (direction.equals(WEST)) {
+			location.x -= pixToMove;
+		}
+	}
+	
 	public int getId() {
 		return id;
 	}
