@@ -90,10 +90,6 @@ public class Car {
 	}
 	
 	public String toString() {
-		return ("id: " + id + 
-				"; speed: " + speed + 
-				"; direction: " + direction + 
-				"; on/off ramp: " + onOffRamp +
-				"; freeway: " + freeway);
+		return (id + "," + speed + "," + direction + "," + onOffRamp + "," + freeway);
 	}
 }
