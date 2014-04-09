@@ -1,10 +1,9 @@
 Butter
 =======
 
-Bryan Chong
-Kaitlyn Lee
-Hyungjin Shin
-Lorraine Sposto
+CSCI-201 Transporation Project
+
+Bryan Chong, Kaitlyn Lee, Hyungjin Shin, Lorraine Sposto
 
 -------
 
