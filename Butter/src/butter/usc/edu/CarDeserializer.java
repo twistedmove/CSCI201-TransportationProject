@@ -10,6 +10,12 @@ import java.net.URL;
 import java.util.Vector;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 
@@ -22,6 +28,34 @@ import com.google.gson.stream.JsonReader;
  */
 
 public class CarDeserializer {
+	
+	/**
+	 * Overrides default JsonDeserializer functionality so that variable names do not have to match.
+	 * @author LorraineSposto
+	 *
+	 */
+	static class CustomCarDeserializer implements JsonDeserializer<Car> {
+		@Override
+		public Car deserialize(final JsonElement json, final Type type,
+				final JsonDeserializationContext context) throws JsonParseException {
+			// TODO Auto-generated method stub
+			
+			final JsonObject jsonObject = json.getAsJsonObject();
+			final int id = jsonObject.get("id").getAsInt();
+			final double speed = jsonObject.get("speed").getAsDouble();
+			final String direction = jsonObject.get("direction").getAsString();
+			final String ramp = jsonObject.get("on/off ramp").getAsString();
+			final String freeway = jsonObject.get("freeway").getAsString();
+			
+			final Car c = new Car();
+			c.setId(id);
+			c.setSpeed(speed);
+			c.setDirection(direction);
+			c.setRamp(ramp);
+			c.setFreeway(freeway);
+			return c;
+		}
+	}
 
 	/**
 	 * Reads a JSON file containing an array of cars and deserializes it into a Vector.
@@ -35,7 +69,9 @@ public class CarDeserializer {
 		JsonReader reader = null;
 		try {
 			Vector<Car> cars = new Vector<Car>();
-			Gson gson = new Gson();
+			GsonBuilder gsonBuilder = new GsonBuilder();
+			gsonBuilder.registerTypeAdapter(Car.class, new CustomCarDeserializer());
+			Gson gson = gsonBuilder.create();
 	
 			FileInputStream in = new FileInputStream(new File(filename));
 			reader = new JsonReader(new InputStreamReader(in, "UTF-8"));
@@ -61,7 +97,9 @@ public class CarDeserializer {
 		JsonReader reader = null;
 		try {
 			Vector<Car> cars = new Vector<Car>();
-			Gson gson = new Gson();
+			GsonBuilder gsonBuilder = new GsonBuilder();
+			gsonBuilder.registerTypeAdapter(Car.class, new CustomCarDeserializer());
+			Gson gson = gsonBuilder.create();
 	
 	        URL url = new URL(urlString);
 	        reader = new JsonReader(new InputStreamReader(url.openStream(), "UTF-8"));

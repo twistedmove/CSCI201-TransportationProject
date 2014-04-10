@@ -12,7 +12,7 @@ public class Car {
 	private double speed;
 	private int pixToMove;
 	private String direction;
-	private String onOffRamp;
+	private String ramp;
 	private String freeway;
 	public Point location;
 	public static final String EAST = "East";
@@ -23,11 +23,17 @@ public class Car {
 	public static final int updatePerSec = 4;
 	public static final double secPerHour = 360.00;
 	
-	public Car(int id, double speed, String direction, String onOffRamp, String freeway) {
+	
+	
+	public Car() {
+		
+	}
+
+	public Car(int id, double speed, String direction, String ramp, String freeway) {
 		this.id = id;
 		this.speed = speed;
 		this.direction = direction;
-		this.onOffRamp = onOffRamp;
+		this.ramp = ramp;
 		this.freeway = freeway;
 		location = new Point(100,100);
 		pixToMove = (int)((speed / secPerHour) * pixelsPerMile / updatePerSec);
@@ -73,12 +79,12 @@ public class Car {
 		this.direction = direction;
 	}
 
-	public String getOnOffRamp() {
-		return onOffRamp;
+	public String getRamp() {
+		return ramp;
 	}
 
-	public void setOnOffRamp(String onOffRamp) {
-		this.onOffRamp = onOffRamp;
+	public void setRamp(String ramp) {
+		this.ramp = ramp;
 	}
 
 	public String getFreeway() {
@@ -90,10 +96,10 @@ public class Car {
 	}
 	
 	public String toString() {
-		return (id + "," + speed + "," + direction + "," + onOffRamp + "," + freeway);
+		return (id + "," + speed + "," + direction + "," + ramp + "," + freeway);
 	}
 	
 	public String insertString() {
-		return (id + "," + speed + ",'" + direction + "','" + onOffRamp + "'," + freeway);
+		return (id + "," + speed + ",'" + direction + "','" + ramp + "'," + freeway);
 	}
 }

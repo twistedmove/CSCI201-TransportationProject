@@ -152,13 +152,12 @@ public class TrafficHistoryDatabase {
 		
 		try {
 			Vector<Car> cars = CarDeserializer.deserializeArrayFromURL("http://www-scf.usc.edu/~csci201/mahdi_project/test.json");
-//			Vector<Car> cars = CarDeserializer.deserializeArrayFromFile("test-formatted.json");
-//			for(Car c : cars) {
-//				System.out.println(c);
-//			}
-			TrafficHistoryDatabase t = new TrafficHistoryDatabase();
-			t.run();
-			t.insertCarsIntoTable(cars);
+			for(Car c : cars) {
+				System.out.println(c);
+			}
+//			TrafficHistoryDatabase t = new TrafficHistoryDatabase();
+//			t.run();
+//			t.insertCarsIntoTable(cars);
 		} catch (IOException e) {
 			System.out.println(e.getMessage());
 		}
