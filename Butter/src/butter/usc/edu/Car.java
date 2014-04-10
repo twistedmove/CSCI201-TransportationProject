@@ -92,4 +92,8 @@ public class Car {
 	public String toString() {
 		return (id + "," + speed + "," + direction + "," + onOffRamp + "," + freeway);
 	}
+	
+	public String insertString() {
+		return (id + "," + speed + ",'" + direction + "','" + onOffRamp + "'," + freeway);
+	}
 }

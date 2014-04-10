@@ -1,5 +1,6 @@
 package butter.usc.edu;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -24,7 +25,7 @@ public class CarDeserializer {
 
 	/**
 	 * Reads a JSON file containing an array of cars and deserializes it into a Vector.
-	 * Currently the on/off ramps don't work and just produce null, maybe because of the question mark thing?
+	 * Currently the on/off ramps don't work and just produce null.
 	 * @param filename - The filename of the JSON file
 	 * @return A vector of Cars
 	 * @throws IOException
@@ -73,18 +74,17 @@ public class CarDeserializer {
 	            reader.close();
 	    }
 	}
-
-/*
-	public static void main(String[] args) {
-		try {
-			Vector<Car> cars = CarDeserializer.deserializeArrayFromURL("http://www-scf.usc.edu/~csci201/mahdi_project/test.json");
-			//Vector<Car> cars = CarDeserializer.deserializeArrayFromFile("test-formatted.json");
-			for(Car c : cars) {
-				System.out.println(c);
-			}
-		} catch (IOException e) {
-			System.out.println(e.getMessage());
-		}
-	}
-*/	
+	
+//	public static void main(String[] args) {
+//		try {
+//			Vector<Car> cars = CarDeserializer.deserializeArrayFromURL("http://www-scf.usc.edu/~csci201/mahdi_project/test.json");
+////			Vector<Car> cars = CarDeserializer.deserializeArrayFromFile("test-formatted.json");
+//			for(Car c : cars) {
+//				System.out.println(c);
+//			}
+//		} catch (IOException e) {
+//			System.out.println(e.getMessage());
+//		}
+//	}
+	
 }
