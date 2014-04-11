@@ -15,8 +15,10 @@ import java.net.URL;
 import java.util.Vector;
 
 import javax.imageio.ImageIO;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -42,10 +44,16 @@ public class ButterGUI extends JFrame{
 	public JLabel picLabel;
 	private JTextField fromDestinationText;
 	private JTextField toDestinationText;
+	private JComboBox fromHighway;
+	private JComboBox toHighway;
+	private JComboBox fromRamp;
+	private JComboBox toRamp;
+	
 	Image mascot;
 	ImageIcon sliced;
 	private Vector<Car> allCars;
 	Image map;
+	private RampBank rb;
 
 	public ButterGUI () {
 		this.setMinimumSize(new Dimension(1200,720));
@@ -55,10 +63,12 @@ public class ButterGUI extends JFrame{
 		this.getContentPane().setLayout(null);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		allCars = new Vector<Car>();
+		rb = new RampBank();
 		importImage();
 		setupButterGUI();
 		//int id, double speed, String direction, String onOffRamp, String freeway) {
 	
+		
 		Car c = new Car(1,60, "East", "Some Offramp", "Some freeway");
 		Car c1 = new Car(2,80, "East","Some Offramp", "Some freeway");
 		Car c2 = new Car(3,80, "North","Some Offramp", "Some freeway");
@@ -139,15 +149,64 @@ public class ButterGUI extends JFrame{
 		// TO AND FROM SEARCH
 				JPanel destinationPanel = new JPanel();
 					destinationPanel.setLayout(null);
-					destinationPanel.setBounds(907, 5, 286, 105);
+					destinationPanel.setBounds(907, 5, 286, 125);
 					destinationPanel.setBorder(new TitledBorder("Destination"));
 				JPanel fromDestinationPanel = new JPanel();
 					fromDestinationPanel.setLayout(null);
-					fromDestinationPanel.setBounds(4, 20, 278, 40);
+					fromDestinationPanel.setBounds(4, 16, 278, 54);
+					fromDestinationPanel.setBorder(new TitledBorder("From")); 
 				JPanel toDestinationPanel = new JPanel();
 					toDestinationPanel.setLayout(null);
-					toDestinationPanel.setBounds(4, 60, 278, 40);
+					toDestinationPanel.setBounds(4, 66, 278, 54);
+					toDestinationPanel.setBorder(new TitledBorder("To")); 
 					
+					/*
+					 * private JComboBox fromHighway;
+	private JComboBox toHighway;
+	private JComboBox fromRamp;
+	private JComboBox toRamp;
+					 */
+					Object hwyOptions [] = {"US 101", "I-105", "I-110", "I-405"};
+					fromHighway = new JComboBox(hwyOptions);
+					fromHighway.setBounds(8, 16, 70, 30);
+					fromHighway.setSelectedIndex(0);
+					fromHighway.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent arg0) {
+							// TODO Auto-generated method stub
+							System.out.println("Switched freeway 1");
+							DefaultComboBoxModel model = new DefaultComboBoxModel(rb.rampNames[fromHighway.getSelectedIndex()]);
+							fromRamp.setModel(model);
+							//fromRamp = new JComboBox(rb.rampNames[fromHighway.getSelectedIndex()]);
+						}
+					});
+					DefaultComboBoxModel model1 = new DefaultComboBoxModel(rb.rampNames[fromHighway.getSelectedIndex()]);
+					fromRamp = new JComboBox();
+					fromRamp.setModel(model1);
+					fromRamp.setBounds(82, 16, 190, 30);
+					
+					toHighway = new JComboBox(hwyOptions);
+					toHighway.setSelectedIndex(0);
+					toHighway.setBounds(8, 16, 70, 30);
+					toHighway.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							System.out.println("Switched freeway 2");
+							DefaultComboBoxModel model = new DefaultComboBoxModel(rb.rampNames[toHighway.getSelectedIndex()]);
+							toRamp.setModel(model);
+							//toRamp = new JComboBox(rb.rampNames[toHighway.getSelectedIndex()]);						
+						}						
+					});
+					DefaultComboBoxModel model2 = new DefaultComboBoxModel(rb.rampNames[toHighway.getSelectedIndex()]);
+					toRamp = new JComboBox();
+					toRamp.setModel(model2);
+					toRamp.setBounds(82, 16, 190, 30);
+					
+					fromDestinationPanel.add(fromHighway);
+					fromDestinationPanel.add(fromRamp);
+					
+					toDestinationPanel.add(toHighway);
+					toDestinationPanel.add(toRamp);
+					
+					/*
 				fromDestinationText = new JTextField();
 					fromDestinationText.setBackground(this.getBackground());
 					fromDestinationText.setBorder(new TitledBorder("From")); 
@@ -158,12 +217,13 @@ public class ButterGUI extends JFrame{
 				toDestinationText.setBounds(0, 0, 277, 35);
 				fromDestinationPanel.add(fromDestinationText);
 				toDestinationPanel.add(toDestinationText);
+				*/
 				destinationPanel.add(fromDestinationPanel);
 				destinationPanel.add(toDestinationPanel);
 						
 				// INFORMATION AREA
 				JPanel informationArea = new JPanel();
-					informationArea.setBounds(907, 158, 287, 394);
+					informationArea.setBounds(907, 168, 287, 394);
 					informationArea.setBorder (new TitledBorder(new EtchedBorder(), "Information"));
 				JTextArea jta = new JTextArea (24, 23);
 			    	jta.setEditable (false);
@@ -174,7 +234,7 @@ public class ButterGUI extends JFrame{
 				
 			    // BUTTONS
 				JButton searchButton = new JButton("Search");
-				searchButton.setBounds(907, 114, 287, 30);
+				searchButton.setBounds(907, 134, 287, 30);
 				searchButton.setBackground(new Color(59, 89, 182));
 				searchButton.setForeground(Color.WHITE);
 				searchButton.addActionListener(new ActionListener() {

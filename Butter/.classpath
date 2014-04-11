@@ -2,8 +2,8 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
-	<classpathentry kind="lib" path="/Users/BryanChong/Dropbox/Projects/CSCI201/CSCI201-TransportationProject/Assets/JSON/Gson API/gson-2.2.4.jar"/>
-	<classpathentry kind="lib" path="/Users/BryanChong/Dropbox/Projects/CSCI201/CSCI201-TransportationProject/Assets/JSON/Gson API/gson-2.2.4-javadoc.jar"/>
-	<classpathentry kind="lib" path="/Users/BryanChong/Dropbox/Projects/CSCI201/CSCI201-TransportationProject/Assets/JSON/Gson API/gson-2.2.4-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/kaitlynlee/Documents/USC Spring 2014/CS 201/CSCI201-TransportationProject/Assets/JSON/Gson API/gson-2.2.4.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/kaitlynlee/Documents/USC Spring 2014/CS 201/CSCI201-TransportationProject/Assets/JSON/Gson API/gson-2.2.4-javadoc.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/kaitlynlee/Documents/USC Spring 2014/CS 201/CSCI201-TransportationProject/Assets/JSON/Gson API/gson-2.2.4-sources.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
