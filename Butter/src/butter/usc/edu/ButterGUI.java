@@ -210,7 +210,7 @@ public class ButterGUI extends JFrame{
 				
 				
 			    // BUTTONS
-				JButton searchButton = new JButton("Search");
+				JButton searchButton = new JButton("Find Route");
 				searchButton.setBounds(907, 134, 287, 30);
 				searchButton.setBackground(new Color(59, 89, 182));
 				searchButton.setForeground(Color.WHITE);

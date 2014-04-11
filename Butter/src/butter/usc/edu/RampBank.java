@@ -3,7 +3,6 @@ package butter.usc.edu;
 import java.util.Vector;
 
 public class RampBank {
-
 	// In order: 101, 105, 110, 405
 	String rampNames[][] = {{"I-5 south (Santa Ana Freeway) Santa Ana",
 			"Euclid Avenue",
@@ -156,12 +155,6 @@ public class RampBank {
 	public static final int num110ramps = 37;
 	public static final int num405ramps = 30;
 
-	/*
-	 * 	String name;
-int freewayIndex;
-double latitude;
-double longitude;
-	 */
 	public RampBank() {
 		allRamps = new Vector<Vector<Ramp>>();
 		Vector<Ramp> ramps101 = new Vector<Ramp>();
@@ -190,5 +183,4 @@ double longitude;
 		allRamps.add(ramps110);
 		allRamps.add(ramps405);
 	}
-	
 }
