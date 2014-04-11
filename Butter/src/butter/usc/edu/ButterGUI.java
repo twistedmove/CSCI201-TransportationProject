@@ -159,24 +159,15 @@ public class ButterGUI extends JFrame{
 					toDestinationPanel.setLayout(null);
 					toDestinationPanel.setBounds(4, 66, 278, 54);
 					toDestinationPanel.setBorder(new TitledBorder("To")); 
-					
-					/*
-					 * private JComboBox fromHighway;
-	private JComboBox toHighway;
-	private JComboBox fromRamp;
-	private JComboBox toRamp;
-					 */
+
 					Object hwyOptions [] = {"US 101", "I-105", "I-110", "I-405"};
 					fromHighway = new JComboBox(hwyOptions);
 					fromHighway.setBounds(8, 16, 70, 30);
 					fromHighway.setSelectedIndex(0);
 					fromHighway.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent arg0) {
-							// TODO Auto-generated method stub
-							System.out.println("Switched freeway 1");
 							DefaultComboBoxModel model = new DefaultComboBoxModel(rb.rampNames[fromHighway.getSelectedIndex()]);
 							fromRamp.setModel(model);
-							//fromRamp = new JComboBox(rb.rampNames[fromHighway.getSelectedIndex()]);
 						}
 					});
 					DefaultComboBoxModel model1 = new DefaultComboBoxModel(rb.rampNames[fromHighway.getSelectedIndex()]);
@@ -189,10 +180,8 @@ public class ButterGUI extends JFrame{
 					toHighway.setBounds(8, 16, 70, 30);
 					toHighway.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
-							System.out.println("Switched freeway 2");
 							DefaultComboBoxModel model = new DefaultComboBoxModel(rb.rampNames[toHighway.getSelectedIndex()]);
-							toRamp.setModel(model);
-							//toRamp = new JComboBox(rb.rampNames[toHighway.getSelectedIndex()]);						
+							toRamp.setModel(model);						
 						}						
 					});
 					DefaultComboBoxModel model2 = new DefaultComboBoxModel(rb.rampNames[toHighway.getSelectedIndex()]);
@@ -206,18 +195,6 @@ public class ButterGUI extends JFrame{
 					toDestinationPanel.add(toHighway);
 					toDestinationPanel.add(toRamp);
 					
-					/*
-				fromDestinationText = new JTextField();
-					fromDestinationText.setBackground(this.getBackground());
-					fromDestinationText.setBorder(new TitledBorder("From")); 
-				toDestinationText = new JTextField();
-					toDestinationText.setBackground(this.getBackground());
-					toDestinationText.setBorder(new TitledBorder("To")); 
-				fromDestinationText.setBounds(0, 0, 277, 35);
-				toDestinationText.setBounds(0, 0, 277, 35);
-				fromDestinationPanel.add(fromDestinationText);
-				toDestinationPanel.add(toDestinationText);
-				*/
 				destinationPanel.add(fromDestinationPanel);
 				destinationPanel.add(toDestinationPanel);
 						
@@ -239,6 +216,7 @@ public class ButterGUI extends JFrame{
 				searchButton.setForeground(Color.WHITE);
 				searchButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
+						// Add actions to get the selected locations from the check boxes, then find route accordingly
 					}
 				});
 			    
