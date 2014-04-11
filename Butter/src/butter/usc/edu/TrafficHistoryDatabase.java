@@ -20,11 +20,23 @@ public class TrafficHistoryDatabase {
 	private final String DATABASE = "traffic_history";
 	
 	/** The name of the table we are testing with */
-	private final String TABLE = "traffic";
+	private final String CURRENT_TABLE = "current_traffic_data";
+	private final String HISTORICAL_TABLE = "historical_traffic_data";
 	
 	private Connection connection = null;
 	private Statement statement = null;
-//	private ResultSet resultset = null;
+	private PreparedStatement preparedStatement = null;
+	private ResultSet resultSet = null;
+	
+	private final String SELECT_CURRENT_STMT = "SELECT * FROM " + CURRENT_TABLE; // TO SELECT ALL FROM CURRENT TABLE (1 ROW)
+	private final String INSERT_HISTORICAL_STMT = "INSERT INTO " + HISTORICAL_TABLE + " VALUES (?,?,?,?,?,?)"; // INSERT ID, SPEED, DIR, RAMP, FREEWAY, DATETIME
+	
+	private final String ID_LABEL = "id";
+	private final String SPEED_LABEL = "speed";
+	private final String DIRECTION_LABEL = "direction";
+	private final String RAMP_LABEL = "ramp";
+	private final String FREEWAY_LABEL = "freeway";
+	private final String DATETIME_LABEL = "timestamp";
 	
 	/**
 	 * Tries to establish connection with the database. If it cannot (the database doesn't exist), it connects to the host.
@@ -72,25 +84,47 @@ public class TrafficHistoryDatabase {
 	}
 	
 	/**
-	 * Creates the table if it does not exist.
+	 * Creates the current data table if it does not exist.
 	 * @throws SQLException
 	 */
-	private void createTrafficTable() throws SQLException {
+	private void createCurrentTrafficTable() throws SQLException {
 		try {
-			String sql = "CREATE TABLE IF NOT EXISTS " + TABLE + " ("
-					+ "id INT NOT NULL,"
-					+ "speed DOUBLE NOT NULL,"
-					+ "direction VARCHAR(255),"
-					+ "on_off_ramp TEXT,"
-					+ "freeway INT NOT NULL"
+			String sql = "CREATE TABLE IF NOT EXISTS " + CURRENT_TABLE + " ("
+					+ ID_LABEL + " INT NOT NULL,"
+					+ SPEED_LABEL + " DOUBLE NOT NULL,"
+					+ DIRECTION_LABEL + " VARCHAR(255),"
+					+ RAMP_LABEL + " TEXT,"
+					+ FREEWAY_LABEL + " INT NOT NULL,"
+					+ DATETIME_LABEL + " TIMESTAMP"
 					+ ")";
 			statement = connection.createStatement();
 			statement.executeUpdate(sql);
-			System.out.println("Created table (if not exists)!");
+			System.out.println("Created current data table (if not exists)!");
 		} finally {
 			if(statement != null) statement.close();
 		}
-		
+	}
+	
+	/**
+	 * Creates the table if it does not exist.
+	 * @throws SQLException
+	 */
+	private void createHistoricalTrafficTable() throws SQLException {
+		try {
+			String sql = "CREATE TABLE IF NOT EXISTS " + HISTORICAL_TABLE + " ("
+					+ ID_LABEL + " INT NOT NULL,"
+					+ SPEED_LABEL + " DOUBLE NOT NULL,"
+					+ DIRECTION_LABEL + " VARCHAR(255),"
+					+ RAMP_LABEL + " TEXT,"
+					+ FREEWAY_LABEL + " INT NOT NULL,"
+					+ DATETIME_LABEL + " TIMESTAMP"
+					+ ")";
+			statement = connection.createStatement();
+			statement.executeUpdate(sql);
+			System.out.println("Created historical table (if not exists)!");
+		} finally {
+			if(statement != null) statement.close();
+		}
 	}
 	
 	/**
@@ -99,44 +133,83 @@ public class TrafficHistoryDatabase {
 	public void run() {
 		try {
 			createDatabase();
-			createTrafficTable();
+			createCurrentTrafficTable();
+			createHistoricalTrafficTable();
 		} catch (SQLException e) {
 			System.out.println("SQLException: " + e.getMessage());
 		}
-		
-//		Drop the table & database
-//		try {
-//			statement = connection.createStatement();
-//		    String dropString = "DROP TABLE " + TABLE;
-//			statement.executeUpdate(dropString);
-//			System.out.println("Dropped the table.");
-//			
-//			dropString = "DROP DATABASE " + DATABASE;
-//			statement.executeUpdate(dropString);
-//		    System.out.println("Database deleted successfully...");
-//	    } catch (SQLException e) {
-//			System.out.println("ERROR: Could not drop the table");
-//			e.printStackTrace();
-//			return;
-//		}
 	}
 	
 	/**
-	 * Whenever we get a new wave of cars, insert the cars into the traffic table.
-	 * @param cars - a vector of cars
+	 * Moves the data in the current data table to the historical table
 	 */
-	public void insertCarsIntoTable(Vector<Car> cars) {
+	private void moveCurrentToHistorical() {
 		try {
-			String insertString = "";
-			for(Car c : cars) {
-				insertString = "INSERT INTO " + TABLE + " VALUES (" + c.insertString() + ")";
-				statement = connection.createStatement();
-				statement.executeUpdate(insertString);
-				System.out.println("Inserted a car.");
+			preparedStatement = connection.prepareStatement(SELECT_CURRENT_STMT);
+			resultSet = preparedStatement.executeQuery();
+			
+			while(resultSet.next()) {
+				int id = resultSet.getInt(ID_LABEL);
+				double speed = resultSet.getDouble(SPEED_LABEL);
+				String direction = resultSet.getString(DIRECTION_LABEL);
+				String ramp = resultSet.getString(RAMP_LABEL);
+				String freeway = resultSet.getString(FREEWAY_LABEL);
+				Timestamp datetime = resultSet.getTimestamp(DATETIME_LABEL);
+				
+				preparedStatement = connection.prepareStatement(INSERT_HISTORICAL_STMT);
+				preparedStatement.setInt(1, id);
+				preparedStatement.setDouble(2, speed);
+				preparedStatement.setString(3, direction);
+				preparedStatement.setString(4, ramp);
+				preparedStatement.setString(5, freeway);
+				preparedStatement.setTimestamp(6, datetime);
+				
+				preparedStatement.executeUpdate();
 			}
-			System.out.println("Inserted all cars into table.");
+			System.out.println("Data moved to historical table");
 		} catch (SQLException e) {
 			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Whenever we get a new wave of cars:
+	 * (1) Inserts the cars from current table into historical table 
+	 * (2) Inserts new data into current table
+	 * @param cars - a vector of cars
+	 */
+	public void addNewCarData(Vector<Car> cars) {
+		try {
+			String sql = "";
+			moveCurrentToHistorical();
+			for(Car c : cars) {
+				sql = "INSERT INTO " + CURRENT_TABLE + " VALUES (" + c.insertString() + ",?)";
+				preparedStatement = connection.prepareStatement(sql);
+				preparedStatement.setTimestamp(1, new Timestamp(new java.util.Date().getTime()));
+				preparedStatement.executeUpdate();
+//				System.out.println("Inserted a new car.");
+			}
+			System.out.println("Inserted new cars into current table.");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void dropDatabase() {
+//		Drop the table & database
+		try {
+			statement = connection.createStatement();
+		    String dropString = "DROP TABLE " + CURRENT_TABLE;
+			statement.executeUpdate(dropString);
+			System.out.println("Dropped the table.");
+			
+			dropString = "DROP DATABASE " + DATABASE;
+			statement.executeUpdate(dropString);
+		    System.out.println("Database deleted successfully...");
+	    } catch (SQLException e) {
+			System.out.println("ERROR: Could not drop the table");
+			e.printStackTrace();
+			return;
 		}
 	}
 	
@@ -145,21 +218,24 @@ public class TrafficHistoryDatabase {
 	 * @param filename
 	 */
 	public void exportToCSV(String filename) {
-		
+
 	}
 	
 	public static void main(String[] args) {
-		
+		TrafficHistoryDatabase t = new TrafficHistoryDatabase();
 		try {
 			Vector<Car> cars = CarDeserializer.deserializeArrayFromURL("http://www-scf.usc.edu/~csci201/mahdi_project/test.json");
-			for(Car c : cars) {
-				System.out.println(c);
-			}
-//			TrafficHistoryDatabase t = new TrafficHistoryDatabase();
-//			t.run();
-//			t.insertCarsIntoTable(cars);
+//			for(Car c : cars) {
+//				System.out.println(c);
+//			}
+			t.run();
+			t.addNewCarData(cars);
+			cars = CarDeserializer.deserializeArrayFromURL("http://www-scf.usc.edu/~csci201/mahdi_project/test.json");
+			t.addNewCarData(cars);
 		} catch (IOException e) {
 			System.out.println(e.getMessage());
+		} finally {
+//			t.dropDatabase();
 		}
 	}
 }
