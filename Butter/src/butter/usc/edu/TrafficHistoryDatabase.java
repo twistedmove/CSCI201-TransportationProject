@@ -1,6 +1,9 @@
 package butter.usc.edu;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.*;
 import java.util.Properties;
 import java.util.Vector;
@@ -29,6 +32,7 @@ public class TrafficHistoryDatabase {
 	private ResultSet resultSet = null;
 	
 	private final String SELECT_CURRENT_STMT = "SELECT * FROM " + CURRENT_TABLE; // TO SELECT ALL FROM CURRENT TABLE (1 ROW)
+	private final String SELECT_HISTORICAL_STMT = "SELECT * FROM " + HISTORICAL_TABLE; // TO SELECT ALL FROM CURRENT TABLE (1 ROW)
 	private final String INSERT_HISTORICAL_STMT = "INSERT INTO " + HISTORICAL_TABLE + " VALUES (?,?,?,?,?,?)"; // INSERT ID, SPEED, DIR, RAMP, FREEWAY, DATETIME
 	
 	private final String ID_LABEL = "id";
@@ -37,6 +41,13 @@ public class TrafficHistoryDatabase {
 	private final String RAMP_LABEL = "ramp";
 	private final String FREEWAY_LABEL = "freeway";
 	private final String DATETIME_LABEL = "timestamp";
+	
+	private int id = 0;
+	private double speed = 0;
+	private String direction = null;
+	private String ramp = null;
+	private String freeway = null;
+	private Timestamp datetime = null;
 	
 	/**
 	 * Tries to establish connection with the database. If it cannot (the database doesn't exist), it connects to the host.
@@ -149,12 +160,7 @@ public class TrafficHistoryDatabase {
 			resultSet = preparedStatement.executeQuery();
 			
 			while(resultSet.next()) {
-				int id = resultSet.getInt(ID_LABEL);
-				double speed = resultSet.getDouble(SPEED_LABEL);
-				String direction = resultSet.getString(DIRECTION_LABEL);
-				String ramp = resultSet.getString(RAMP_LABEL);
-				String freeway = resultSet.getString(FREEWAY_LABEL);
-				Timestamp datetime = resultSet.getTimestamp(DATETIME_LABEL);
+				extractData();
 				
 				preparedStatement = connection.prepareStatement(INSERT_HISTORICAL_STMT);
 				preparedStatement.setInt(1, id);
@@ -170,6 +176,19 @@ public class TrafficHistoryDatabase {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	/**
+	 * Extracts data from result set.
+	 * @throws SQLException 
+	 */
+	private void extractData() throws SQLException {
+		id = resultSet.getInt(ID_LABEL);
+		speed = resultSet.getDouble(SPEED_LABEL);
+		direction = resultSet.getString(DIRECTION_LABEL);
+		ramp = resultSet.getString(RAMP_LABEL);
+		freeway = resultSet.getString(FREEWAY_LABEL);
+		datetime = resultSet.getTimestamp(DATETIME_LABEL);
 	}
 	
 	/**
@@ -201,7 +220,11 @@ public class TrafficHistoryDatabase {
 			statement = connection.createStatement();
 		    String dropString = "DROP TABLE " + CURRENT_TABLE;
 			statement.executeUpdate(dropString);
-			System.out.println("Dropped the table.");
+			System.out.println("Dropped current table.");
+			
+		    dropString = "DROP TABLE " + HISTORICAL_TABLE;
+			statement.executeUpdate(dropString);
+			System.out.println("Dropped historical table.");
 			
 			dropString = "DROP DATABASE " + DATABASE;
 			statement.executeUpdate(dropString);
@@ -216,9 +239,43 @@ public class TrafficHistoryDatabase {
 	/**
 	 * 
 	 * @param filename
+	 * @throws IOException 
 	 */
-	public void exportToCSV(String filename) {
-
+	public void exportToCSV(String filename) throws IOException {
+		FileWriter fw = new FileWriter(new File(filename));
+		PrintWriter pw = new PrintWriter(fw);
+		pw.println(ID_LABEL + "," + SPEED_LABEL + "," + DIRECTION_LABEL + "," + RAMP_LABEL + "," + FREEWAY_LABEL + "," + DATETIME_LABEL);
+		try {
+			preparedStatement = connection.prepareStatement(SELECT_HISTORICAL_STMT);
+			resultSet = preparedStatement.executeQuery();
+			
+			while(resultSet.next()) {
+				extractData();
+				ramp = escapeCommas(ramp);
+				
+				pw.println(id + "," + speed + "," + direction + ", "
+						+ "" + ramp + ""
+								+ "," + freeway
+										+ "," + datetime + "\"");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			pw.flush();
+			pw.close();
+			fw.close();
+		}
+	}
+	
+	private String escapeCommas(String s) {
+		int index = s.indexOf(", ");
+		System.out.println("NOT ESCAPED: " + s);
+		if(index > 0) {
+			System.out.println("YES");
+			s = s.replaceAll(",\\s+", " ");
+		}
+		System.out.println("ESCAPED: " + s);
+		return s;
 	}
 	
 	public static void main(String[] args) {
@@ -230,12 +287,13 @@ public class TrafficHistoryDatabase {
 //			}
 			t.run();
 			t.addNewCarData(cars);
-			cars = CarDeserializer.deserializeArrayFromURL("http://www-scf.usc.edu/~csci201/mahdi_project/test.json");
 			t.addNewCarData(cars);
+			t.addNewCarData(cars);
+			t.exportToCSV("historical_data.csv");
 		} catch (IOException e) {
 			System.out.println(e.getMessage());
 		} finally {
-//			t.dropDatabase();
+			t.dropDatabase();
 		}
 	}
 }
