@@ -14,4 +14,11 @@
 	<natures>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>assets/TrafficHistoryDatabase.java</name>
+			<type>1</type>
+			<locationURI>PROJECT_LOC/src/butter/usc/edu/TrafficHistoryDatabase.java</locationURI>
+		</link>
+	</linkedResources>
 </projectDescription>

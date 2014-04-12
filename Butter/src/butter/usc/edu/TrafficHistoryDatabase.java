@@ -293,7 +293,7 @@ public class TrafficHistoryDatabase {
 		} catch (IOException e) {
 			System.out.println(e.getMessage());
 		} finally {
-			t.dropDatabase();
+			//t.dropDatabase();
 		}
 	}
 }
