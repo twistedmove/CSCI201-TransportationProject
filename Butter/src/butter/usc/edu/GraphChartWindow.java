@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Vector;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
@@ -27,6 +28,7 @@ import javax.swing.table.TableColumn;
 import javax.swing.JTable;
 import javax.swing.JComboBox;
 import javax.swing.JScrollPane;
+import java.awt.GridLayout;
 
 public class GraphChartWindow extends JFrame{
 	private JTable table;
@@ -35,7 +37,7 @@ public class GraphChartWindow extends JFrame{
 	private JTable DataTable;
 	GraphChartWindow(){
 		super("Graph");
-		setSize(1059, 1022);
+		setSize(882, 814);
 		setLocation(100,100);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setResizable(false);
@@ -46,38 +48,44 @@ public class GraphChartWindow extends JFrame{
 
 		//Display graph.jpg panel
 		final ChartPanel GraphPanel = new ChartPanel();
-		GraphPanel.setBounds(32, 77, 1000, 600);
+		GraphPanel.setBounds(32, 35, 818, 498);
 		getContentPane().add(GraphPanel);
 
 		//Table Panel
 		JPanel TablePanel = new JPanel();
 		TablePanel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		TablePanel.setBackground(new Color(176, 196, 222));
-		TablePanel.setBounds(32, 711, 1000, 270);
+		TablePanel.setBounds(32, 545, 818, 214);
+		TablePanel.setLayout(new GridLayout(0, 1, 0, 0));
 		getContentPane().add(TablePanel);
-		TablePanel.setLayout(null);	
-		DefaultTableModel model = new DefaultTableModel(5, 15);
-		JTable DataTable = new JTable(model);
 
-		DataTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-		DataTable.setTableHeader(null);
-		DataTable.setRowHeight(34);
-		DataTable.setGridColor(Color.BLACK);
+		//Table
+		Vector cols = new Vector(10);
+		cols.addElement(new String("Car ID"));
+		for(int i = 0; i<5; i++)
+		{
+			cols.addElement(new String("Time Interval " + i));
+		}
+		DefaultTableModel tableModel = new DefaultTableModel(cols, 3);
+		tableModel.setColumnIdentifiers(cols);
 		
-		/*TableColumn c = new TableColumn(3);
-        c.setHeaderValue("ID 6");
-        DataTable.getColumnModel().addColumn(c);*/
 
-		JScrollPane scrollPane = new JScrollPane(DataTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-		Dimension d = DataTable.getPreferredSize();
-		scrollPane.setPreferredSize(new Dimension(d.width, 15*5));
-		scrollPane.setBounds(new Rectangle(16, 16, 967, 235));
+		JTable theTable = new JTable(tableModel);
+		theTable.setBounds(25, 50, 950, 600);
+		theTable.setBackground(Color.gray);
+		theTable.setRowHeight(23);
+		JScrollPane scrollPane = new JScrollPane(theTable,JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		theTable.setAutoResizeMode(0);
+		for(int i = 1; i<cols.size(); i++)
+		{
+			theTable.getColumnModel().getColumn(i).setPreferredWidth(93);
+		}
 		TablePanel.add(scrollPane);
 
 		//SelectFreeway ComboBox
-		String[] freeways = {"All Freeways", "Freeway 1", "Freeway 2", "Freeway 3"};//TODO change these to the correct freeways
+		String[] freeways = {"All Freeways", "Freeway 1", "Freeway 2", "Freeway 3"};			//TODO change these to the correct freeways
 		JComboBox freewayComboBox = new JComboBox(freeways);
-		freewayComboBox.setBounds(32, 47, 156, 27);
+		freewayComboBox.setBounds(32, 6, 156, 27);
 		getContentPane().add(freewayComboBox);
 		freewayComboBox.setSelectedIndex(0);
 		freewayComboBox.addActionListener(new ActionListener(){
@@ -91,12 +99,10 @@ public class GraphChartWindow extends JFrame{
 			}
 		});
 
-
-
 		setVisible(true);
 	}
 
-	public static void main(String [] args)
+	public static void main(String [] args)					//TODO delete this later!
 	{
 		new GraphChartWindow();
 	}
@@ -125,6 +131,7 @@ public class GraphChartWindow extends JFrame{
 			 */
 
 			//TODO if(selectedFreeway == "All Freeways"){} ------ Specify which cars to graph by Freeway.
+
 			XYSeries ID1 = new XYSeries("Car 1");
 			ID1.add(100, 1);
 			ID1.add(200, 2);
@@ -147,7 +154,7 @@ public class GraphChartWindow extends JFrame{
 					true, 								// Use tooltips
 					false 								// Configure chart to generate URLs?
 					);
-			theGraph = chart.createBufferedImage(1000,600);
+			theGraph = chart.createBufferedImage(818, 498);
 		}
 	}
 }
