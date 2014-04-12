@@ -19,6 +19,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -35,6 +36,7 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class ButterGUI extends JFrame{
 	private static final long serialVersionUID = 367534120156013938L;
@@ -49,8 +51,8 @@ public class ButterGUI extends JFrame{
 	private JComboBox fromRamp;
 	private JComboBox toRamp;
 	private Vector<Car> cars;
+	private JTextArea jta;
 	private TrafficHistoryDatabase trafficHistoryDatabase;
-	private PathBank pb;
 	
 	Image mascot;
 	ImageIcon sliced;
@@ -67,7 +69,6 @@ public class ButterGUI extends JFrame{
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		allCars = new Vector<Car>();
 		rb = new RampBank();
-		pb = new PathBank();
 		importImage();
 		setupButterGUI();
 		//int id, double speed, String direction, String onOffRamp, String freeway) {
@@ -132,7 +133,7 @@ public class ButterGUI extends JFrame{
 				mapPanel.setMinimumSize(new Dimension(950, 680));
 				
 				try {
-					String imageUrl = "http://maps.googleapis.com/maps/api/staticmap?center=Los+Angeles,CA&zoom=12&size=1440x1440&scale=2&sensor=false";
+					String imageUrl = "https://maps.googleapis.com/maps/api/staticmap?center=Los+Angeles,CA&zoom=12&size=1440x1440&scale=2&sensor=false";
 					String destinationFile = "map.jpg";
 					URL url = new URL(imageUrl);
 					InputStream is = url.openStream();
@@ -224,7 +225,7 @@ public class ButterGUI extends JFrame{
 				JPanel informationArea = new JPanel();
 					informationArea.setBounds(907, 168, 287, 394);
 					informationArea.setBorder (new TitledBorder(new EtchedBorder(), "Information"));
-				JTextArea jta = new JTextArea (24, 23);
+				jta = new JTextArea (24, 23);
 			    	jta.setEditable (false);
 			    JScrollPane scrollPane = new JScrollPane (jta);
 			    	scrollPane.setVerticalScrollBarPolicy (ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
@@ -258,6 +259,30 @@ public class ButterGUI extends JFrame{
 				exportDataButton.setForeground(Color.WHITE);
 				exportDataButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
+						try {
+							JFileChooser jfc = new JFileChooser(); 
+					    	FileNameExtensionFilter csv = new FileNameExtensionFilter("CSV (.csv)", "csv");  
+			            		jfc.addChoosableFileFilter(csv);  
+			            		jfc.setFileFilter(csv);
+			            	int result = jfc.showSaveDialog(null);	
+			            	if(result != JFileChooser.APPROVE_OPTION){
+								jta.setText(jta.getText() + "Butter: Export Canceled!" + "\n");
+								return;
+							} else {
+								File file = jfc.getSelectedFile();
+								String file_name = file.toString();
+								if (!file_name.endsWith(".csv")){
+								    file_name += ".csv";
+								}
+								trafficHistoryDatabase.exportToCSV(file_name);
+								jta.setText(jta.getText() + "Butter: Export Successful!" + "\n");
+							}
+						} catch (IOException ioe){
+							ioe.getMessage();
+						}
+						
+						
+						
 						
 					}
 				});
