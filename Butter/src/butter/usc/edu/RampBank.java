@@ -1,8 +1,14 @@
 package butter.usc.edu;
 
 import java.util.Vector;
+/*
+ *  RampBank class: creates all Ramps for all 4 freeways and stores the Ramps in a 2-dimensional vector--a vector of a vector. The String names of the ramps are stored in rampNames, a 2-dimension array
+ *  @author Kaitlyn
+ */
 
 public class RampBank {
+	Vector<Vector<Ramp>> allRamps;
+	int freeways [] = {101, 105, 110, 405};
 	// In order: 101, 105, 110, 405
 	String rampNames[][] = {{"I-5 south (Santa Ana Freeway) Santa Ana",
 			"Euclid Avenue",
@@ -149,7 +155,6 @@ public class RampBank {
 			"Rinaldi Street   Mission Hills",
 			"I-5 north (Golden State Freeway)   Sacramento"
 	}};
-	Vector<Vector<Ramp>> allRamps;
 	public static final int num101ramps = 57;
 	public static final int num105ramps = 20;
 	public static final int num110ramps = 37;
@@ -163,19 +168,19 @@ public class RampBank {
 		Vector<Ramp> ramps405 = new Vector<Ramp>();
 
 		for (int i = 0; i < num101ramps; i++) {
-			ramps101.add(new Ramp(rampNames[0][i], 101, 0, 0));
+			ramps101.add(new Ramp(rampNames[0][i], 101, 0));
 		}
 
 		for (int i = 0; i < num105ramps; i++) {
-			ramps105.add(new Ramp(rampNames[1][i], 105, 0, 0));
+			ramps105.add(new Ramp(rampNames[1][i], 105, 0));
 		}
 
 		for (int i = 0; i < num110ramps; i++) {
-			ramps110.add(new Ramp(rampNames[2][i], 110, 0, 0));
+			ramps110.add(new Ramp(rampNames[2][i], 110, 0));
 		}
 
 		for (int i = 0; i < num405ramps; i++) {
-			ramps405.add(new Ramp(rampNames[3][i], 405, 0, 0));
+			ramps405.add(new Ramp(rampNames[3][i], 405, 0));
 		}
 		
 		allRamps.add(ramps101);
