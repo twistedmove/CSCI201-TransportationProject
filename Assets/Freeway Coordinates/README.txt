@@ -1,4 +1,4 @@
-Google Fustion Tables to visualize the coordinates that make up the freeways.
+Google Fusion Tables to visualize the coordinates that make up the freeways.
 
 https://www.google.com/fusiontables/DataSource?docid=1nwMaJqYYjyNE1KzdNMXxeBWcxddozrp7C-gzejqN
 
