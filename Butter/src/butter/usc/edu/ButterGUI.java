@@ -49,6 +49,8 @@ public class ButterGUI extends JFrame{
 	private JComboBox fromRamp;
 	private JComboBox toRamp;
 	
+	private TrafficHistoryDatabase trafficHistoryDatabase;
+	
 	Image mascot;
 	ImageIcon sliced;
 	private Vector<Car> allCars;
@@ -68,6 +70,8 @@ public class ButterGUI extends JFrame{
 		setupButterGUI();
 		//int id, double speed, String direction, String onOffRamp, String freeway) {
 	
+		trafficHistoryDatabase = new TrafficHistoryDatabase();
+		trafficHistoryDatabase.run();
 		
 		Car c = new Car(1,60, "East", "Some Offramp", "Some freeway");
 		Car c1 = new Car(2,80, "East","Some Offramp", "Some freeway");
@@ -99,6 +103,20 @@ public class ButterGUI extends JFrame{
 	        System.out.println("No file exists.");
 		}
 		
+	}
+	
+	/**
+	 * Used to grab data from wherever and add it to the database.
+	 * Will need threads...
+	 */
+	private void getCarData() {
+		try {
+			Vector<Car> cars = CarDeserializer.deserializeArrayFromURL("http://www-scf.usc.edu/~csci201/mahdi_project/test.json");
+			trafficHistoryDatabase.addNewCarData(cars);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	

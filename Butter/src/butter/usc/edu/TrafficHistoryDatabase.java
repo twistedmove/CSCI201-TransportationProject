@@ -269,12 +269,12 @@ public class TrafficHistoryDatabase {
 	
 	private String escapeCommas(String s) {
 		int index = s.indexOf(", ");
-		System.out.println("NOT ESCAPED: " + s);
+//		System.out.println("NOT ESCAPED: " + s);
 		if(index > 0) {
-			System.out.println("YES");
+//			System.out.println("YES");
 			s = s.replaceAll(",\\s+", " ");
 		}
-		System.out.println("ESCAPED: " + s);
+//		System.out.println("ESCAPED: " + s);
 		return s;
 	}
 	
