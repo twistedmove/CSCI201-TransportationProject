@@ -1,4 +1,4 @@
-package butter.usc.edu;
+package edu.usc;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -60,19 +60,36 @@ public class GraphChartWindow extends JFrame{
 		getContentPane().add(TablePanel);
 
 		//Table
+
+		Vector car1 = new Vector();
+		car1.add("1");
+		car1.add("30mph");
+		car1.add("40mph");
+		car1.add("50mph");
+		Vector car2 = new Vector();
+		car2.add("2");
+		car2.add("40mph");
+		car2.add("50mph");
+		car2.add("60mph");
+		Vector cars = new Vector();
+		cars.add(car1);
+		cars.add(car2);
+
+
 		Vector cols = new Vector(10);
 		cols.addElement(new String("Car ID"));
-		for(int i = 0; i<5; i++)
+		for(int i = 1; i<car1.size(); i++)										//TODO make it loop depending on database time intervals
 		{
 			cols.addElement(new String("Time Interval " + i));
 		}
-		DefaultTableModel tableModel = new DefaultTableModel(cols, 3);
+		DefaultTableModel tableModel = new DefaultTableModel(2, car1.size());
 		tableModel.setColumnIdentifiers(cols);
-		
+
 
 		JTable theTable = new JTable(tableModel);
 		theTable.setBounds(25, 50, 950, 600);
-		theTable.setBackground(Color.gray);
+		theTable.setBackground(Color.lightGray);
+		theTable.setGridColor(Color.black);
 		theTable.setRowHeight(23);
 		JScrollPane scrollPane = new JScrollPane(theTable,JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		theTable.setAutoResizeMode(0);
@@ -100,6 +117,18 @@ public class GraphChartWindow extends JFrame{
 		});
 
 		setVisible(true);
+	}
+	Object convertTOData(Vector<Vector<String>> a)
+	{
+		Object[][] data = new Object[a.size()][a.get(0).size()];
+		for(int i = 0; i<a.size();i++)
+		{
+			for(int j = 0; j< a.get(0).size();j++)
+			{
+				data[i][j] = a.get(i).get(j);
+			}
+		}
+		return data;
 	}
 
 	public static void main(String [] args)					//TODO delete this later!
