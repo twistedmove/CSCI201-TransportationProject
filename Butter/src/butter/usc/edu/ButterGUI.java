@@ -50,6 +50,7 @@ public class ButterGUI extends JFrame{
 	private JComboBox toRamp;
 	private Vector<Car> cars;
 	private TrafficHistoryDatabase trafficHistoryDatabase;
+	private PathBank pb;
 	
 	Image mascot;
 	ImageIcon sliced;
@@ -66,6 +67,7 @@ public class ButterGUI extends JFrame{
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		allCars = new Vector<Car>();
 		rb = new RampBank();
+		pb = new PathBank();
 		importImage();
 		setupButterGUI();
 		//int id, double speed, String direction, String onOffRamp, String freeway) {
