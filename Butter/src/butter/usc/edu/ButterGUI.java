@@ -48,7 +48,7 @@ public class ButterGUI extends JFrame{
 	private JComboBox toHighway;
 	private JComboBox fromRamp;
 	private JComboBox toRamp;
-	
+	private Vector<Car> cars;
 	private TrafficHistoryDatabase trafficHistoryDatabase;
 	
 	Image mascot;
@@ -72,7 +72,9 @@ public class ButterGUI extends JFrame{
 	
 		trafficHistoryDatabase = new TrafficHistoryDatabase();
 		trafficHistoryDatabase.run();
+		getCarData();
 		
+	/*
 		Car c = new Car(1,60, "East", "Some Offramp", "Some freeway");
 		Car c1 = new Car(2,80, "East","Some Offramp", "Some freeway");
 		Car c2 = new Car(3,80, "North","Some Offramp", "Some freeway");
@@ -81,18 +83,18 @@ public class ButterGUI extends JFrame{
 		allCars.add(c2);
 		
 		final int timeSlice = 250; 
-		  Timer timer = new  Timer (timeSlice, new ActionListener ()                                       {
-		    public void actionPerformed (ActionEvent e) {
-		    //	p.removeAll();
-		    	mapPanel.updateUI();
-				for (int i = 0; i < allCars.size(); i++) {
-					allCars.get(i).updateSpeed();
-				}
-				mapPanel.repaint();
-		    }
-		  });
-		  timer.start();
-		
+		Timer timer = new  Timer (timeSlice, new ActionListener ()                                       {
+		public void actionPerformed (ActionEvent e) {
+		//	p.removeAll();
+	    	mapPanel.updateUI();
+			for (int i = 0; i < allCars.size(); i++) {
+				allCars.get(i).updateSpeed();
+			}
+			mapPanel.repaint();
+		}
+		});
+		timer.start();
+	*/	  
 	}
 	
 	private void importImage(){
@@ -265,6 +267,7 @@ public class ButterGUI extends JFrame{
 				exitButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						if (JOptionPane.showConfirmDialog(null,"Are you done using Butter?", "Slicing Butter", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE , sliced) == JOptionPane.YES_OPTION){
+							trafficHistoryDatabase.dropDatabase();
 							System.exit(0);
 						}
 					}
