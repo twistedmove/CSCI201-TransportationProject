@@ -31,7 +31,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
-import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.EtchedBorder;
@@ -44,13 +43,18 @@ public class ButterGUI extends JFrame{
 	public JPanel mapPanel;
 	public PanelDraw mapPicPanel;
 	public JLabel picLabel;
+	@SuppressWarnings("unused")
 	private JTextField fromDestinationText;
+	@SuppressWarnings("unused")
 	private JTextField toDestinationText;
+	@SuppressWarnings("rawtypes")
 	private JComboBox fromHighway;
+	@SuppressWarnings("rawtypes")
 	private JComboBox toHighway;
+	@SuppressWarnings("rawtypes")
 	private JComboBox fromRamp;
+	@SuppressWarnings("rawtypes")
 	private JComboBox toRamp;
-	private Vector<Car> cars;
 	private JTextArea jta;
 	private TrafficHistoryDatabase trafficHistoryDatabase;
 	
@@ -86,7 +90,7 @@ public class ButterGUI extends JFrame{
 		allCars.add(c2);
 		
 		final int timeSlice = 250; 
-		Timer timer = new  Timer (timeSlice, new ActionListener ()                                       {
+		Timer timer = new  Timer (timeSlice, new ActionListener () {
 		public void actionPerformed (ActionEvent e) {
 		//	p.removeAll();
 	    	mapPanel.updateUI();
@@ -98,6 +102,9 @@ public class ButterGUI extends JFrame{
 		});
 		timer.start();
 	*/	  
+		
+		
+		mapPanel.repaint();
 	}
 	
 	private void importImage(){
@@ -125,6 +132,7 @@ public class ButterGUI extends JFrame{
 	}
 	
 	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void setupButterGUI(){	
 		// MAP STUFF
 				mapPanel = new JPanel();

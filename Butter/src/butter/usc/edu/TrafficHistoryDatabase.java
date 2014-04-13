@@ -277,14 +277,12 @@ public class TrafficHistoryDatabase {
 //		System.out.println("ESCAPED: " + s);
 		return s;
 	}
-	
+
+/*
 	public static void main(String[] args) {
 		TrafficHistoryDatabase t = new TrafficHistoryDatabase();
 		try {
 			Vector<Car> cars = CarDeserializer.deserializeArrayFromURL("http://www-scf.usc.edu/~csci201/mahdi_project/test.json");
-//			for(Car c : cars) {
-//				System.out.println(c);
-//			}
 			t.run();
 			t.addNewCarData(cars);
 			t.addNewCarData(cars);
@@ -296,4 +294,5 @@ public class TrafficHistoryDatabase {
 			//t.dropDatabase();
 		}
 	}
+*/	
 }
