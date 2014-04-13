@@ -1,12 +1,17 @@
 package butter.usc.edu;
 
 import java.util.Vector;
-
+/*
+ * PathBank holds all Locations on the paths for each highway in a vector.
+ * @author Kaitlyn
+ */
 public class PathBank {
-	Vector<Location> locations101;
-	Vector<Location> locations105;
-	Vector<Location> locations110;
-	Vector<Location> locations405;
+	public static Vector<Location> locations101;
+	public static Vector<Location> locations105;
+	public static Vector<Location> locations110;
+	public static Vector<Location> locations405;
+	public static Vector<Vector<Location>> allLocations;
+	
 	// {latitude, longitude}
 	
 	public PathBank() {
@@ -14,6 +19,11 @@ public class PathBank {
 		locations105 = new Vector<Location>();
 		locations110 = new Vector<Location>();
 		locations405 = new Vector<Location>();
+		allLocations = new Vector<Vector<Location>>();
+		allLocations.add(locations101);
+		allLocations.add(locations105);
+		allLocations.add(locations110);
+		allLocations.add(locations405);
 
 		for (int i = 0; i < coordinates101.length; i++) {
 			locations101.add(new Location(coordinates101[i][0], coordinates101[i][1]));
@@ -39,10 +49,20 @@ public class PathBank {
 		for (int i = 1; i < coordinates405.length; i++) {
 			locations405.get(i).setPrev(locations405.get(i-1));
 		}
+		
+		locations405.get(0).setLast();
+		locations101.get(0).setLast();
+		locations105.get(0).setLast();
+		locations110.get(0).setLast();
+		
+		locations405.get(locations405.size() - 1).setLast();
+		locations101.get(locations101.size() - 1).setLast();
+		locations105.get(locations105.size() - 1).setLast();
+		locations110.get(locations110.size() - 1).setLast();
 	}
 	
 	
-	Double coordinates101 [][] = {{34.02624,-118.20833},
+	public static Double coordinates101 [][] = {{34.02624,-118.20833},
 			{34.02605,-118.20785},
 			{34.02574,-118.20698},
 			{34.02526,-118.20548},

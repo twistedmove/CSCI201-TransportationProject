@@ -1,4 +1,7 @@
 package butter.usc.edu;
+
+import java.awt.Point;
+
 /*
  *  Ramp class, creates a ramp given the name, freeway number, and the index of the coordinate in the respective array of path coordinates. 
  *  @author Kaitlyn
@@ -7,6 +10,7 @@ public class Ramp {
 	String name;
 	int freeway;
 	int indexOfCoordinate;
+	Location l;
 	//double latitude;
 	//double longitude;
 	/*
@@ -17,9 +21,10 @@ public class Ramp {
 		this.longitude = longitude;
 	}
 	*/
-	public Ramp(String name, int freeway, int indexOfCoordinate) {
+	public Ramp(String name, int freeway, int indexOfCoordinate, Location l) {
 		this.name = name;
 		this.freeway = freeway;
 		this.indexOfCoordinate = indexOfCoordinate;
+		this.l = l;
 	}
 }

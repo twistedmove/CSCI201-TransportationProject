@@ -31,6 +31,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.EtchedBorder;
@@ -43,17 +44,9 @@ public class ButterGUI extends JFrame{
 	public JPanel mapPanel;
 	public PanelDraw mapPicPanel;
 	public JLabel picLabel;
-	@SuppressWarnings("unused")
-	private JTextField fromDestinationText;
-	@SuppressWarnings("unused")
-	private JTextField toDestinationText;
-	@SuppressWarnings("rawtypes")
 	private JComboBox fromHighway;
-	@SuppressWarnings("rawtypes")
 	private JComboBox toHighway;
-	@SuppressWarnings("rawtypes")
 	private JComboBox fromRamp;
-	@SuppressWarnings("rawtypes")
 	private JComboBox toRamp;
 	private JTextArea jta;
 	private TrafficHistoryDatabase trafficHistoryDatabase;
@@ -62,6 +55,7 @@ public class ButterGUI extends JFrame{
 	ImageIcon sliced;
 	private Vector<Car> allCars;
 	Image map;
+	private PathBank pb;
 	private RampBank rb;
 
 	public ButterGUI () {
@@ -72,7 +66,9 @@ public class ButterGUI extends JFrame{
 		this.getContentPane().setLayout(null);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		allCars = new Vector<Car>();
+		pb = new PathBank();
 		rb = new RampBank();
+
 		importImage();
 		setupButterGUI();
 		//int id, double speed, String direction, String onOffRamp, String freeway) {
@@ -81,10 +77,10 @@ public class ButterGUI extends JFrame{
 		trafficHistoryDatabase.run();
 		getCarData();
 		
-	/*
-		Car c = new Car(1,60, "East", "Some Offramp", "Some freeway");
-		Car c1 = new Car(2,80, "East","Some Offramp", "Some freeway");
-		Car c2 = new Car(3,80, "North","Some Offramp", "Some freeway");
+	
+		Car c = new Car(1,60, "West", "Western Avenue, Normandie Avenue", "10");
+		Car c1 = new Car(2,80, "North","Euclid Avenue", "101");
+		Car c2 = new Car(3,80, "North","Alameda Street Union Station", "101");
 		allCars.add(c);
 		allCars.add(c1);
 		allCars.add(c2);
@@ -101,9 +97,6 @@ public class ButterGUI extends JFrame{
 		}
 		});
 		timer.start();
-	*/	  
-		
-		
 		mapPanel.repaint();
 	}
 	
@@ -141,7 +134,7 @@ public class ButterGUI extends JFrame{
 				mapPanel.setMinimumSize(new Dimension(950, 680));
 				
 				try {
-					String imageUrl = "https://maps.googleapis.com/maps/api/staticmap?center=Los+Angeles,CA&zoom=12&size=1440x1440&scale=2&sensor=false";
+					String imageUrl = "https://maps.googleapis.com/maps/api/staticmap?center=34.090483+-118.293966&zoom=10&size=1280x1280&scale=2&sensor=false";
 					String destinationFile = "map.jpg";
 					URL url = new URL(imageUrl);
 					InputStream is = url.openStream();
