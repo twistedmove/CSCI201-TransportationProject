@@ -153,11 +153,11 @@ public class ButterGUI extends JFrame{
 				}
 				mapPanel.setLayout(null);
 
-				picLabel = new JLabel(new ImageIcon((new ImageIcon("map.jpg")).getImage().getScaledInstance(1200, 1200, java.awt.Image.SCALE_SMOOTH)));
+				picLabel = new JLabel(new ImageIcon((new ImageIcon("map.jpg")).getImage().getScaledInstance(1440, 1440, java.awt.Image.SCALE_SMOOTH)));
 				
-				map = (new ImageIcon("map.jpg")).getImage().getScaledInstance(1280, 1280, java.awt.Image.SCALE_SMOOTH);
+				map = (new ImageIcon("map.jpg")).getImage().getScaledInstance(1440, 1440, java.awt.Image.SCALE_SMOOTH);
 				mapPicPanel = new PanelDraw();
-				mapPicPanel.setPreferredSize(new Dimension(1280,1280));
+				mapPicPanel.setPreferredSize(new Dimension(1440,1440));
 				
 				JScrollPane jsp = new JScrollPane(mapPicPanel);
 				//JScrollPane jsp = new JScrollPane(picLabel);
