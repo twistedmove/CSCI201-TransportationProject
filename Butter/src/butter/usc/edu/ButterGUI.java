@@ -66,8 +66,9 @@ public class ButterGUI extends JFrame{
 		this.getContentPane().setLayout(null);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		allCars = new Vector<Car>();
-		rb = new RampBank();
 		pb = new PathBank();
+		rb = new RampBank();
+
 		importImage();
 		setupButterGUI();
 		//int id, double speed, String direction, String onOffRamp, String freeway) {
@@ -76,10 +77,10 @@ public class ButterGUI extends JFrame{
 		trafficHistoryDatabase.run();
 		getCarData();
 		
-	/*
-		Car c = new Car(1,60, "East", "Some Offramp", "Some freeway");
-		Car c1 = new Car(2,80, "East","Some Offramp", "Some freeway");
-		Car c2 = new Car(3,80, "North","Some Offramp", "Some freeway");
+	
+		Car c = new Car(1,60, "West", "Western Avenue, Normandie Avenue", "10");
+		Car c1 = new Car(2,80, "North","Euclid Avenue", "101");
+		Car c2 = new Car(3,80, "North","Alameda Street Union Station", "101");
 		allCars.add(c);
 		allCars.add(c1);
 		allCars.add(c2);
@@ -96,7 +97,6 @@ public class ButterGUI extends JFrame{
 		}
 		});
 		timer.start();
-	*/	  
 	}
 	
 	private void importImage(){
@@ -132,7 +132,7 @@ public class ButterGUI extends JFrame{
 				mapPanel.setMinimumSize(new Dimension(950, 680));
 				
 				try {
-					String imageUrl = "http://maps.googleapis.com/maps/api/staticmap?center=Los+Angeles,CA&zoom=12&size=1440x1440&scale=2&sensor=false";
+					String imageUrl = "https://maps.googleapis.com/maps/api/staticmap?center=34.090483+-118.293966&zoom=10&size=1280x1280&scale=2&sensor=false";
 					String destinationFile = "map.jpg";
 					URL url = new URL(imageUrl);
 					InputStream is = url.openStream();
@@ -153,11 +153,11 @@ public class ButterGUI extends JFrame{
 				}
 				mapPanel.setLayout(null);
 
-				picLabel = new JLabel(new ImageIcon((new ImageIcon("map.jpg")).getImage().getScaledInstance(1440, 1440, java.awt.Image.SCALE_SMOOTH)));
+				picLabel = new JLabel(new ImageIcon((new ImageIcon("map.jpg")).getImage().getScaledInstance(1200, 1200, java.awt.Image.SCALE_SMOOTH)));
 				
-				map = (new ImageIcon("map.jpg")).getImage().getScaledInstance(1440, 1440, java.awt.Image.SCALE_SMOOTH);
+				map = (new ImageIcon("map.jpg")).getImage().getScaledInstance(1280, 1280, java.awt.Image.SCALE_SMOOTH);
 				mapPicPanel = new PanelDraw();
-				mapPicPanel.setPreferredSize(new Dimension(1440,1440));
+				mapPicPanel.setPreferredSize(new Dimension(1280,1280));
 				
 				JScrollPane jsp = new JScrollPane(mapPicPanel);
 				//JScrollPane jsp = new JScrollPane(picLabel);

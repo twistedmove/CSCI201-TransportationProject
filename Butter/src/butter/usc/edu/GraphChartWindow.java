@@ -1,4 +1,4 @@
-package edu.usc;
+package butter.usc.edu;
 
 import java.awt.Color;
 import java.awt.Dimension;

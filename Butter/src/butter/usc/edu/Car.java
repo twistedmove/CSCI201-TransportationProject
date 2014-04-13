@@ -14,6 +14,8 @@ public class Car {
 	private String direction;
 	private String ramp;
 	private String freeway;
+	private int freewayIndex;
+	private int rampIndex;
 	public Point location;
 	public static final String EAST = "East";
 	public static final String WEST = "West";
@@ -22,8 +24,6 @@ public class Car {
 	public static final int pixelsPerMile = 57;
 	public static final int updatePerSec = 4;
 	public static final double secPerHour = 360.00;
-	
-	
 	
 	public Car() {
 		
@@ -37,8 +37,34 @@ public class Car {
 		this.freeway = freeway;
 		location = new Point(100,100);
 		pixToMove = (int)((speed / secPerHour) * pixelsPerMile / updatePerSec);
+		this.freewayIndex = getFreewayIndex(this);
+		this.rampIndex = getRampIndex(this);
+		//this.location = PathBank.allLocations.get(freewayIndex).get(rampIndex).
+		
+		//System.out.println("Starting position is: ");
 	}
 
+	public static int getFreewayIndex(Car c) {
+		
+		for (int i = 0; i < RampBank.freeways.length; i++) {
+			if (c.freeway.equals(RampBank.freeways[i])) {
+				return i;
+			}
+		}
+		System.out.println("***Freeway not found*** ");
+		return -1;
+	}
+	
+	public static int getRampIndex(Car c) {
+		for (int i = 0; i < RampBank.rampNames[c.freewayIndex].length; i++) {
+			if (c.ramp.equals(RampBank.rampNames[c.freewayIndex][i])) {
+				return i;
+			}
+		}
+		System.out.println("Ramp not found");
+		return -1;
+	}
+	
 	public void updateSpeed() {
 	//	System.out.println("update");
 		if (direction.equals(NORTH) ){
