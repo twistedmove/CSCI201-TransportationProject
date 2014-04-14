@@ -10,12 +10,13 @@ import java.awt.Point;
 public class Car {
 	private int id;
 	private double speed;
-	private int pixToMove;
+	//private int pixToMove;
 	private String direction;
 	private String ramp;
 	private String freeway;
 	private int freewayIndex;
 	private int rampIndex;
+	private int coordinateIndex;
 	public Point point;
 	//public Location currentLocation;
 	public static final String EAST = "East";
@@ -37,10 +38,11 @@ public class Car {
 		this.ramp = ramp;
 		this.freeway = freeway;
 		//location = new Point(100,100);
-		pixToMove = (int)((speed / secPerHour) * pixelsPerMile / updatePerSec);
+	//	pixToMove = (int)((speed / secPerHour) * pixelsPerMile / updatePerSec);
 		this.freewayIndex = getFreewayIndex(this);
 		this.rampIndex = getRampIndex(this);
 		this.point = RampBank.allRamps.get(freewayIndex).get(rampIndex).l.point;// PathBank.allLocations.get(freewayIndex).get(rampIndex).point;
+		this.coordinateIndex = RampBank.allRamps.get(freewayIndex).get(rampIndex).indexOfCoordinate;
 		System.out.println(RampBank.allRamps.get(freewayIndex).get(rampIndex).name + " index coordinate: " + RampBank.allRamps.get(freewayIndex).get(rampIndex).indexOfCoordinate);
 		
 		System.out.println("lat, long: " + RampBank.allRamps.get(freewayIndex).get(rampIndex).l.getLatitude() + ", " + RampBank.allRamps.get(freewayIndex).get(rampIndex).l.getLongitude() + ". " + point);
@@ -70,16 +72,44 @@ public class Car {
 	public void updateSpeed() {
 	//	System.out.println("update");
 		if (direction.equals(NORTH) ){
-			point.y -= pixToMove;
+			//point.y -= pixToMove;
+			// coordinateIndex++;
+			if (freewayIndex == 3) {
+				coordinateIndex++;
+				this.point = PathBank.allLocations.get(freewayIndex).get(coordinateIndex).point;
+			}
+			//this.point = RampBank.allRamps.get(freewayIndex).get(rampIndex).l.point;
 		}
 		if (direction.equals(SOUTH)) {
-			point.y += pixToMove;
+			if (freewayIndex == 3) {
+				coordinateIndex--;
+				this.point = PathBank.allLocations.get(freewayIndex).get(coordinateIndex).point;
+			}
+			//point.y += pixToMove;
 		}
 		if (direction.equals(EAST)) {
-			point.x += pixToMove;
+			if (freewayIndex == 1 || freewayIndex ==2) {
+				coordinateIndex++;
+				this.point = PathBank.allLocations.get(freewayIndex).get(coordinateIndex).point;
+				
+			}
+			else if (freewayIndex == 0) {
+				coordinateIndex--;
+				this.point = PathBank.allLocations.get(freewayIndex).get(coordinateIndex).point;
+			}
+			//point.x += pixToMove;
 		}
 		if (direction.equals(WEST)) {
-			point.x -= pixToMove;
+			if (freewayIndex == 0) {
+				coordinateIndex++;
+				this.point = PathBank.allLocations.get(freewayIndex).get(coordinateIndex).point;
+				
+			}
+			else if (freewayIndex == 1 || freewayIndex ==2) {
+				coordinateIndex--;
+				this.point = PathBank.allLocations.get(freewayIndex).get(coordinateIndex).point;
+			}
+			//point.x -= pixToMove;
 		}
 	}
 	

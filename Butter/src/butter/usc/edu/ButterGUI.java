@@ -79,11 +79,13 @@ public class ButterGUI extends JFrame{
 		
 	
 		Car c = new Car(1,60, "West", "Western Avenue, Normandie Avenue", "10");
-		Car c1 = new Car(2,80, "North","Euclid Avenue", "101");
-		Car c2 = new Car(3,80, "North","Alameda Street Union Station", "101");
+		Car c1 = new Car(2,80, "West","Euclid Avenue", "101");
+		Car c2 = new Car(3,80, "East","Crenshaw Boulevard", "105");
+		Car c3 = new Car(3,80, "North","Moraga Drive", "405");
 		allCars.add(c);
 		allCars.add(c1);
 		allCars.add(c2);
+		allCars.add(c3);
 		
 		final int timeSlice = 250; 
 		Timer timer = new  Timer (timeSlice, new ActionListener () {
@@ -96,7 +98,7 @@ public class ButterGUI extends JFrame{
 			mapPanel.repaint();
 		}
 		});
-		//timer.start();
+		timer.start();
 		mapPanel.repaint();
 	}
 	
