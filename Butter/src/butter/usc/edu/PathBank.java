@@ -19,11 +19,7 @@ public class PathBank {
 		locations105 = new Vector<Location>();
 		locations110 = new Vector<Location>();
 		locations405 = new Vector<Location>();
-		allLocations = new Vector<Vector<Location>>();
-		allLocations.add(locations101);
-		allLocations.add(locations105);
-		allLocations.add(locations110);
-		allLocations.add(locations405);
+
 
 		for (int i = 0; i < coordinates101.length; i++) {
 			locations101.add(new Location(coordinates101[i][0], coordinates101[i][1]));
@@ -59,6 +55,12 @@ public class PathBank {
 		locations101.get(locations101.size() - 1).setLast();
 		locations105.get(locations105.size() - 1).setLast();
 		locations110.get(locations110.size() - 1).setLast();
+		
+		allLocations = new Vector<Vector<Location>>();
+		allLocations.add(locations101);
+		allLocations.add(locations105);
+		allLocations.add(locations110);
+		allLocations.add(locations405);
 	}
 	
 	

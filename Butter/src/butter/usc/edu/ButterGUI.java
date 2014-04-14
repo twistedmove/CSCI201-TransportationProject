@@ -96,7 +96,7 @@ public class ButterGUI extends JFrame{
 			mapPanel.repaint();
 		}
 		});
-		timer.start();
+		//timer.start();
 		mapPanel.repaint();
 	}
 	
@@ -155,11 +155,11 @@ public class ButterGUI extends JFrame{
 				}
 				mapPanel.setLayout(null);
 
-				picLabel = new JLabel(new ImageIcon((new ImageIcon("map.jpg")).getImage().getScaledInstance(1440, 1440, java.awt.Image.SCALE_SMOOTH)));
+				picLabel = new JLabel(new ImageIcon((new ImageIcon("map.jpg")).getImage().getScaledInstance(1450, 1450, java.awt.Image.SCALE_SMOOTH)));
 				
-				map = (new ImageIcon("map.jpg")).getImage().getScaledInstance(1440, 1440, java.awt.Image.SCALE_SMOOTH);
+				map = (new ImageIcon("map.jpg")).getImage().getScaledInstance(1450, 1450, java.awt.Image.SCALE_SMOOTH);
 				mapPicPanel = new PanelDraw();
-				mapPicPanel.setPreferredSize(new Dimension(1440,1440));
+				mapPicPanel.setPreferredSize(new Dimension(1450,1450));
 				
 				JScrollPane jsp = new JScrollPane(mapPicPanel);
 				//JScrollPane jsp = new JScrollPane(picLabel);
@@ -337,7 +337,7 @@ public class ButterGUI extends JFrame{
 			g.clearRect(0, 0, getWidth(), getHeight() );
 			g.drawImage(map, 0, 0, null);
 			for (int i = 0; i < allCars.size(); i++) {
-				g.fillRect(allCars.get(i).location.x, allCars.get(i).location.y, 10, 10);
+				g.fillRect(allCars.get(i).point.x, allCars.get(i).point.y, 10, 10);
 			}
 		}
 	}

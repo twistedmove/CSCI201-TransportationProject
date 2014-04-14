@@ -16,12 +16,13 @@ public class Car {
 	private String freeway;
 	private int freewayIndex;
 	private int rampIndex;
-	public Point location;
+	public Point point;
+	//public Location currentLocation;
 	public static final String EAST = "East";
 	public static final String WEST = "West";
 	public static final String NORTH = "North";
 	public static final String SOUTH = "South";
-	public static final int pixelsPerMile = 57; // Might be 13
+	public static final int pixelsPerMile = 29;
 	public static final int updatePerSec = 4;
 	public static final double secPerHour = 360.00;
 	
@@ -35,13 +36,14 @@ public class Car {
 		this.direction = direction;
 		this.ramp = ramp;
 		this.freeway = freeway;
-		location = new Point(100,100);
+		//location = new Point(100,100);
 		pixToMove = (int)((speed / secPerHour) * pixelsPerMile / updatePerSec);
 		this.freewayIndex = getFreewayIndex(this);
 		this.rampIndex = getRampIndex(this);
-		//this.location = PathBank.allLocations.get(freewayIndex).get(rampIndex).
+		this.point = RampBank.allRamps.get(freewayIndex).get(rampIndex).l.point;// PathBank.allLocations.get(freewayIndex).get(rampIndex).point;
+		System.out.println(RampBank.allRamps.get(freewayIndex).get(rampIndex).name + " index coordinate: " + RampBank.allRamps.get(freewayIndex).get(rampIndex).indexOfCoordinate);
 		
-		//System.out.println("Starting position is: ");
+		System.out.println("lat, long: " + RampBank.allRamps.get(freewayIndex).get(rampIndex).l.getLatitude() + ", " + RampBank.allRamps.get(freewayIndex).get(rampIndex).l.getLongitude() + ". " + point);
 	}
 
 	public static int getFreewayIndex(Car c) {
@@ -68,16 +70,16 @@ public class Car {
 	public void updateSpeed() {
 	//	System.out.println("update");
 		if (direction.equals(NORTH) ){
-			location.y += pixToMove;
+			point.y -= pixToMove;
 		}
 		if (direction.equals(SOUTH)) {
-			location.y -= pixToMove;
+			point.y += pixToMove;
 		}
 		if (direction.equals(EAST)) {
-			location.x += pixToMove;
+			point.x += pixToMove;
 		}
 		if (direction.equals(WEST)) {
-			location.x -= pixToMove;
+			point.x -= pixToMove;
 		}
 	}
 	

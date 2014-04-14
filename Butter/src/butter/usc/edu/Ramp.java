@@ -26,5 +26,6 @@ public class Ramp {
 		this.freeway = freeway;
 		this.indexOfCoordinate = indexOfCoordinate;
 		this.l = l;
+		//System.out.println(name + ", " + indexOfCoordinate + " lat, long: " + l.getLatitude() + ", " + l.getLongitude());
 	}
 }

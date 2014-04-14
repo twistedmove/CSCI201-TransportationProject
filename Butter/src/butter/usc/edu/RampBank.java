@@ -11,7 +11,7 @@ public class RampBank {
 	public static String freeways [] = {"101", "105", "10", "405"};
 
 	public static final int num101ramps = 57;
-	public static final int num105ramps = 20;
+	public static final int num105ramps = 21;
 	public static final int num110ramps = 37;
 	public static final int num405ramps = 30;
 	// See below for variables that hold more data

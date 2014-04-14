@@ -1,5 +1,6 @@
 package butter.usc.edu;
 
+import java.awt.Point;
 import java.io.Serializable;
 
 /**
@@ -9,7 +10,7 @@ import java.io.Serializable;
  */
 public class Location implements Serializable {
 	private static final long serialVersionUID = 1856189671964327747L;
-	
+	public Point point;
 	private double latitude;
 	private double longitude;
 	public Location previous;
@@ -24,6 +25,10 @@ public class Location implements Serializable {
 	public Location(double latitude, double longitude) {
 		this.longitude = longitude;
 		this.latitude = latitude;
+		point = new Point();
+		point.y = (int) ((34.449805 - latitude)*2002.79);
+		point.x = (int)((118.725 + longitude)*1655.64);
+		// System.out.println("lat, long: " + latitude + ", " + longitude + ". " + point);
 	}
 	public void setPrev(Location l) {
 		previous = l;
