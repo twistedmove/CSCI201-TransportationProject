@@ -26,9 +26,9 @@ public class Car {
 	public static final int pixelsPerMile = 29;
 	public static final int updatePerSec = 4;
 	public static final double secPerHour = 360.00;
-	
+
 	public Car() {
-		
+
 	}
 
 	public Car(int id, double speed, String direction, String ramp, String freeway) {
@@ -38,18 +38,18 @@ public class Car {
 		this.ramp = ramp;
 		this.freeway = freeway;
 		//location = new Point(100,100);
-	//	pixToMove = (int)((speed / secPerHour) * pixelsPerMile / updatePerSec);
+		//	pixToMove = (int)((speed / secPerHour) * pixelsPerMile / updatePerSec);
 		this.freewayIndex = getFreewayIndex(this);
 		this.rampIndex = getRampIndex(this);
 		this.point = RampBank.allRamps.get(freewayIndex).get(rampIndex).l.point;// PathBank.allLocations.get(freewayIndex).get(rampIndex).point;
 		this.coordinateIndex = RampBank.allRamps.get(freewayIndex).get(rampIndex).indexOfCoordinate;
 		System.out.println(RampBank.allRamps.get(freewayIndex).get(rampIndex).name + " index coordinate: " + RampBank.allRamps.get(freewayIndex).get(rampIndex).indexOfCoordinate);
-		
+
 		System.out.println("lat, long: " + RampBank.allRamps.get(freewayIndex).get(rampIndex).l.getLatitude() + ", " + RampBank.allRamps.get(freewayIndex).get(rampIndex).l.getLongitude() + ". " + point);
 	}
 
 	public static int getFreewayIndex(Car c) {
-		
+
 		for (int i = 0; i < RampBank.freeways.length; i++) {
 			if (c.freeway.equals(RampBank.freeways[i])) {
 				return i;
@@ -58,7 +58,7 @@ public class Car {
 		System.out.println("***Freeway not found*** ");
 		return -1;
 	}
-	
+
 	public static int getRampIndex(Car c) {
 		for (int i = 0; i < RampBank.rampNames[c.freewayIndex].length; i++) {
 			if (c.ramp.equals(RampBank.rampNames[c.freewayIndex][i])) {
@@ -68,51 +68,44 @@ public class Car {
 		System.out.println("Ramp not found");
 		return -1;
 	}
-	
+
 	public void updateSpeed() {
-	//	System.out.println("update");
-		if (direction.equals(NORTH) ){
-			//point.y -= pixToMove;
-			// coordinateIndex++;
-			if (freewayIndex == 3) {
-				coordinateIndex++;
+		Boolean increased = false;
+		//if (!PathBank.allLocations.get(freewayIndex).get(coordinateIndex).isFirst && !PathBank.allLocations.get(freewayIndex).get(coordinateIndex).isFirst) {
+			if (direction.equals(NORTH) ){
+				if (freewayIndex == 3) { // If on the 405
+					coordinateIndex++;
+					increased = true;
+				}
+			}
+			else if (direction.equals(SOUTH)) {
+				if (freewayIndex == 3) { // If on the 405
+					coordinateIndex--;
+				}
+			}
+			else if (direction.equals(EAST)) {
+				if (freewayIndex == 1 || freewayIndex == 2) { // If on the 101, 105, or 10
+					coordinateIndex++;
+					increased = true;
+				}
+				else if (freewayIndex == 0) {
+					coordinateIndex--;
+				}
+			}
+			else if (direction.equals(WEST)) { 
+				if (freewayIndex == 1 || freewayIndex == 2) { // If on the 101, 105, or 10
+					coordinateIndex--;
+				}
+				else if (freewayIndex == 0) {
+					coordinateIndex++;
+					increased = true;
+				}
+			}
+			// Not going beyond the bounds of the path
+			if ((increased && coordinateIndex < PathBank.allLocations.get(freewayIndex).size()) || (!increased && coordinateIndex >= 0)) {
 				this.point = PathBank.allLocations.get(freewayIndex).get(coordinateIndex).point;
 			}
-			//this.point = RampBank.allRamps.get(freewayIndex).get(rampIndex).l.point;
-		}
-		if (direction.equals(SOUTH)) {
-			if (freewayIndex == 3) {
-				coordinateIndex--;
-				this.point = PathBank.allLocations.get(freewayIndex).get(coordinateIndex).point;
-			}
-			//point.y += pixToMove;
-		}
-		if (direction.equals(EAST)) {
-			if (freewayIndex == 1 || freewayIndex ==2) {
-				coordinateIndex++;
-				this.point = PathBank.allLocations.get(freewayIndex).get(coordinateIndex).point;
-				
-			}
-			else if (freewayIndex == 0) {
-				coordinateIndex--;
-				this.point = PathBank.allLocations.get(freewayIndex).get(coordinateIndex).point;
-			}
-			//point.x += pixToMove;
-		}
-		if (direction.equals(WEST)) {
-			if (freewayIndex == 0) {
-				coordinateIndex++;
-				this.point = PathBank.allLocations.get(freewayIndex).get(coordinateIndex).point;
-				
-			}
-			else if (freewayIndex == 1 || freewayIndex ==2) {
-				coordinateIndex--;
-				this.point = PathBank.allLocations.get(freewayIndex).get(coordinateIndex).point;
-			}
-			//point.x -= pixToMove;
-		}
 	}
-	
 	public int getId() {
 		return id;
 	}
@@ -152,11 +145,11 @@ public class Car {
 	public void setFreeway(String freeway) {
 		this.freeway = freeway;
 	}
-	
+
 	public String toString() {
 		return (id + "," + speed + "," + direction + "," + ramp + "," + freeway);
 	}
-	
+
 	public String insertString() {
 		return (id + "," + speed + ",'" + direction + "','" + ramp + "'," + freeway);
 	}
