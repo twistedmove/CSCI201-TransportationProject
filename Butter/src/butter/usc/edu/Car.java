@@ -23,9 +23,18 @@ public class Car {
 	public static final String WEST = "West";
 	public static final String NORTH = "North";
 	public static final String SOUTH = "South";
-	public static final int pixelsPerMile = 29;
-	public static final int updatePerSec = 4;
+	//public static final int pixelsPerMile = 29;
+	public static final int updatePerSec = 8;
 	public static final double secPerHour = 360.00;
+
+	public double milesPerTimeDiv;
+	private Boolean sloped = false;
+	private double slopeX, slopeY;
+	private double intercept;
+	private int counter;
+	private int divisions;
+	private Point temp;
+	private Boolean slopeDone = false;
 
 	public Car() {
 
@@ -43,6 +52,8 @@ public class Car {
 		this.rampIndex = getRampIndex(this);
 		this.point = RampBank.allRamps.get(freewayIndex).get(rampIndex).l.point;// PathBank.allLocations.get(freewayIndex).get(rampIndex).point;
 		this.coordinateIndex = RampBank.allRamps.get(freewayIndex).get(rampIndex).indexOfCoordinate;
+		milesPerTimeDiv = speed / secPerHour / updatePerSec;
+		System.out.println("Car " + id + " with speed: " + speed + " miles per time div: " + milesPerTimeDiv);
 		System.out.println(RampBank.allRamps.get(freewayIndex).get(rampIndex).name + " index coordinate: " + RampBank.allRamps.get(freewayIndex).get(rampIndex).indexOfCoordinate);
 
 		System.out.println("lat, long: " + RampBank.allRamps.get(freewayIndex).get(rampIndex).l.getLatitude() + ", " + RampBank.allRamps.get(freewayIndex).get(rampIndex).l.getLongitude() + ". " + point);
@@ -71,40 +82,175 @@ public class Car {
 
 	public void updateSpeed() {
 		Boolean increased = false;
-		//if (!PathBank.allLocations.get(freewayIndex).get(coordinateIndex).isFirst && !PathBank.allLocations.get(freewayIndex).get(coordinateIndex).isFirst) {
+		double tempX = 0;
+		double tempY = 0;
+		if (sloped) {
+			// System.out.println("Sloped, ");
+			point.x += (int) (slopeX); 
+			point.y += (int) (slopeY);
+			if (counter == (divisions - 1)) {
+				sloped = false;
+				slopeDone = true;
+				//System.out.println("Quit");
+			}
+			else {
+				counter++;
+			}
+			//System.out.println(point);
+		}
+
+		else {
 			if (direction.equals(NORTH) ){
 				if (freewayIndex == 3) { // If on the 405
-					coordinateIndex++;
-					increased = true;
+					//System.out.println(point);
+					//System.out.println(PathBank.allLocations.get(freewayIndex).get(coordinateIndex).milesToNext);
+					//System.out.println("Next should be: " + PathBank.allLocations.get(freewayIndex).get(coordinateIndex).next.point);
+					tempX = PathBank.allLocations.get(freewayIndex).get(coordinateIndex).next.point.x - PathBank.allLocations.get(freewayIndex).get(coordinateIndex).point.x;
+					tempY = PathBank.allLocations.get(freewayIndex).get(coordinateIndex).next.point.y - PathBank.allLocations.get(freewayIndex).get(coordinateIndex).point.y;
+					if ((Math.abs(tempX) > 1 || Math.abs(tempY) > 1 ) && PathBank.allLocations.get(freewayIndex).get(coordinateIndex).milesToNext >= 2*milesPerTimeDiv && !slopeDone) {
+						//slope = tempY / tempX;
+						counter = 1;
+						double rawDiv = Math.floor(PathBank.allLocations.get(freewayIndex).get(coordinateIndex).milesToNext / milesPerTimeDiv);
+						divisions = (int)(Math.min(rawDiv, Math.max(Math.abs(tempX), Math.abs(tempY))));
+						slopeX = tempX / (double)divisions;
+						slopeY = tempY / (double)divisions;
+						//System.out.println("Divisions: " + divisions + " rawdiv " + rawDiv + " slope: " + slopeX +", " + slopeY + " total to move: " + tempX + ", " + tempY);
+
+						//temp = point;
+						sloped = true;
+					}
+					else { // This includes slopeDone
+						coordinateIndex++;
+						increased = true;
+					}
 				}
 			}
-			else if (direction.equals(SOUTH)) {
+			else if (direction.equals(SOUTH)) { 
 				if (freewayIndex == 3) { // If on the 405
-					coordinateIndex--;
+					System.out.println(PathBank.allLocations.get(freewayIndex).get(coordinateIndex).milesToPrev);
+					tempX = PathBank.allLocations.get(freewayIndex).get(coordinateIndex).point.x - PathBank.allLocations.get(freewayIndex).get(coordinateIndex).previous.point.x;
+					tempY = PathBank.allLocations.get(freewayIndex).get(coordinateIndex).point.y - PathBank.allLocations.get(freewayIndex).get(coordinateIndex).previous.point.y;
+
+					if ((Math.abs(tempX) > 1 || Math.abs(tempY) > 1 ) && PathBank.allLocations.get(freewayIndex).get(coordinateIndex).milesToNext >= 2*milesPerTimeDiv && !slopeDone) {
+						//slope = tempY / tempX;
+						counter = 1;
+						double rawDiv = Math.floor(PathBank.allLocations.get(freewayIndex).get(coordinateIndex).milesToPrev / milesPerTimeDiv);
+						divisions = (int)(Math.min(rawDiv, Math.max(Math.abs(tempX), Math.abs(tempY))));
+						slopeX = tempX / (double)divisions;
+						slopeY = tempY / (double)divisions;
+						//System.out.println("Divisions: " + divisions + " rawdiv " + rawDiv + " slope: " + slopeX +", " + slopeY + " total to move: " + tempX + ", " + tempY);
+
+						//temp = point;
+						sloped = true;
+					}
+					else {
+						coordinateIndex--;
+					}
 				}
 			}
 			else if (direction.equals(EAST)) {
 				if (freewayIndex == 1 || freewayIndex == 2) { // If on the 101, 105, or 10
-					coordinateIndex++;
-					increased = true;
+					System.out.println(PathBank.allLocations.get(freewayIndex).get(coordinateIndex).milesToNext);
+					tempX = PathBank.allLocations.get(freewayIndex).get(coordinateIndex).next.point.x - PathBank.allLocations.get(freewayIndex).get(coordinateIndex).point.x;
+					tempY = PathBank.allLocations.get(freewayIndex).get(coordinateIndex).next.point.y - PathBank.allLocations.get(freewayIndex).get(coordinateIndex).point.y;
+					if ((Math.abs(tempX) > 1 || Math.abs(tempY) > 1 ) && PathBank.allLocations.get(freewayIndex).get(coordinateIndex).milesToNext >= 2*milesPerTimeDiv && !slopeDone) {
+						//slope = tempY / tempX;
+						counter = 1;
+						double rawDiv = Math.floor(PathBank.allLocations.get(freewayIndex).get(coordinateIndex).milesToNext / milesPerTimeDiv);
+						divisions = (int)(Math.min(rawDiv, Math.max(Math.abs(tempX), Math.abs(tempY))));
+						slopeX = tempX / (double)divisions;
+						slopeY = tempY / (double)divisions;
+						//System.out.println("Divisions: " + divisions + " rawdiv " + rawDiv + " slope: " + slopeX +", " + slopeY + " total to move: " + tempX + ", " + tempY);
+						
+						//temp = point;
+						sloped = true;
+					}
+					else {
+					
+						coordinateIndex++;
+						increased = true;
+					}
+					//increased = true;
 				}
 				else if (freewayIndex == 0) {
-					coordinateIndex--;
+					System.out.println(PathBank.allLocations.get(freewayIndex).get(coordinateIndex).milesToPrev);
+					tempX = PathBank.allLocations.get(freewayIndex).get(coordinateIndex).point.x - PathBank.allLocations.get(freewayIndex).get(coordinateIndex).previous.point.x;
+					tempY = PathBank.allLocations.get(freewayIndex).get(coordinateIndex).point.y - PathBank.allLocations.get(freewayIndex).get(coordinateIndex).previous.point.y;
+					if ((Math.abs(tempX) > 1 || Math.abs(tempY) > 1 ) && PathBank.allLocations.get(freewayIndex).get(coordinateIndex).milesToNext >= 2*milesPerTimeDiv && !slopeDone) {
+						//slope = tempY / tempX;
+						counter = 1;
+						double rawDiv = Math.floor(PathBank.allLocations.get(freewayIndex).get(coordinateIndex).milesToPrev / milesPerTimeDiv);
+						divisions = (int)(Math.min(rawDiv, Math.max(Math.abs(tempX), Math.abs(tempY))));
+						slopeX = tempX / (double)divisions;
+						slopeY = tempY / (double)divisions;
+						//System.out.println("Divisions: " + divisions + " rawdiv " + rawDiv + " slope: " + slopeX +", " + slopeY + " total to move: " + tempX + ", " + tempY);
+						
+						//temp = point;
+						sloped = true;
+					}
+					
+					else {
+						coordinateIndex--;
+					}
+					
 				}
 			}
 			else if (direction.equals(WEST)) { 
 				if (freewayIndex == 1 || freewayIndex == 2) { // If on the 101, 105, or 10
-					coordinateIndex--;
+					System.out.println(PathBank.allLocations.get(freewayIndex).get(coordinateIndex).milesToPrev);
+					tempX = PathBank.allLocations.get(freewayIndex).get(coordinateIndex).point.x - PathBank.allLocations.get(freewayIndex).get(coordinateIndex).previous.point.x;
+					tempY = PathBank.allLocations.get(freewayIndex).get(coordinateIndex).point.y - PathBank.allLocations.get(freewayIndex).get(coordinateIndex).previous.point.y;
+
+					if ((Math.abs(tempX) > 1 || Math.abs(tempY) > 1 ) && PathBank.allLocations.get(freewayIndex).get(coordinateIndex).milesToNext >= 2*milesPerTimeDiv && !slopeDone) {
+						//slope = tempY / tempX;
+						counter = 1;
+						double rawDiv = Math.floor(PathBank.allLocations.get(freewayIndex).get(coordinateIndex).milesToPrev / milesPerTimeDiv);
+						divisions = (int)(Math.min(rawDiv, Math.max(Math.abs(tempX), Math.abs(tempY))));
+						slopeX = tempX / (double)divisions;
+						slopeY = tempY / (double)divisions;
+						//System.out.println("Divisions: " + divisions + " rawdiv " + rawDiv + " slope: " + slopeX +", " + slopeY + " total to move: " + tempX + ", " + tempY);
+						
+						//temp = point;
+						sloped = true;
+					}
+					
+					else {
+						coordinateIndex--;
+					}
 				}
 				else if (freewayIndex == 0) {
-					coordinateIndex++;
-					increased = true;
+					System.out.println(PathBank.allLocations.get(freewayIndex).get(coordinateIndex).milesToNext);
+					tempX = PathBank.allLocations.get(freewayIndex).get(coordinateIndex).next.point.x - PathBank.allLocations.get(freewayIndex).get(coordinateIndex).point.x;
+					tempY = PathBank.allLocations.get(freewayIndex).get(coordinateIndex).next.point.y - PathBank.allLocations.get(freewayIndex).get(coordinateIndex).point.y;
+					if ((Math.abs(tempX) > 1 || Math.abs(tempY) > 1 ) && PathBank.allLocations.get(freewayIndex).get(coordinateIndex).milesToNext >= 2*milesPerTimeDiv && !slopeDone) {
+						//slope = tempY / tempX;
+						counter = 1;
+						double rawDiv = Math.floor(PathBank.allLocations.get(freewayIndex).get(coordinateIndex).milesToNext / milesPerTimeDiv);
+						divisions = (int)(Math.min(rawDiv, Math.max(Math.abs(tempX), Math.abs(tempY))));
+						slopeX = tempX / (double)divisions;
+						slopeY = tempY / (double)divisions;
+						//System.out.println("Divisions: " + divisions + " rawdiv " + rawDiv + " slope: " + slopeX +", " + slopeY + " total to move: " + tempX + ", " + tempY);
+						
+						//temp = point;
+						sloped = true;
+					}
+					else {
+					
+						coordinateIndex++;
+						increased = true;
+					}
+//					increased = true;
 				}
 			}
 			// Not going beyond the bounds of the path
-			if ((increased && coordinateIndex < PathBank.allLocations.get(freewayIndex).size()) || (!increased && coordinateIndex >= 0)) {
+			if (((increased && coordinateIndex < PathBank.allLocations.get(freewayIndex).size()) || (!increased && coordinateIndex >= 0)) && !sloped) {
 				this.point = PathBank.allLocations.get(freewayIndex).get(coordinateIndex).point;
+				System.out.println("Delta X, Y: " + tempX + ", " + tempY);
 			}
+			slopeDone = false;
+		}
+
+
 	}
 	public int getId() {
 		return id;
