@@ -81,10 +81,11 @@ public class ButterGUI extends JFrame{
 		Car c3 = new Car(4,60, "North","Moraga Drive", "405");
 		Car c4 = new Car(5,90, "North","Sherman Way", "405");
 		allCars.add(c);
-		allCars.add(c1);
-		allCars.add(c2);
-		allCars.add(c3);
-		allCars.add(c4);
+		///allCars.add(c1);
+		//allCars.add(c2);
+		//allCars.add(c3);
+		//allCars.add(c4);
+		// the 10 has issues
 		
 		final int timeSlice = 250; 
 		Timer timer = new  Timer (timeSlice, new ActionListener () {
