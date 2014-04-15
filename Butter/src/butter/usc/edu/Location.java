@@ -2,6 +2,7 @@ package butter.usc.edu;
 
 import java.awt.Point;
 import java.io.Serializable;
+import java.util.Vector;
 
 /**
  * Just a object to package up longitude and latitude pairs.
@@ -15,22 +16,34 @@ public class Location implements Serializable {
 	private double longitude;
 	double milesToNext;
 	double milesToPrev;
+	
 	public Location previous;
 	public Location next;
-
+	
+///////////////////////////////////////////////////////////////////////////////////////////////////
+	public int freeway;
+	public int branchNum;
+	public Location branch;
+	public double milesToBranch;
+///////////////////////////////////////////////////////////////////////////////////////////////////
+	
 	//public double previousDist;
 	//public double nextDist;
 
 	Boolean isFirst = false;
 	Boolean isLast = false;
 
-	public Location(double latitude, double longitude) {
+	public Location(double latitude, double longitude, int freeway, int branchNum) {
 		this.longitude = longitude;
 		this.latitude = latitude;
 		point = new Point();
 		point.y = (int) ((34.449805 - latitude)*2002.79);
 		point.x = (int)((118.725 + longitude)*1655.64 + 6);
 		// System.out.println("lat, long: " + latitude + ", " + longitude + ". " + point);
+		
+		this.freeway = freeway;
+		this.branchNum = branchNum;
+		
 	}
 	public void setPrev(Location l) {
 		previous = l;
@@ -45,7 +58,14 @@ public class Location implements Serializable {
 		milesToNext = getDistanceFromLatLonInM(this.latitude, this.longitude, l.latitude, l.longitude);
 		l.milesToPrev = this.milesToNext;
 	}
-
+	
+	public void setBranch(Location l) {
+		branch = l;
+		l.branch = this;
+		milesToBranch = getDistanceFromLatLonInM(this.latitude, this.longitude, l.latitude, l.longitude);
+		l.milesToBranch = this.milesToPrev;
+	}
+	
 	/**
 	 * @return the latitude
 	 */
@@ -61,7 +81,9 @@ public class Location implements Serializable {
 	}
 
 	public String toString() {
-		return (latitude + ", " + longitude);
+		String str = ("[" + latitude + ", " + longitude + "] " 
+				+ "\n\t\tfreeway: " + freeway + " branch: " + branch);
+		return str;
 	}
 
 	public void setLast() {

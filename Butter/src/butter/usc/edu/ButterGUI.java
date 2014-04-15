@@ -65,7 +65,12 @@ public class ButterGUI extends JFrame{
 		this.getContentPane().setLayout(null);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		allCars = new Vector<Car>();
-		pb = new PathBank();
+		try {
+			pb = new PathBank();
+		} catch (TxtFormatException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		rb = new RampBank();
 
 		importImage();
