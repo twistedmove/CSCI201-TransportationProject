@@ -65,10 +65,10 @@ public class PathBank {
 //			locations405.get(i).setPrevVector(locations405.get(i-1));
 //		}
 		
-		locations405.get(0).setLast(); 
-		locations101.get(0).setLast();
-		locations105.get(0).setLast();
-		locations10.get(0).setLast();
+		locations405.get(0).setFirst(); 
+		locations101.get(0).setFirst();
+		locations105.get(0).setFirst();
+		locations10.get(0).setFirst();
 		
 		locations405.get(locations405.size() - 1).setLast();
 		locations101.get(locations101.size() - 1).setLast();
@@ -143,6 +143,7 @@ public class PathBank {
 		}
 	}
 	
+}
 //	public static Double coordinates101 [][] = {{34.02624,-118.20833},
 //			{34.02605,-118.20785},
 //			{34.02574,-118.20698},
@@ -1339,4 +1340,4 @@ public class PathBank {
 //			{34.29336,-118.46918},
 //			{34.29359,-118.46941},
 //			{34.29588,-118.47197}};
-}
+

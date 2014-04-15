@@ -81,16 +81,24 @@ public class ButterGUI extends JFrame{
 		trafficHistoryDatabase.start();
 	
 		Car c = new Car(1,60, "West", "Western Avenue, Normandie Avenue", "10");
-		Car c1 = new Car(2,70, "West","Euclid Avenue", "101");
+		Car c1 = new Car(2,70, "West","Los Angeles Street", "101");
+		
 		Car c2 = new Car(3,80, "East","Crenshaw Boulevard", "105");
-		Car c3 = new Car(4,60, "North","Moraga Drive", "405");
-		Car c4 = new Car(5,90, "North","Sherman Way", "405");
+		Car c3 = new Car(4,60, "North","Sherman Way", "405");
+		Car c4 = new Car(5,90, "South","Sherman Way", "405");
+		
+		Car c5 = new Car(6,80, "East", "Western Avenue, Normandie Avenue", "10");
+		Car c6 = new Car(7,70, "East","Los Angeles Street", "101");
+		Car c7 = new Car(8,80, "West","Crenshaw Boulevard", "105");
+		
 		allCars.add(c);
-		///allCars.add(c1);
-		//allCars.add(c2);
-		//allCars.add(c3);
-		//allCars.add(c4);
-		// the 10 has issues
+		allCars.add(c1);
+		allCars.add(c2);
+		allCars.add(c3);
+		allCars.add(c4);
+		allCars.add(c5);
+		allCars.add(c6);
+		allCars.add(c7);
 		
 		final int timeSlice = 250; 
 		Timer timer = new  Timer (timeSlice, new ActionListener () {
@@ -177,7 +185,7 @@ public class ButterGUI extends JFrame{
 					toDestinationPanel.setBounds(4, 66, 278, 54);
 					toDestinationPanel.setBorder(new TitledBorder("To")); 
 
-					Object hwyOptions [] = {"US 101", "I-105", "I-110", "I-405"};
+					Object hwyOptions [] = {"US 101", "I-105", "I-10", "I-405"};
 					fromHighway = new JComboBox(hwyOptions);
 					fromHighway.setBounds(8, 16, 70, 30);
 					fromHighway.setSelectedIndex(0);
