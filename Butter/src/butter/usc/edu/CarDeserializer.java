@@ -28,13 +28,19 @@ import com.google.gson.stream.JsonReader;
  */
 
 public class CarDeserializer {
+	private String url;
+	public CarDeserializer(String url) {
+		// TODO Auto-generated constructor stub
+		this.url = url;
+//		this.start();
+	}
 	
 	/**
 	 * Overrides default JsonDeserializer functionality so that variable names do not have to match.
 	 * @author LorraineSposto
 	 *
 	 */
-	static class CustomCarDeserializer implements JsonDeserializer<Car> {
+	class CustomCarDeserializer implements JsonDeserializer<Car> {
 		@Override
 		public Car deserialize(final JsonElement json, final Type type,
 				final JsonDeserializationContext context) throws JsonParseException {
@@ -56,34 +62,6 @@ public class CarDeserializer {
 			return c;
 		}
 	}
-
-	/**
-	 * Reads a JSON file containing an array of cars and deserializes it into a Vector.
-	 * Currently the on/off ramps don't work and just produce null.
-	 * @param filename - The filename of the JSON file
-	 * @return A vector of Cars
-	 * @throws IOException
-	 */
-
-	public static Vector<Car> deserializeArrayFromFile(String filename) throws IOException {
-		JsonReader reader = null;
-		try {
-			Vector<Car> cars = new Vector<Car>();
-			GsonBuilder gsonBuilder = new GsonBuilder();
-			gsonBuilder.registerTypeAdapter(Car.class, new CustomCarDeserializer());
-			Gson gson = gsonBuilder.create();
-	
-			FileInputStream in = new FileInputStream(new File(filename));
-			reader = new JsonReader(new InputStreamReader(in, "UTF-8"));
-	
-			Type collectionType = new TypeToken<Vector<Car>>(){}.getType();
-			cars = gson.fromJson(reader, collectionType);
-			return cars;
-		} finally {
-			if (reader != null) reader.close();
-		}
-		
-	}
 	
 	/**
 	 * Reads a JSON from a URL stream containing an array of cars and deserializes it into a Vector.
@@ -93,7 +71,7 @@ public class CarDeserializer {
 	 * @throws IOException
 	 */
 	
-	public static Vector<Car> deserializeArrayFromURL(String urlString) throws IOException {
+	public Vector<Car> deserializeArrayFromURL(String urlString) throws IOException {
 		JsonReader reader = null;
 		try {
 			Vector<Car> cars = new Vector<Car>();
@@ -112,17 +90,4 @@ public class CarDeserializer {
 	            reader.close();
 	    }
 	}
-	
-//	public static void main(String[] args) {
-//		try {
-//			Vector<Car> cars = CarDeserializer.deserializeArrayFromURL("http://www-scf.usc.edu/~csci201/mahdi_project/test.json");
-////			Vector<Car> cars = CarDeserializer.deserializeArrayFromFile("test-formatted.json");
-//			for(Car c : cars) {
-//				System.out.println(c);
-//			}
-//		} catch (IOException e) {
-//			System.out.println(e.getMessage());
-//		}
-//	}
-	
 }

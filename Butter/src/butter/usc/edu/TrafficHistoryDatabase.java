@@ -10,10 +10,12 @@ import java.util.Vector;
 
 /**
  * Create the database if it does not exist. Use for inserting data into database.
+ * Extends Thread.
+ * Calls to server using CarDeserializer every so often to fetch data.
  * @author LorraineSposto
  *
  */
-public class TrafficHistoryDatabase {
+public class TrafficHistoryDatabase extends Thread {
 	
 	private final String USERNAME = "root";
 	private final String PASSWORD = "pass";
@@ -48,6 +50,15 @@ public class TrafficHistoryDatabase {
 	private String ramp = null;
 	private String freeway = null;
 	private Timestamp datetime = null;
+	
+	private CarDeserializer carDeserializer = new CarDeserializer("http://www-scf.usc.edu/~csci201/mahdi_project/test.json");
+	
+	private Vector<Car> allCars;
+	
+	public TrafficHistoryDatabase(Vector<Car> cars) {
+		super();
+		allCars = cars;
+	}
 	
 	/**
 	 * Tries to establish connection with the database. If it cannot (the database doesn't exist), it connects to the host.
@@ -146,8 +157,23 @@ public class TrafficHistoryDatabase {
 			createDatabase();
 			createCurrentTrafficTable();
 			createHistoricalTrafficTable();
+			
+			while(true) {
+//				allCars = carDeserializer.deserializeArrayFromURL("http://www-scf.usc.edu/~csci201/mahdi_project/test.json");
+//				addNewCarData();
+				System.out.println("PRETENDING TO CALL SERVER LUL SLEEP FOR 15 SEC");
+				Thread.sleep(15000);
+			}
 		} catch (SQLException e) {
 			System.out.println("SQLException: " + e.getMessage());
+		} 
+//		catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+		catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 	
@@ -197,11 +223,11 @@ public class TrafficHistoryDatabase {
 	 * (2) Inserts new data into current table
 	 * @param cars - a vector of cars
 	 */
-	public void addNewCarData(Vector<Car> cars) {
+	public void addNewCarData() {
 		try {
 			String sql = "";
 			moveCurrentToHistorical();
-			for(Car c : cars) {
+			for(Car c : allCars) {
 				sql = "INSERT INTO " + CURRENT_TABLE + " VALUES (" + c.insertString() + ",?)";
 				preparedStatement = connection.prepareStatement(sql);
 				preparedStatement.setTimestamp(1, new Timestamp(new java.util.Date().getTime()));
