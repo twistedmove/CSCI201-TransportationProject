@@ -33,6 +33,7 @@ public class PathBank {
 		for (int i = 0; i < coordinates405.length; i++) {
 			locations405.add(new Location(coordinates405[i][0], coordinates405[i][1]));
 		}
+		
 		for (int i = 1; i < coordinates101.length; i++) { // start second in, end last
 			locations101.get(i).setPrev(locations101.get(i-1)); // sets i-1's next to i
 		}
