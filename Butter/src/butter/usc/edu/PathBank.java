@@ -47,10 +47,10 @@ public class PathBank {
 			locations405.get(i).setPrev(locations405.get(i-1));
 		}
 		
-		locations405.get(0).setLast(); 
-		locations101.get(0).setLast();
-		locations105.get(0).setLast();
-		locations10.get(0).setLast();
+		locations405.get(0).setFirst(); 
+		locations101.get(0).setFirst();
+		locations105.get(0).setFirst();
+		locations10.get(0).setFirst();
 		
 		locations405.get(locations405.size() - 1).setLast();
 		locations101.get(locations101.size() - 1).setLast();
@@ -63,7 +63,6 @@ public class PathBank {
 		allLocations.add(locations10);
 		allLocations.add(locations405);
 	}
-	
 	
 	public static Double coordinates101 [][] = {{34.02624,-118.20833},
 			{34.02605,-118.20785},
