@@ -12,7 +12,7 @@ public class RampBank {
 
 	public static final int num101ramps = 57;
 	public static final int num105ramps = 21;
-	public static final int num110ramps = 37;
+	public static final int num10ramps = 37;
 	public static final int num405ramps = 30;
 	// See below for variables that hold more data
 
@@ -31,8 +31,8 @@ public class RampBank {
 			ramps105.add(new Ramp(rampNames[1][i], 105, indices105[i], PathBank.locations105.get(indices105[i])));
 		}
 
-		for (int i = 0; i < num110ramps; i++) {
-			ramps110.add(new Ramp(rampNames[2][i], 110, indices110[i], PathBank.locations110.get(indices110[i])));
+		for (int i = 0; i < num10ramps; i++) {
+			ramps110.add(new Ramp(rampNames[2][i], 110, indices10[i], PathBank.locations10.get(indices10[i])));
 		}
 
 		for (int i = 0; i < num405ramps; i++) {
@@ -194,7 +194,7 @@ public class RampBank {
 	
 	public static int indices101 [] = {0, 35, 39, 46, 58, 62, 67, 72, 73, 78, 84, 85, 86, 87, 89, 90, 98, 100, 105, 107, 111, 115, 118, 128, 129, 137, 140, 142, 146, 160, 164, 169, 173, 181, 192, 193, 195, 197, 207, 215, 226, 235, 243, 252, 257, 265, 272, 279, 286, 292, 300, 302, 304, 311, 318, 321, 327};
 	public static int indices105 [] = {0, 9, 14, 27, 32, 49, 55, 67, 83, 91, 114, 124, 154, 166, 176, 190, 196, 199, 205, 211, 215};
-	public static int indices110 [] = {336, 314, 313, 305, 295, 287, 279, 269, 258, 247, 236, 224, 217, 206, 200, 192, 180, 178, 176, 164, 152, 144, 138, 135, 133, 118, 109, 106, 90, 75, 69, 63, 39, 36, 17, 10, 0};
+	public static int indices10 [] = {336, 314, 313, 305, 295, 287, 279, 269, 258, 247, 236, 224, 217, 206, 200, 192, 180, 178, 176, 164, 152, 144, 138, 135, 133, 118, 109, 106, 90, 75, 69, 63, 39, 36, 17, 10, 0};
 	public static int indices405 [] = {0, 41, 45, 53, 56, 57, 66, 69, 76, 80, 91, 97, 110, 118, 123, 127, 143, 181, 212, 223, 237, 251, 260, 266, 269, 280, 285, 290, 296, 313};
-	public static int allIndices[][] = {indices101, indices105, indices110, indices405};
+	public static int allIndices[][] = {indices101, indices105, indices10, indices405};
 }

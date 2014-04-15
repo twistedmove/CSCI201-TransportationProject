@@ -39,7 +39,7 @@ public class GraphChartWindow extends JFrame{
 		super("Graph");
 		setSize(882, 814);
 		setLocation(100,100);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setResizable(false);
 		getContentPane().setLayout(null);
 

@@ -5,7 +5,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.*;
-import java.util.Properties;
 import java.util.Vector;
 
 /**
@@ -172,8 +171,10 @@ public class TrafficHistoryDatabase extends Thread {
 //			e.printStackTrace();
 //		}
 		catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println("TrafficHistoryDatabase.run(): InterruptedException: " + e.getMessage());
+//			for (Car c : allCars) {
+//				c.interrupt();
+//			} 
 		}
 	}
 	
@@ -223,7 +224,7 @@ public class TrafficHistoryDatabase extends Thread {
 	 * (2) Inserts new data into current table
 	 * @param cars - a vector of cars
 	 */
-	public void addNewCarData() {
+	private void addNewCarData() {
 		try {
 			String sql = "";
 			moveCurrentToHistorical();

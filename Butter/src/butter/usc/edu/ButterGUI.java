@@ -238,7 +238,8 @@ public class ButterGUI extends JFrame{
 				viewDataButton.setForeground(Color.WHITE);
 				viewDataButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						
+						// TODO
+						new GraphChartWindow();
 					}
 				});
 
