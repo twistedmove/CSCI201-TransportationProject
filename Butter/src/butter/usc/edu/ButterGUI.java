@@ -6,6 +6,8 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -37,7 +39,7 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-public class ButterGUI extends JFrame{
+public class ButterGUI extends JFrame implements MouseListener{
 	private static final long serialVersionUID = 367534120156013938L;
 
 	public JPanel mapPanel;
@@ -58,6 +60,7 @@ public class ButterGUI extends JFrame{
 	ImageIcon sliced;
 	private Vector<Car> allCars;
 	Image map;
+	@SuppressWarnings("unused")
 	private PathBank pb;
 	private RampBank rb;
 
@@ -71,9 +74,8 @@ public class ButterGUI extends JFrame{
 		allCars = new Vector<Car>();
 		try {
 			pb = new PathBank();
-		} catch (TxtFormatException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+		} catch (TxtFormatException tfe) {
+			jta.setText(jta.getText() + "Butter: TFE Exception. Contact Admin." + "\n");
 		}
 		rb = new RampBank();
 
@@ -261,7 +263,7 @@ public class ButterGUI extends JFrame{
 				viewDataButton.setForeground(Color.WHITE);
 				viewDataButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						jta.setText(jta.getText() + "Butter: View Data!" + "\n");
+						jta.setText(jta.getText() + "Butter - View Data!" + "\n");
 						new GraphChartWindow();
 					}
 				});
@@ -272,7 +274,7 @@ public class ButterGUI extends JFrame{
 				exportDataButton.setForeground(Color.WHITE);
 				exportDataButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						jta.setText(jta.getText() + "Butter: Export Data!" + "\n");
+						jta.setText(jta.getText() + "Butter - Export Data!" + "\n");
 						try {
 							JFileChooser jfc = new JFileChooser(); 
 					    	FileNameExtensionFilter csv = new FileNameExtensionFilter("CSV (.csv)", "csv");  
@@ -280,7 +282,7 @@ public class ButterGUI extends JFrame{
 			            		jfc.setFileFilter(csv);
 			            	int result = jfc.showSaveDialog(null);	
 			            	if(result != JFileChooser.APPROVE_OPTION){
-								jta.setText(jta.getText() + "Butter: Export Canceled!" + "\n");
+								jta.setText(jta.getText() + "Butter - Export Canceled!" + "\n");
 								return;
 							} else {
 								File file = jfc.getSelectedFile();
@@ -289,7 +291,7 @@ public class ButterGUI extends JFrame{
 								    file_name += ".csv";
 								}
 								trafficHistoryDatabase.exportToCSV(file_name);
-								jta.setText(jta.getText() + "Butter: Export Successful!" + "\n");
+								jta.setText(jta.getText() + "Butter - Export Successful!" + "\n");
 							}
 						} catch (IOException ioe){
 							ioe.getMessage();
@@ -425,14 +427,35 @@ public class ButterGUI extends JFrame{
 			UIManager.setLookAndFeel(
             UIManager.getCrossPlatformLookAndFeelClassName());
 		} catch (UnsupportedLookAndFeelException e) {
-			// do something
 		} catch (ClassNotFoundException e) {
-			// do something
 		} catch (InstantiationException e) {
-			// do something
 		} catch (IllegalAccessException e) {
-			// do something
 		}
 		new ButterGUI();
 	}
+
+	@Override
+	public void mouseClicked(MouseEvent e) {}
+
+	@Override
+	public void mousePressed(MouseEvent e) {}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		for (int i=0; i<allCars.size(); i++){
+			if (allCars.get(i).checkPoint(e.getX(), e.getY())){
+				jta.setText(jta.getText() + "Butter - Car: " + allCars.get(i).getId() + "\n");
+				jta.setText(jta.getText() + "		Speed: " + allCars.get(i).getSpeed() + "\n");
+				jta.setText(jta.getText() + "		Freeway: " + allCars.get(i).getFreeway() + "\n");			
+				jta.setText(jta.getText() + "		Direction: " + allCars.get(i).getDirection() + "\n");		
+				jta.setText(jta.getText() + "		Ramp: " + allCars.get(i).getRamp() + "\n");
+			}
+		}
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {}
+
+	@Override
+	public void mouseExited(MouseEvent e) {}
 }

@@ -1,6 +1,7 @@
 package butter.usc.edu;
 
 import java.awt.Point;
+import java.awt.geom.Rectangle2D;
 
 /**
  * Car class, so far only holding the essential values of a car as outlined in test.json
@@ -209,6 +210,27 @@ public class Car {
 			slopeDone = false;
 		}
 	}
+	
+	public boolean checkPoint(int xc, int yc){
+		Rectangle2D r2d = null;
+		if (direction.equals(WEST) || direction.equals(EAST)){
+			r2d = new Rectangle2D.Double(x, y, 24, 12);
+			if (r2d.contains(xc,yc-45)){
+				return true;
+			} else{
+				return false;
+			}
+		} else if(direction.equals(NORTH) || direction.equals(SOUTH)){
+			r2d = new Rectangle2D.Double(x, y, 12, 24);
+			if (r2d.contains(xc,yc-45)){
+				return true;
+			} else{
+				return false;
+			}
+		}
+		return false;
+	}
+	
 	public int getId() {
 		return id;
 	}
