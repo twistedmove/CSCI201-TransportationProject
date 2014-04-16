@@ -163,10 +163,10 @@ public class ButterGUI extends JFrame implements MouseListener{
 				mapPanel.setLayout(null);
 
 				picLabel = new JLabel(new ImageIcon((new ImageIcon("map.jpg")).getImage().getScaledInstance(1450, 1450, java.awt.Image.SCALE_SMOOTH)));
-				
 				map = (new ImageIcon("map.jpg")).getImage().getScaledInstance(1450, 1450, java.awt.Image.SCALE_SMOOTH);
 				mapPicPanel = new PanelDraw();
 				mapPicPanel.setPreferredSize(new Dimension(1450,1450));
+				mapPicPanel.addMouseListener(this);
 				
 				JScrollPane jsp = new JScrollPane(mapPicPanel);
 				//JScrollPane jsp = new JScrollPane(picLabel);
@@ -435,23 +435,23 @@ public class ButterGUI extends JFrame implements MouseListener{
 	}
 
 	@Override
-	public void mouseClicked(MouseEvent e) {}
+	public void mouseClicked(MouseEvent e) {
+		for (int i=0; i<allCars.size(); i++){
+			if (allCars.get(i).checkPoint(e.getX(), e.getY())){
+				jta.setText(jta.getText() + "Butter - Car: " + allCars.get(i).getId() + "\n");
+				jta.setText(jta.getText() + "            Speed: " + allCars.get(i).getSpeed() + "\n");
+				jta.setText(jta.getText() + "            Freeway: " + allCars.get(i).getFreeway() + "\n");			
+				jta.setText(jta.getText() + "            Direction: " + allCars.get(i).getDirection() + "\n");		
+				jta.setText(jta.getText() + "            Ramp: " + allCars.get(i).getRamp() + "\n");
+			}
+		}
+	}
 
 	@Override
 	public void mousePressed(MouseEvent e) {}
 
 	@Override
-	public void mouseReleased(MouseEvent e) {
-		for (int i=0; i<allCars.size(); i++){
-			if (allCars.get(i).checkPoint(e.getX(), e.getY())){
-				jta.setText(jta.getText() + "Butter - Car: " + allCars.get(i).getId() + "\n");
-				jta.setText(jta.getText() + "		Speed: " + allCars.get(i).getSpeed() + "\n");
-				jta.setText(jta.getText() + "		Freeway: " + allCars.get(i).getFreeway() + "\n");			
-				jta.setText(jta.getText() + "		Direction: " + allCars.get(i).getDirection() + "\n");		
-				jta.setText(jta.getText() + "		Ramp: " + allCars.get(i).getRamp() + "\n");
-			}
-		}
-	}
+	public void mouseReleased(MouseEvent e) {}
 
 	@Override
 	public void mouseEntered(MouseEvent e) {}

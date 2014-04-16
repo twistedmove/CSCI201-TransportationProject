@@ -25,7 +25,7 @@ public class Car {
 	public static final int updatePerSec = 8;
 	public static final double secPerHour = 360.00;
 
-	public double milesPerTimeDiv;
+	public double milesPerTimeDiv;	// MPH
 	private Boolean sloped = false;
 	private double slopeX, slopeY;
 	private int counter;
@@ -214,15 +214,15 @@ public class Car {
 	public boolean checkPoint(int xc, int yc){
 		Rectangle2D r2d = null;
 		if (direction.equals(WEST) || direction.equals(EAST)){
-			r2d = new Rectangle2D.Double(x, y, 24, 12);
-			if (r2d.contains(xc,yc-45)){
+			r2d = new Rectangle2D.Double(point.getX(), point.getY(), 24, 12);
+			if (r2d.contains(xc,yc)){
 				return true;
 			} else{
 				return false;
 			}
 		} else if(direction.equals(NORTH) || direction.equals(SOUTH)){
-			r2d = new Rectangle2D.Double(x, y, 12, 24);
-			if (r2d.contains(xc,yc-45)){
+			r2d = new Rectangle2D.Double(point.getX(), point.getY(), 12, 24);
+			if (r2d.contains(xc,yc)){
 				return true;
 			} else{
 				return false;
