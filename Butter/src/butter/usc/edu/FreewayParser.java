@@ -17,6 +17,11 @@ class TxtFormatException extends Exception {
 	}
 }
 
+/**
+ * Reads in coordinates from CSV and links the coordinates.
+ * @author LorraineSposto
+ *
+ */
 public class FreewayParser {
 	
 	static Vector<Location> parseFreeway(File filename, int freeway) throws TxtFormatException {
