@@ -43,9 +43,13 @@ public class ButterGUI extends JFrame{
 	public JPanel mapPanel;
 	public PanelDraw mapPicPanel;
 	public JLabel picLabel;
+	@SuppressWarnings("rawtypes")
 	private JComboBox fromHighway;
+	@SuppressWarnings("rawtypes")
 	private JComboBox toHighway;
+	@SuppressWarnings("rawtypes")
 	private JComboBox fromRamp;
+	@SuppressWarnings("rawtypes")
 	private JComboBox toRamp;
 	private JTextArea jta;
 	private TrafficHistoryDatabase trafficHistoryDatabase;
@@ -191,10 +195,13 @@ public class ButterGUI extends JFrame{
 					fromHighway.setSelectedIndex(0);
 					fromHighway.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent arg0) {
+							@SuppressWarnings("static-access")
 							DefaultComboBoxModel model = new DefaultComboBoxModel(rb.rampNames[fromHighway.getSelectedIndex()]);
 							fromRamp.setModel(model);
 						}
 					});
+					
+					@SuppressWarnings("static-access")
 					DefaultComboBoxModel model1 = new DefaultComboBoxModel(rb.rampNames[fromHighway.getSelectedIndex()]);
 					fromRamp = new JComboBox();
 					fromRamp.setModel(model1);
@@ -205,10 +212,13 @@ public class ButterGUI extends JFrame{
 					toHighway.setBounds(8, 16, 70, 30);
 					toHighway.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
+							@SuppressWarnings("static-access")
 							DefaultComboBoxModel model = new DefaultComboBoxModel(rb.rampNames[toHighway.getSelectedIndex()]);
 							toRamp.setModel(model);						
 						}						
 					});
+					
+					@SuppressWarnings("static-access")
 					DefaultComboBoxModel model2 = new DefaultComboBoxModel(rb.rampNames[toHighway.getSelectedIndex()]);
 					toRamp = new JComboBox();
 					toRamp.setModel(model2);
@@ -241,7 +251,7 @@ public class ButterGUI extends JFrame{
 				searchButton.setForeground(Color.WHITE);
 				searchButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						// Add actions to get the selected locations from the check boxes, then find route accordingly
+						// Add actions to get the selected locations from the check boxes, then find route accordingly TODO
 					}
 				});
 			    
@@ -251,7 +261,7 @@ public class ButterGUI extends JFrame{
 				viewDataButton.setForeground(Color.WHITE);
 				viewDataButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						// TODO
+						jta.setText(jta.getText() + "Butter: View Data!" + "\n");
 						new GraphChartWindow();
 					}
 				});
@@ -262,6 +272,7 @@ public class ButterGUI extends JFrame{
 				exportDataButton.setForeground(Color.WHITE);
 				exportDataButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
+						jta.setText(jta.getText() + "Butter: Export Data!" + "\n");
 						try {
 							JFileChooser jfc = new JFileChooser(); 
 					    	FileNameExtensionFilter csv = new FileNameExtensionFilter("CSV (.csv)", "csv");  

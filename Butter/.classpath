@@ -2,17 +2,5 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
-	<classpathentry kind="lib" path="/Users/kaitlynlee/Documents/USC Spring 2014/CS 201/CSCI201-TransportationProject/Assets/JARs/gson-2.2.4-javadoc.jar"/>
-	<classpathentry kind="lib" path="/Users/kaitlynlee/Documents/USC Spring 2014/CS 201/CSCI201-TransportationProject/Assets/JARs/gson-2.2.4-sources.jar"/>
-	<classpathentry kind="lib" path="/Users/kaitlynlee/Documents/USC Spring 2014/CS 201/CSCI201-TransportationProject/Assets/JARs/gson-2.2.4.jar"/>
-	<classpathentry kind="lib" path="/Users/kaitlynlee/Documents/USC Spring 2014/CS 201/CSCI201-TransportationProject/Assets/JARs/jcommon-1.0.21.jar"/>
-	<classpathentry kind="lib" path="/Users/kaitlynlee/Documents/USC Spring 2014/CS 201/CSCI201-TransportationProject/Assets/JARs/jfreechart-1.0.17.jar"/>
-	<classpathentry kind="lib" path="/Users/kaitlynlee/Documents/USC Spring 2014/CS 201/CSCI201-TransportationProject/Assets/JARs/mysql-connector-java-5.1.30-bin.jar"/>
-	<classpathentry kind="lib" path="/Users/BryanChong/Dropbox/Projects/CSCI201/CSCI201-TransportationProject/Assets/JARs/gson-2.2.4-javadoc.jar"/>
-	<classpathentry kind="lib" path="/Users/BryanChong/Dropbox/Projects/CSCI201/CSCI201-TransportationProject/Assets/JARs/gson-2.2.4-sources.jar"/>
-	<classpathentry kind="lib" path="/Users/BryanChong/Dropbox/Projects/CSCI201/CSCI201-TransportationProject/Assets/JARs/gson-2.2.4.jar"/>
-	<classpathentry kind="lib" path="/Users/BryanChong/Dropbox/Projects/CSCI201/CSCI201-TransportationProject/Assets/JARs/jcommon-1.0.21.jar"/>
-	<classpathentry kind="lib" path="/Users/BryanChong/Dropbox/Projects/CSCI201/CSCI201-TransportationProject/Assets/JARs/jfreechart-1.0.17.jar"/>
-	<classpathentry kind="lib" path="/Users/BryanChong/Dropbox/Projects/CSCI201/CSCI201-TransportationProject/Assets/JARs/mysql-connector-java-5.1.30-bin.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
