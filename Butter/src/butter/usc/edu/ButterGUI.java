@@ -87,13 +87,13 @@ public class ButterGUI extends JFrame{
 		Car c = new Car(1,60, "West", "Western Avenue, Normandie Avenue", "10");
 		Car c1 = new Car(2,70, "West","Los Angeles Street", "101");
 		
-		Car c2 = new Car(3,80, "East","Crenshaw Boulevard", "105");
+		Car c2 = new Car(3,30, "East","Crenshaw Boulevard", "105");
 		Car c3 = new Car(4,60, "North","Sherman Way", "405");
-		Car c4 = new Car(5,90, "South","Sherman Way", "405");
+		Car c4 = new Car(5,40, "South","Sherman Way", "405");
 		
-		Car c5 = new Car(6,80, "East", "Western Avenue, Normandie Avenue", "10");
-		Car c6 = new Car(7,70, "East","Los Angeles Street", "101");
-		Car c7 = new Car(8,80, "West","Crenshaw Boulevard", "105");
+		Car c5 = new Car(6,20, "East", "Western Avenue, Normandie Avenue", "10");
+		Car c6 = new Car(7,45, "East","Los Angeles Street", "101");
+		Car c7 = new Car(8,50, "West","Crenshaw Boulevard", "105");
 		
 		allCars.add(c);
 		allCars.add(c1);
@@ -346,11 +346,76 @@ public class ButterGUI extends JFrame{
 		private static final long serialVersionUID = -8653010960482307907L;
 
 		protected void paintComponent(Graphics g) {
-			super.paintComponents(g);
+			super.paintComponents(g);			
+			
+			Image car0GreenEast = null, car0GreenNorth = null, car0GreenSouth = null, car0GreenWest = null, car0YellowEast = null, car0YellowNorth = null, car0YellowSouth = null, car0YellowWest = null, car0RedEast = null, car0RedNorth = null, car0RedSouth = null, car0RedWest = null;
+			
+			try {
+				car0GreenEast = ImageIO.read(new File("assets/images/car0greeneast.gif"));
+				car0GreenNorth = ImageIO.read(new File("assets/images/car0greennorth.gif"));
+				car0GreenSouth = ImageIO.read(new File("assets/images/car0greensouth.gif"));
+				car0GreenWest = ImageIO.read(new File("assets/images/car0greenwest.gif"));
+				car0YellowEast = ImageIO.read(new File("assets/images/car0yelloweast.gif"));
+				car0YellowNorth = ImageIO.read(new File("assets/images/car0yellownorth.gif"));
+				car0YellowSouth = ImageIO.read(new File("assets/images/car0yellowsouth.gif"));
+				car0YellowWest = ImageIO.read(new File("assets/images/car0yellowwest.gif"));
+				car0RedEast = ImageIO.read(new File("assets/images/car0redeast.gif"));
+				car0RedNorth = ImageIO.read(new File("assets/images/car0rednorth.gif"));
+				car0RedSouth = ImageIO.read(new File("assets/images/car0redsouth.gif"));
+				car0RedWest = ImageIO.read(new File("assets/images/car0redwest.gif"));
+			} catch (IOException ex) {
+		        System.out.println("No file exists.");
+			}
+			
+			
 			g.clearRect(0, 0, getWidth(), getHeight() );
 			g.drawImage(map, 0, 0, null);
 			for (int i = 0; i < allCars.size(); i++) {
-				g.fillRect(allCars.get(i).point.x, allCars.get(i).point.y, 10, 10);
+				if (allCars.get(i).getDirection().equalsIgnoreCase("North")){					
+				
+					if (allCars.get(i).getSpeed() >= 60){
+						g.drawImage(car0GreenNorth, allCars.get(i).point.x, allCars.get(i).point.y, null);
+					} else if (allCars.get(i).getSpeed() < 60 && allCars.get(i).getSpeed() > 35){
+						g.drawImage(car0YellowNorth, allCars.get(i).point.x, allCars.get(i).point.y, null);
+					} else {
+						g.drawImage(car0RedNorth, allCars.get(i).point.x, allCars.get(i).point.y, null);
+					}
+					
+					//g.fillRect(allCars.get(i).point.x, allCars.get(i).point.y, 10, 10);
+				} else if (allCars.get(i).getDirection().equalsIgnoreCase("East")){
+					
+					if (allCars.get(i).getSpeed() >= 60){
+						g.drawImage(car0GreenEast, allCars.get(i).point.x, allCars.get(i).point.y, null);
+					} else if (allCars.get(i).getSpeed() < 60 && allCars.get(i).getSpeed() > 35){
+						g.drawImage(car0YellowEast, allCars.get(i).point.x, allCars.get(i).point.y, null);
+					} else {
+						g.drawImage(car0RedEast, allCars.get(i).point.x, allCars.get(i).point.y, null);
+					}
+					
+					//g.fillRect(allCars.get(i).point.x, allCars.get(i).point.y, 10, 10);
+				} else if (allCars.get(i).getDirection().equalsIgnoreCase("South")){
+					
+					if (allCars.get(i).getSpeed() >= 60){
+						g.drawImage(car0GreenSouth, allCars.get(i).point.x, allCars.get(i).point.y, null);
+					} else if (allCars.get(i).getSpeed() < 60 && allCars.get(i).getSpeed() > 35){
+						g.drawImage(car0YellowSouth, allCars.get(i).point.x, allCars.get(i).point.y, null);
+					} else {
+						g.drawImage(car0RedSouth, allCars.get(i).point.x, allCars.get(i).point.y, null);
+					}
+					
+					//g.fillRect(allCars.get(i).point.x, allCars.get(i).point.y, 10, 10);
+				} else if (allCars.get(i).getDirection().equalsIgnoreCase("West")){
+					
+					if (allCars.get(i).getSpeed() >= 60){
+						g.drawImage(car0GreenWest, allCars.get(i).point.x, allCars.get(i).point.y, null);
+					} else if (allCars.get(i).getSpeed() < 60 && allCars.get(i).getSpeed() > 35){
+						g.drawImage(car0YellowWest, allCars.get(i).point.x, allCars.get(i).point.y, null);
+					} else {
+						g.drawImage(car0RedWest, allCars.get(i).point.x, allCars.get(i).point.y, null);
+					}
+					
+					//g.fillRect(allCars.get(i).point.x, allCars.get(i).point.y, 10, 10);
+				}
 			}
 		}
 	}
