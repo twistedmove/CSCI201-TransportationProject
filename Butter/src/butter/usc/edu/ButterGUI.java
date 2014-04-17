@@ -106,7 +106,7 @@ public class ButterGUI extends JFrame implements MouseListener{
 		allCars.add(c6);
 		allCars.add(c7);
 		
-		final int timeSlice = 250; 
+		final int timeSlice = 125; 
 		Timer timer = new  Timer (timeSlice, new ActionListener () {
 		public void actionPerformed (ActionEvent e) {
 		//	p.removeAll();
