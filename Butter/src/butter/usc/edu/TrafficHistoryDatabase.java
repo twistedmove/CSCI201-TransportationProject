@@ -50,7 +50,9 @@ public class TrafficHistoryDatabase extends Thread {
 	private String freeway = null;
 	private Timestamp datetime = null;
 	
-	private CarDeserializer carDeserializer = new CarDeserializer("http://www-scf.usc.edu/~csci201/mahdi_project/test.json");
+	public static final String SERVER_URL = "http://www-scf.usc.edu/~csci201/mahdi_project/project_data.json";
+	
+//	private CarDeserializer carDeserializer = new CarDeserializer(SERVER_URL);
 	
 	private Vector<Car> allCars;
 	
@@ -158,23 +160,20 @@ public class TrafficHistoryDatabase extends Thread {
 			createHistoricalTrafficTable();
 			
 			while(true) {
-//				allCars = carDeserializer.deserializeArrayFromURL("http://www-scf.usc.edu/~csci201/mahdi_project/test.json");
-//				addNewCarData();
-				System.out.println("PRETENDING TO CALL SERVER LUL SLEEP FOR 15 SEC");
-				Thread.sleep(15000);
+				allCars = CarDeserializer.deserializeArrayFromURL(SERVER_URL);
+				addNewCarData();
+				System.out.println("Calling server. Again in 5 seconds.");
+				Thread.sleep(5000); // 3 minutes = 180000 ms
 			}
 		} catch (SQLException e) {
 			System.out.println("SQLException: " + e.getMessage());
 		} 
-//		catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+		catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		catch (InterruptedException e) {
 			System.out.println("TrafficHistoryDatabase.run(): InterruptedException: " + e.getMessage());
-//			for (Car c : allCars) {
-//				c.interrupt();
-//			} 
 		}
 	}
 	
@@ -305,21 +304,11 @@ public class TrafficHistoryDatabase extends Thread {
 		return s;
 	}
 
-/*
+
 	public static void main(String[] args) {
-		TrafficHistoryDatabase t = new TrafficHistoryDatabase();
-		try {
-			Vector<Car> cars = CarDeserializer.deserializeArrayFromURL("http://www-scf.usc.edu/~csci201/mahdi_project/test.json");
-			t.run();
-			t.addNewCarData(cars);
-			t.addNewCarData(cars);
-			t.addNewCarData(cars);
-			t.exportToCSV("historical_data.csv");
-		} catch (IOException e) {
-			System.out.println(e.getMessage());
-		} finally {
-			//t.dropDatabase();
-		}
+		Vector<Car> cars = new Vector<Car>();
+		TrafficHistoryDatabase t = new TrafficHistoryDatabase(cars);
+		t.start();
 	}
-*/	
+
 }
