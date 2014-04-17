@@ -32,9 +32,9 @@ public class Car {
 	private int divisions;
 	private Boolean slopeDone = false;
 
-	public Car() {
-
-	}
+//	public Car() {
+//
+//	}
 
 	public Car(int id, double speed, String direction, String ramp, String freeway) {
 		this.id = id;

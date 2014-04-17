@@ -50,15 +50,21 @@ public class TrafficHistoryDatabase extends Thread {
 	private String freeway = null;
 	private Timestamp datetime = null;
 	
-	public static final String SERVER_URL = "http://www-scf.usc.edu/~csci201/mahdi_project/project_data.json";
+	int serverCalls;
+	
+//	public static final String SERVER_URL = "http://www-scf.usc.edu/~csci201/mahdi_project/project_data.json";
+	public static final String SERVER_URL = "http://www-scf.usc.edu/~csci201/mahdi_project/test.json";
 	
 //	private CarDeserializer carDeserializer = new CarDeserializer(SERVER_URL);
 	
-	private Vector<Car> allCars;
+//	private Vector<Car> allCars;
 	
-	public TrafficHistoryDatabase(Vector<Car> cars) {
+	public TrafficHistoryDatabase() throws SQLException {
 		super();
-		allCars = cars;
+		createDatabase();
+		createCurrentTrafficTable();
+		createHistoricalTrafficTable();
+		serverCalls = 0;
 	}
 	
 	/**
@@ -150,25 +156,38 @@ public class TrafficHistoryDatabase extends Thread {
 		}
 	}
 	
+	private void getData() throws IOException {
+		System.out.println("*** Attempting to get data ***");
+		boolean gotLock = false;
+		while(!gotLock) {
+			gotLock = ButterGUI.allCarsWrapper.getLock().tryLock();
+			System.out.println("*** Waiting for lock ***");
+		}
+		System.out.println("*** Got lock: " + gotLock + " ***");
+		try {
+			System.out.println("CALLING SERVER - 10 SECS.");
+			serverCalls++;
+			System.out.println("CALL " + serverCalls);
+			ButterGUI.allCarsWrapper.allCars = CarDeserializer.deserializeArrayFromURL(SERVER_URL);
+			addNewCarData();
+		} finally {
+			ButterGUI.allCarsWrapper.getLock().unlock();
+			System.out.println("** Releasing lock **");
+		}
+	}
+	
 	/**
 	 * Connects to SQL server, creates database and table if necessary.
 	 */
 	public void run() {
 		try {
-			createDatabase();
-			createCurrentTrafficTable();
-			createHistoricalTrafficTable();
-			
 			while(true) {
-				allCars = CarDeserializer.deserializeArrayFromURL(SERVER_URL);
-				addNewCarData();
-				System.out.println("Calling server. Again in 5 seconds.");
-				Thread.sleep(180000); // 3 minutes = 180000 ms
+				getData();
+				System.out.println("*** SLEEPING ***");
+				Thread.sleep(10000); // 3 minutes = 180000 ms
+				System.out.println("*** AWAKE ***");
 			}
-		} catch (SQLException e) {
-			System.out.println("SQLException: " + e.getMessage());
-		} 
-		catch (IOException e) {
+		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -227,7 +246,7 @@ public class TrafficHistoryDatabase extends Thread {
 		try {
 			String sql = "";
 			moveCurrentToHistorical();
-			for(Car c : allCars) {
+			for(Car c : ButterGUI.allCarsWrapper.allCars) {
 				sql = "INSERT INTO " + CURRENT_TABLE + " VALUES (" + c.insertString() + ",?)";
 				preparedStatement = connection.prepareStatement(sql);
 				preparedStatement.setTimestamp(1, new Timestamp(new java.util.Date().getTime()));
@@ -305,10 +324,10 @@ public class TrafficHistoryDatabase extends Thread {
 	}
 
 
-	public static void main(String[] args) {
-		Vector<Car> cars = new Vector<Car>();
-		TrafficHistoryDatabase t = new TrafficHistoryDatabase(cars);
-		t.start();
-	}
+//	public static void main(String[] args) {
+//		Vector<Car> cars = new Vector<Car>();
+//		TrafficHistoryDatabase t = new TrafficHistoryDatabase(cars);
+//		t.start();
+//	}
 
 }

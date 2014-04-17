@@ -16,8 +16,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Vector;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import javax.imageio.ImageIO;
 import javax.swing.DefaultComboBoxModel;
@@ -42,6 +46,28 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+class AllCarsWrapper {
+	
+	public Vector<Car> allCars;
+	private Lock lock;
+	private Condition condition;
+	
+	public AllCarsWrapper() {
+		allCars = new Vector<Car>();
+		lock = new ReentrantLock();
+		condition = lock.newCondition();
+	}
+
+	public Lock getLock() {
+		return lock;
+	}
+
+	public Condition getCondition() {
+		return condition;
+	}
+	
+}
+
 public class ButterGUI extends JFrame implements MouseListener{
 	private static final long serialVersionUID = 367534120156013938L;
 
@@ -64,7 +90,9 @@ public class ButterGUI extends JFrame implements MouseListener{
 	
 	Image mascot;
 	ImageIcon sliced;
-	private Vector<Car> allCars;
+//	private Vector<Car> allCars;
+	public static AllCarsWrapper allCarsWrapper;
+	private CarTimer carTimer;
 	Image map;
 	@SuppressWarnings("unused")
 	private PathBank pb;
@@ -82,7 +110,8 @@ public class ButterGUI extends JFrame implements MouseListener{
 			}
 		});
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		allCars = new Vector<Car>();
+//		allCars = new Vector<Car>();
+		allCarsWrapper = new AllCarsWrapper();
 		try {
 			pb = new PathBank();
 		} catch (TxtFormatException tfe) {
@@ -94,8 +123,15 @@ public class ButterGUI extends JFrame implements MouseListener{
 		setupButterGUI();
 		//int id, double speed, String direction, String onOffRamp, String freeway) {
 	
-		trafficHistoryDatabase = new TrafficHistoryDatabase(allCars);
-		trafficHistoryDatabase.start();
+		try {
+			trafficHistoryDatabase = new TrafficHistoryDatabase();
+//			trafficHistoryDatabase.start();
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		carTimer = new CarTimer(mapPanel);
+		new Thread(carTimer).start();
 	
 		Car c = new Car(1,60, "West", "Western Avenue, Normandie Avenue", "10");
 		Car c1 = new Car(2,90, "West","Tujunga Avenue", "101");
@@ -107,27 +143,15 @@ public class ButterGUI extends JFrame implements MouseListener{
 		Car c6 = new Car(7,45, "East","Los Angeles Street", "101");
 		Car c7 = new Car(8,50, "West","Crenshaw Boulevard", "105");
 		
-		allCars.add(c);
-		allCars.add(c1);
-		allCars.add(c2);
-		allCars.add(c3);
-		allCars.add(c4);
-		allCars.add(c5);
-		allCars.add(c6);
-		allCars.add(c7);
+		allCarsWrapper.allCars.add(c);
+		allCarsWrapper.allCars.add(c1);
+		allCarsWrapper.allCars.add(c2);
+		allCarsWrapper.allCars.add(c3);
+		allCarsWrapper.allCars.add(c4);
+		allCarsWrapper.allCars.add(c5);
+		allCarsWrapper.allCars.add(c6);
+		allCarsWrapper.allCars.add(c7);
 		
-		final int timeSlice = 250; 
-		Timer timer = new  Timer (timeSlice, new ActionListener () {
-		public void actionPerformed (ActionEvent e) {
-		//	p.removeAll();
-	    	mapPanel.updateUI();
-			for (int i = 0; i < allCars.size(); i++) {
-				allCars.get(i).updateSpeed();
-			}
-			mapPanel.repaint();
-		}
-		});
-		timer.start();
 		mapPanel.repaint();
 	}
 	
@@ -174,7 +198,7 @@ public class ButterGUI extends JFrame implements MouseListener{
 
 				picLabel = new JLabel(new ImageIcon((new ImageIcon("map.jpg")).getImage().getScaledInstance(1450, 1450, java.awt.Image.SCALE_SMOOTH)));
 				map = (new ImageIcon("map.jpg")).getImage().getScaledInstance(1450, 1450, java.awt.Image.SCALE_SMOOTH);
-				mapPicPanel = new PanelDraw();
+				mapPicPanel = new PanelDraw(map);
 				mapPicPanel.setPreferredSize(new Dimension(1450,1450));
 				mapPicPanel.addMouseListener(this);
 				
@@ -354,84 +378,6 @@ public class ButterGUI extends JFrame implements MouseListener{
 				this.pack();		
 	}
 	
-	class PanelDraw extends JPanel{ 
-		private static final long serialVersionUID = -8653010960482307907L;
-
-		protected void paintComponent(Graphics g) {
-			super.paintComponents(g);			
-			
-			Image car0GreenEast = null, car0GreenNorth = null, car0GreenSouth = null, car0GreenWest = null, car0YellowEast = null, car0YellowNorth = null, car0YellowSouth = null, car0YellowWest = null, car0RedEast = null, car0RedNorth = null, car0RedSouth = null, car0RedWest = null;
-			
-			try {
-				car0GreenEast = ImageIO.read(new File("assets/images/car0greeneast.gif"));
-				car0GreenNorth = ImageIO.read(new File("assets/images/car0greennorth.gif"));
-				car0GreenSouth = ImageIO.read(new File("assets/images/car0greensouth.gif"));
-				car0GreenWest = ImageIO.read(new File("assets/images/car0greenwest.gif"));
-				car0YellowEast = ImageIO.read(new File("assets/images/car0yelloweast.gif"));
-				car0YellowNorth = ImageIO.read(new File("assets/images/car0yellownorth.gif"));
-				car0YellowSouth = ImageIO.read(new File("assets/images/car0yellowsouth.gif"));
-				car0YellowWest = ImageIO.read(new File("assets/images/car0yellowwest.gif"));
-				car0RedEast = ImageIO.read(new File("assets/images/car0redeast.gif"));
-				car0RedNorth = ImageIO.read(new File("assets/images/car0rednorth.gif"));
-				car0RedSouth = ImageIO.read(new File("assets/images/car0redsouth.gif"));
-				car0RedWest = ImageIO.read(new File("assets/images/car0redwest.gif"));
-			} catch (IOException ex) {
-		        System.out.println("No file exists.");
-			}
-			
-			
-			g.clearRect(0, 0, getWidth(), getHeight() );
-			g.drawImage(map, 0, 0, null);
-			for (int i = 0; i < allCars.size(); i++) {
-				if (allCars.get(i).getDirection().equalsIgnoreCase("North")){					
-				
-					if (allCars.get(i).getSpeed() >= 60){
-						g.drawImage(car0GreenNorth, allCars.get(i).point.x, allCars.get(i).point.y, null);
-					} else if (allCars.get(i).getSpeed() < 60 && allCars.get(i).getSpeed() > 35){
-						g.drawImage(car0YellowNorth, allCars.get(i).point.x, allCars.get(i).point.y, null);
-					} else {
-						g.drawImage(car0RedNorth, allCars.get(i).point.x, allCars.get(i).point.y, null);
-					}
-					
-					//g.fillRect(allCars.get(i).point.x, allCars.get(i).point.y, 10, 10);
-				} else if (allCars.get(i).getDirection().equalsIgnoreCase("East")){
-					
-					if (allCars.get(i).getSpeed() >= 60){
-						g.drawImage(car0GreenEast, allCars.get(i).point.x, allCars.get(i).point.y, null);
-					} else if (allCars.get(i).getSpeed() < 60 && allCars.get(i).getSpeed() > 35){
-						g.drawImage(car0YellowEast, allCars.get(i).point.x, allCars.get(i).point.y, null);
-					} else {
-						g.drawImage(car0RedEast, allCars.get(i).point.x, allCars.get(i).point.y, null);
-					}
-					
-					//g.fillRect(allCars.get(i).point.x, allCars.get(i).point.y, 10, 10);
-				} else if (allCars.get(i).getDirection().equalsIgnoreCase("South")){
-					
-					if (allCars.get(i).getSpeed() >= 60){
-						g.drawImage(car0GreenSouth, allCars.get(i).point.x, allCars.get(i).point.y, null);
-					} else if (allCars.get(i).getSpeed() < 60 && allCars.get(i).getSpeed() > 35){
-						g.drawImage(car0YellowSouth, allCars.get(i).point.x, allCars.get(i).point.y, null);
-					} else {
-						g.drawImage(car0RedSouth, allCars.get(i).point.x, allCars.get(i).point.y, null);
-					}
-					
-					//g.fillRect(allCars.get(i).point.x, allCars.get(i).point.y, 10, 10);
-				} else if (allCars.get(i).getDirection().equalsIgnoreCase("West")){
-					
-					if (allCars.get(i).getSpeed() >= 60){
-						g.drawImage(car0GreenWest, allCars.get(i).point.x, allCars.get(i).point.y, null);
-					} else if (allCars.get(i).getSpeed() < 60 && allCars.get(i).getSpeed() > 35){
-						g.drawImage(car0YellowWest, allCars.get(i).point.x, allCars.get(i).point.y, null);
-					} else {
-						g.drawImage(car0RedWest, allCars.get(i).point.x, allCars.get(i).point.y, null);
-					}
-					
-					//g.fillRect(allCars.get(i).point.x, allCars.get(i).point.y, 10, 10);
-				}
-			}
-		}
-	}
-	
 	public static int depthFirstSearch(){
 		Node n = null;
 		// setting up the root node for the search
@@ -529,14 +475,14 @@ public class ButterGUI extends JFrame implements MouseListener{
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		for (int i=0; i<allCars.size(); i++){
-			if (allCars.get(i).checkPoint(e.getX(), e.getY())){
+		for (int i=0; i<allCarsWrapper.allCars.size(); i++){
+			if (allCarsWrapper.allCars.get(i).checkPoint(e.getX(), e.getY())){
 				jta.setText("");
-				jta.setText(jta.getText() + "Butter - Car: " + allCars.get(i).getId() + "\n");
-				jta.setText(jta.getText() + "            Speed: " + allCars.get(i).getSpeed() + "\n");
-				jta.setText(jta.getText() + "            Freeway: " + allCars.get(i).getFreeway() + "\n");			
-				jta.setText(jta.getText() + "            Direction: " + allCars.get(i).getDirection() + "\n");		
-				jta.setText(jta.getText() + "            Ramp: " + allCars.get(i).getRamp() + "\n");
+				jta.setText(jta.getText() + "Butter - Car: " + allCarsWrapper.allCars.get(i).getId() + "\n");
+				jta.setText(jta.getText() + "            Speed: " + allCarsWrapper.allCars.get(i).getSpeed() + "\n");
+				jta.setText(jta.getText() + "            Freeway: " + allCarsWrapper.allCars.get(i).getFreeway() + "\n");			
+				jta.setText(jta.getText() + "            Direction: " + allCarsWrapper.allCars.get(i).getDirection() + "\n");		
+				jta.setText(jta.getText() + "            Ramp: " + allCarsWrapper.allCars.get(i).getRamp() + "\n");
 			}
 		}
 	}

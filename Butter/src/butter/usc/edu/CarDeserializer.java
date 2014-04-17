@@ -47,12 +47,12 @@ public class CarDeserializer {
 			final String ramp = jsonObject.get("on/off ramp").getAsString();
 			final String freeway = jsonObject.get("freeway").getAsString();
 			
-			final Car c = new Car();
-			c.setId(id);
-			c.setSpeed(speed);
-			c.setDirection(direction);
-			c.setRamp(ramp);
-			c.setFreeway(freeway);
+			final Car c = new Car(id, speed, direction, ramp, freeway);
+//			c.setId(id);
+//			c.setSpeed(speed);
+//			c.setDirection(direction);
+//			c.setRamp(ramp);
+//			c.setFreeway(freeway);
 			return c;
 		}
 	}
