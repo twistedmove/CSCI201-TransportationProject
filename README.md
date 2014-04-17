@@ -16,7 +16,7 @@ Requirements
 [X] Export historical data to CSV <br/>
 
 [] Vehicular data displayed on the map <br/>
-> [X] Color of vehicle is based on speed (red/slow, green/fast)
+> [X] Color of vehicle is based on speed (red/slow, green/fast) <br/>
 > [X] Car will move on roadway 
 
 [] Display flow of traffic <br/>
@@ -24,5 +24,5 @@ Requirements
 > [] Provide estimated time to reach destination based on speed limit and speeds
 
 [] View historical data to determine best days to travel to destination
-> [X] Display in graph
+> [X] Display in graph <br/>
 > [] Display in table form
