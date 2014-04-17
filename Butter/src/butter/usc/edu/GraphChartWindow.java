@@ -1,5 +1,8 @@
 package butter.usc.edu;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -43,19 +46,18 @@ public class GraphChartWindow extends JFrame{
 	BufferedImage theGraph;
 	Object[][] data;
 	
-	JPanel TablePanel;
 	JTable theTable;
 	
 	GraphChartWindow(){
 		super("Graph");
 		setSize(882, 814);
 		setLocation(100,100);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(this.DISPOSE_ON_CLOSE);
 		setResizable(false);
 		getContentPane().setLayout(null);
 
 		//Table Panel
-		TablePanel = new JPanel();
+		JPanel TablePanel = new JPanel();
 		TablePanel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		TablePanel.setBackground(new Color(176, 196, 222));
 		TablePanel.setBounds(32, 545, 818, 214);
@@ -67,7 +69,7 @@ public class GraphChartWindow extends JFrame{
 
 		Vector cols = new Vector();
 		cols.addElement(new String("Car ID"));
-		for(int i = 1; i<data[0].length; i++)										//TODO make it loop depending on database time intervals
+		for(int i = 1; i<data[0].length; i++)
 		{
 			cols.addElement(new String("Time Interval " + i));
 		}
@@ -107,10 +109,10 @@ public class GraphChartWindow extends JFrame{
 				JComboBox cb = (JComboBox)ae.getSource();
 				selectedFreeway = (String)cb.getSelectedItem();
 				System.out.println("You chose " + selectedFreeway + ".");
+				//Updating everything!
 				data = convertTOData();
 				new Graph(data);
 				redrawTable();
-				//Update graph to selected freeways.
 				GraphPanel.repaint();
 			}
 		});
@@ -120,10 +122,9 @@ public class GraphChartWindow extends JFrame{
 
 	void redrawTable()
 	{
-		TablePanel.remove(theTable);
 		Vector cols = new Vector();
 		cols.addElement(new String("Car ID"));
-		for(int i = 1; i<data[0].length; i++)										//TODO make it loop depending on database time intervals
+		for(int i = 1; i<data[0].length; i++)
 		{
 			cols.addElement(new String("Time Interval " + i));
 		}
@@ -177,14 +178,14 @@ public class GraphChartWindow extends JFrame{
 		
 		
 		//===============
-		
 		*/
+
 		
 		
 		//TEMPORARY!!!!
 		if(selectedFreeway == "All Freeways")
 		{
-			Object[][] data = {{"1","100","400","150"},{"2","1","1","1"},{"3","1","1","1"}};
+			Object[][] data = {{"1","100","400","150","150"},{"2","1","1","1","150"},{"3","1","1","1","150"}};
 			return data;
 		}
 		else
@@ -196,7 +197,7 @@ public class GraphChartWindow extends JFrame{
 		//===============================================
 	}
 
-	public static void main(String [] args)					//TODO delete this later!
+	public static void main(String [] args)	
 	{
 		new GraphChartWindow();
 	}
