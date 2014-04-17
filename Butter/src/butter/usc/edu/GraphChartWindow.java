@@ -9,6 +9,13 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.Vector;
 
 import javax.imageio.ImageIO;
@@ -28,13 +35,16 @@ import javax.swing.table.TableColumn;
 import javax.swing.JTable;
 import javax.swing.JComboBox;
 import javax.swing.JScrollPane;
+
 import java.awt.GridLayout;
 
 public class GraphChartWindow extends JFrame{
-	private JTable table;
 	String selectedFreeway = "All Freeways";
 	BufferedImage theGraph;
 	Object[][] data;
+	
+	JPanel TablePanel;
+	JTable theTable;
 	
 	GraphChartWindow(){
 		super("Graph");
@@ -45,7 +55,7 @@ public class GraphChartWindow extends JFrame{
 		getContentPane().setLayout(null);
 
 		//Table Panel
-		final JPanel TablePanel = new JPanel();
+		TablePanel = new JPanel();
 		TablePanel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		TablePanel.setBackground(new Color(176, 196, 222));
 		TablePanel.setBounds(32, 545, 818, 214);
@@ -65,7 +75,7 @@ public class GraphChartWindow extends JFrame{
 		tableModel.setColumnIdentifiers(cols);
 
 
-		final JTable theTable = new JTable(tableModel);
+		theTable = new JTable(tableModel);
 		theTable.setBounds(25, 50, 950, 600);
 		theTable.setBackground(Color.lightGray);
 		theTable.setGridColor(Color.black);
@@ -99,6 +109,7 @@ public class GraphChartWindow extends JFrame{
 				System.out.println("You chose " + selectedFreeway + ".");
 				data = convertTOData();
 				new Graph(data);
+				redrawTable();
 				//Update graph to selected freeways.
 				GraphPanel.repaint();
 			}
@@ -107,13 +118,73 @@ public class GraphChartWindow extends JFrame{
 		setVisible(true);
 	}
 
+	void redrawTable()
+	{
+		TablePanel.remove(theTable);
+		Vector cols = new Vector();
+		cols.addElement(new String("Car ID"));
+		for(int i = 1; i<data[0].length; i++)										//TODO make it loop depending on database time intervals
+		{
+			cols.addElement(new String("Time Interval " + i));
+		}
+		DefaultTableModel tableModel = new DefaultTableModel(data, cols.toArray());
+		tableModel.setColumnIdentifiers(cols);
+
+		theTable.setModel(tableModel);
+	}
 
 	Object[][] convertTOData()
 	{
-		//TODO create data variable using the DATABASE!!!!!!
+		/*final String USERNAME = "root";
+		final String PASSWORD = "pass";
+		String CONNECTION_URL = "jdbc:mysql://localhost:3306/";
+
+		final String DATABASE = "traffic_history";
+		final String HISTORICAL_TABLE = "historical_traffic_data";
+		
+		Connection connection = null;
+		Statement statement = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+
+		final String ID_LABEL = "id";
+		final String SPEED_LABEL = "speed";
+		final String DIRECTION_LABEL = "direction";
+		final String RAMP_LABEL = "ramp";
+		final String FREEWAY_LABEL = "freeway";
+		final String DATETIME_LABEL = "timestamp";
+		
+		int id = 0;
+		double speed = 0;
+		String direction = null;
+		String ramp = null;
+		String freeway = null;
+		Timestamp datetime = null;
+		
+		//Connecting to database
+		try {
+			connection = DriverManager.getConnection(CONNECTION_URL + DATABASE, USERNAME, PASSWORD);
+			System.out.println("Connection to database acquired.");
+		} catch (SQLException e) {System.out.println("Connection to database not acquired.");}
+		//========================
+		
+		try {
+			preparedStatement = connection.prepareStatement("SELECT * FROM " + HISTORICAL_TABLE);
+			resultSet = preparedStatement.executeQuery();
+		} catch (SQLException e) {System.out.println("Unable to grab data.");}
+		
+		//Pulling Data
+		
+		
+		//===============
+		
+		*/
+		
+		
+		//TEMPORARY!!!!
 		if(selectedFreeway == "All Freeways")
 		{
-			Object[][] data = {{"1","100","200","150"},{"2","1","1","1"},{"3","1","1","1"}};
+			Object[][] data = {{"1","100","400","150"},{"2","1","1","1"},{"3","1","1","1"}};
 			return data;
 		}
 		else
@@ -122,6 +193,7 @@ public class GraphChartWindow extends JFrame{
 			return data;
 		}
 		
+		//===============================================
 	}
 
 	public static void main(String [] args)					//TODO delete this later!
