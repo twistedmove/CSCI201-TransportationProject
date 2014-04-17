@@ -438,6 +438,7 @@ public class ButterGUI extends JFrame implements MouseListener{
 	public void mouseClicked(MouseEvent e) {
 		for (int i=0; i<allCars.size(); i++){
 			if (allCars.get(i).checkPoint(e.getX(), e.getY())){
+				jta.setText("");
 				jta.setText(jta.getText() + "Butter - Car: " + allCars.get(i).getId() + "\n");
 				jta.setText(jta.getText() + "            Speed: " + allCars.get(i).getSpeed() + "\n");
 				jta.setText(jta.getText() + "            Freeway: " + allCars.get(i).getFreeway() + "\n");			
