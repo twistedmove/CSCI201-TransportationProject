@@ -16,17 +16,17 @@ public class Location implements Serializable {
 	private double longitude;
 	double milesToNext;
 	double milesToPrev;
-	
+
 	public Location previous;
 	public Location next;
-	
-///////////////////////////////////////////////////////////////////////////////////////////////////
+
+	///////////////////////////////////////////////////////////////////////////////////////////////////
 	public int freeway;
 	public int branchNum;
 	public Location branch;
 	public double milesToBranch;
-///////////////////////////////////////////////////////////////////////////////////////////////////
-	
+	///////////////////////////////////////////////////////////////////////////////////////////////////
+
 	//public double previousDist;
 	//public double nextDist;
 
@@ -40,10 +40,10 @@ public class Location implements Serializable {
 		point.y = (int) ((34.449805 - latitude)*2002.79);
 		point.x = (int)((118.725 + longitude)*1655.64 + 6);
 		// System.out.println("lat, long: " + latitude + ", " + longitude + ". " + point);
-		
+
 		this.freeway = freeway;
 		this.branchNum = branchNum;
-		
+
 	}
 	public void setPrev(Location l) {
 		previous = l;
@@ -58,21 +58,20 @@ public class Location implements Serializable {
 		milesToNext = getDistanceFromLatLonInM(this.latitude, this.longitude, l.latitude, l.longitude);
 		l.milesToPrev = this.milesToNext;
 	}
-	
+
 	public void setBranch(Location l) {
 		branch = l;
 		l.branch = this;
 		milesToBranch = getDistanceFromLatLonInM(this.latitude, this.longitude, l.latitude, l.longitude);
 		l.milesToBranch = this.milesToPrev;
 	}
-	
+
 	public double distToPointAway(int pointsAway) { 
 		/* positive pointsAway looks at the location pointsAway ahead of the current location. 
 		 * For example, pointsAway = 1 would look at the "next" location. pointsAway = -2 would look at the previous of the previous location. 
 		 */
 		Location away = cloneLocation(this);
-		
-		
+
 		if (pointsAway > 0) {
 			for (int i = 0; i < pointsAway; i++) {
 				away = cloneLocation(away.next);
@@ -80,19 +79,19 @@ public class Location implements Serializable {
 			return getDistanceFromLatLonInM(this.latitude, this.longitude, away.latitude, away.longitude);
 		}
 		else if (pointsAway < 0) {
-			for (int i = 0; i < pointsAway; i++) {
+			for (int i = 0; i > pointsAway; i--) {
 				away = cloneLocation(away.previous);
 			}
 			return getDistanceFromLatLonInM(this.latitude, this.longitude, away.latitude, away.longitude);
 		}
-		
+
 		// if the locations are equal, distance is 0
 		return 0;
 	}
-	
+
 	public Location getLocationAway(int pointsAway) {
 		Location away = cloneLocation(this);
-		
+
 		if (pointsAway > 0) {
 			for (int i = 0; i < pointsAway; i++) {
 				away = cloneLocation(away.next);
@@ -100,24 +99,27 @@ public class Location implements Serializable {
 			return away;
 		}
 		else if (pointsAway < 0) {
-			for (int i = 0; i < pointsAway; i++) {
+			for (int i = 0; i > pointsAway; i--) {
 				away = cloneLocation(away.previous);
 			}
 			return away;
 		}
 		return this;
 	}
-	
+
 	public Location cloneLocation(Location l) {
-		Location ln = new Location(l.latitude, l.longitude, l.freeway, l.branchNum);
-		ln.isFirst = l.isFirst;
-		ln.isLast = l.isLast;
-		ln.milesToBranch = l.milesToBranch;
-		ln.milesToNext = l.milesToNext;
-		ln.milesToPrev = l.milesToPrev;
-		ln.next = l.next;
-		ln.point = l.point;
-		ln.previous = ln.previous;
+		Location ln = null;
+		if (l != null) {
+			ln = new Location(l.latitude, l.longitude, l.freeway, l.branchNum);
+			ln.isFirst = l.isFirst;
+			ln.isLast = l.isLast;
+			ln.milesToBranch = l.milesToBranch;
+			ln.milesToNext = l.milesToNext;
+			ln.milesToPrev = l.milesToPrev;
+			ln.next = l.next;
+			ln.point = l.point;
+			ln.previous = l.previous;
+		}
 		return ln;
 	}
 	/**

@@ -163,7 +163,7 @@ public class TrafficHistoryDatabase extends Thread {
 				allCars = CarDeserializer.deserializeArrayFromURL(SERVER_URL);
 				addNewCarData();
 				System.out.println("Calling server. Again in 5 seconds.");
-				Thread.sleep(5000); // 3 minutes = 180000 ms
+				Thread.sleep(180000); // 3 minutes = 180000 ms
 			}
 		} catch (SQLException e) {
 			System.out.println("SQLException: " + e.getMessage());

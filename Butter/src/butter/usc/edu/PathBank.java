@@ -50,7 +50,6 @@ public class PathBank {
 		findIntersections();
 		System.out.println("Successfully read in all freeway coordinates.");
 		
-		
 		// Setting the nexts and prevs
 //		for (int i = 1; i < coordinates101.length; i++) { // start second in, end last
 //			locations101.get(i).setPrevVector(locations101.get(i-1)); // sets i-1's next to i
