@@ -28,19 +28,13 @@ import com.google.gson.stream.JsonReader;
  */
 
 public class CarDeserializer {
-	private String url;
-	public CarDeserializer(String url) {
-		// TODO Auto-generated constructor stub
-		this.url = url;
-//		this.start();
-	}
 	
 	/**
 	 * Overrides default JsonDeserializer functionality so that variable names do not have to match.
 	 * @author LorraineSposto
 	 *
 	 */
-	class CustomCarDeserializer implements JsonDeserializer<Car> {
+	static class CustomCarDeserializer implements JsonDeserializer<Car> {
 		@Override
 		public Car deserialize(final JsonElement json, final Type type,
 				final JsonDeserializationContext context) throws JsonParseException {
@@ -71,7 +65,7 @@ public class CarDeserializer {
 	 * @throws IOException
 	 */
 	
-	public Vector<Car> deserializeArrayFromURL(String urlString) throws IOException {
+	public static Vector<Car> deserializeArrayFromURL(String urlString) throws IOException {
 		JsonReader reader = null;
 		try {
 			Vector<Car> cars = new Vector<Car>();
