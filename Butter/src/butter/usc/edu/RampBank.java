@@ -8,6 +8,10 @@ import java.util.Vector;
 
 public class RampBank {
 	public static Vector<Vector<Ramp>> allRamps;
+	public static Vector<Ramp> ramps101;
+	public static Vector<Ramp> ramps105;
+	public static Vector<Ramp> ramps10;
+	public static Vector<Ramp> ramps405;
 	public static String freeways [] = {"101", "105", "10", "405"};
 
 	public static final int num101ramps = 57;
@@ -18,10 +22,10 @@ public class RampBank {
 
 	public RampBank() {
 		allRamps = new Vector<Vector<Ramp>>();
-		Vector<Ramp> ramps101 = new Vector<Ramp>();
-		Vector<Ramp> ramps105 = new Vector<Ramp>();
-		Vector<Ramp> ramps110 = new Vector<Ramp>();
-		Vector<Ramp> ramps405 = new Vector<Ramp>();
+		ramps101 = new Vector<Ramp>();
+		ramps105 = new Vector<Ramp>();
+		ramps10 = new Vector<Ramp>();
+		ramps405 = new Vector<Ramp>();
 
 		for (int i = 0; i < num101ramps; i++) {
 			ramps101.add(new Ramp(rampNames[0][i], 101, indices101[i], PathBank.locations101.get(indices101[i])));
@@ -32,7 +36,7 @@ public class RampBank {
 		}
 
 		for (int i = 0; i < num10ramps; i++) {
-			ramps110.add(new Ramp(rampNames[2][i], 110, indices10[i], PathBank.locations10.get(indices10[i])));
+			ramps10.add(new Ramp(rampNames[2][i], 110, indices10[i], PathBank.locations10.get(indices10[i])));
 		}
 
 		for (int i = 0; i < num405ramps; i++) {
@@ -41,7 +45,7 @@ public class RampBank {
 		
 		allRamps.add(ramps101);
 		allRamps.add(ramps105);
-		allRamps.add(ramps110);
+		allRamps.add(ramps10);
 		allRamps.add(ramps405);
 	}
 	

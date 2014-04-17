@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Vector;
 
 import javax.imageio.ImageIO;
@@ -48,15 +49,18 @@ public class ButterGUI extends JFrame implements MouseListener{
 	public PanelDraw mapPicPanel;
 	public JLabel picLabel;
 	@SuppressWarnings("rawtypes")
-	private JComboBox fromHighway;
+	private static JComboBox fromHighway;
 	@SuppressWarnings("rawtypes")
-	private JComboBox toHighway;
+	private static JComboBox toHighway;
 	@SuppressWarnings("rawtypes")
-	private JComboBox fromRamp;
+	private static JComboBox fromRamp;
 	@SuppressWarnings("rawtypes")
-	private JComboBox toRamp;
+	private static JComboBox toRamp;
 	private JTextArea jta;
 	private TrafficHistoryDatabase trafficHistoryDatabase;
+	private static DFSGraph dfsg;
+	
+	
 	
 	Image mascot;
 	ImageIcon sliced;
@@ -77,7 +81,6 @@ public class ButterGUI extends JFrame implements MouseListener{
 			    trafficHistoryDatabase.dropDatabase();
 			}
 		});
-		
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		allCars = new Vector<Car>();
 		try {
@@ -99,7 +102,7 @@ public class ButterGUI extends JFrame implements MouseListener{
 		
 		Car c2 = new Car(3,30, "East","Crenshaw Boulevard", "105");
 		Car c3 = new Car(4,60, "North","Sherman Way", "405");
-		Car c4 = new Car(5,40, "South","Sherman Way", "405");
+		Car c4 = new Car(5,20, "North","Sherman Way", "405");
 		
 		Car c5 = new Car(6,20, "East", "Western Avenue, Normandie Avenue", "10");
 		Car c6 = new Car(7,45, "East","Los Angeles Street", "101");
@@ -261,7 +264,7 @@ public class ButterGUI extends JFrame implements MouseListener{
 				searchButton.setForeground(Color.WHITE);
 				searchButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						// Add actions to get the selected locations from the check boxes, then find route accordingly TODO
+						depthFirstSearch();
 					}
 				});
 			    
@@ -429,6 +432,89 @@ public class ButterGUI extends JFrame implements MouseListener{
 			}
 		}
 	}
+	
+	public static int depthFirstSearch(){
+		Node n = null;
+		// setting up the root node for the search
+		if (fromHighway.getSelectedItem().equals("US 101")){
+			int num = 0;
+			for (int i=0; i<RampBank.ramps101.size(); i++){
+				if (RampBank.ramps101.get(i).name == fromRamp.getSelectedItem()){
+					num = RampBank.ramps101.get(i).indexOfCoordinate;
+				}
+			}
+			Location l = PathBank.locations101.get(num);
+			n = new Node(l);
+		} else if (fromHighway.getSelectedItem().equals("I-10")){
+			int num = 0;
+			for (int i=0; i<RampBank.ramps10.size(); i++){
+				if (RampBank.ramps10.get(i).name == fromRamp.getSelectedItem()){
+					num = RampBank.ramps10.get(i).indexOfCoordinate;
+				}
+			}
+			Location l = PathBank.locations101.get(num);
+			n = new Node(l);
+		} else if (fromHighway.getSelectedItem().equals("I-105")){
+			int num = 0;
+			for (int i=0; i<RampBank.ramps105.size(); i++){
+				if (RampBank.ramps105.get(i).name == fromRamp.getSelectedItem()){
+					num = RampBank.ramps105.get(i).indexOfCoordinate;
+				}
+			}
+			Location l = PathBank.locations101.get(num);
+			n = new Node(l);
+		} else if (fromHighway.getSelectedItem().equals("I-405")){
+			int num = 0;
+			for (int i=0; i<RampBank.ramps405.size(); i++){
+				if (RampBank.ramps405.get(i).name == fromRamp.getSelectedItem()){
+					num = RampBank.ramps405.get(i).indexOfCoordinate;
+				}
+			}
+			Location l = PathBank.locations101.get(num);
+			n = new Node(l);
+		}
+		
+		// adding nodes to nodelist
+		dfsg = new DFSGraph(n);
+		for (int i=0; i < PathBank.allLocations.size();i++){
+			for (int j=0; j < PathBank.allLocations.get(i).size(); j++){
+				dfsg.addNode(new Node(PathBank.allLocations.get(i).get(j)));
+			}
+		}
+		
+		// connecting nodes
+		// each freeway has 1 next null and 1 previous null locations
+		for (int i=0; i<dfsg.nodeList.size(); i++){
+			if (dfsg.nodeList.get(i).getLocation().branch != null){
+				int index = findIndexofLocation(dfsg.nodeList.get(i).getLocation().branch);
+				if (index != -1){
+					dfsg.connectNode(dfsg.nodeList.get(i), dfsg.nodeList.get(index));
+				}
+			} else if (dfsg.nodeList.get(i).getLocation().next!= null){
+				int index = findIndexofLocation(dfsg.nodeList.get(i).getLocation().next);
+				if (index != -1){
+					dfsg.connectNode(dfsg.nodeList.get(i), dfsg.nodeList.get(index));
+				}
+			}
+		}
+		
+		
+		
+		dfsg.depthfirstsearch();
+		System.out.println("done");
+		return 0;
+	}
+	
+	public static int findIndexofLocation(Location l){
+		int val = -1;
+		for (int i =0; i<dfsg.nodeList.size(); i++){
+			if (l == dfsg.nodeList.get(i).getLocation()){
+				val = i;
+			}
+		}
+		return val;
+	}
+		
 	
 	public static void main(String[] args) throws IOException {
 		try {
