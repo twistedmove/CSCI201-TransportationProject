@@ -8,6 +8,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -70,6 +72,12 @@ public class ButterGUI extends JFrame implements MouseListener{
 		this.setLocationRelativeTo(null);
 		this.setTitle("Butter");
 		this.getContentPane().setLayout(null);
+		this.addWindowListener(new WindowAdapter() {
+		public void windowClosing(WindowEvent e) {
+			    trafficHistoryDatabase.dropDatabase();
+			}
+		});
+		
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		allCars = new Vector<Car>();
 		try {
