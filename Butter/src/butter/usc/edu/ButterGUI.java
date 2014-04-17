@@ -97,27 +97,27 @@ public class ButterGUI extends JFrame implements MouseListener{
 		trafficHistoryDatabase = new TrafficHistoryDatabase(allCars);
 		trafficHistoryDatabase.start();
 	
+		//Car c = new Car(1,60, "East", "Western Avenue, Normandie Avenue", "10");
 		Car c = new Car(1,60, "West", "Western Avenue, Normandie Avenue", "10");
 		Car c1 = new Car(2,70, "West","Los Angeles Street", "101");
 		
 		Car c2 = new Car(3,30, "East","Crenshaw Boulevard", "105");
 		Car c3 = new Car(4,60, "North","Sherman Way", "405");
 		Car c4 = new Car(5,20, "North","Sherman Way", "405");
-		
 		Car c5 = new Car(6,20, "East", "Western Avenue, Normandie Avenue", "10");
 		Car c6 = new Car(7,45, "East","Los Angeles Street", "101");
 		Car c7 = new Car(8,50, "West","Crenshaw Boulevard", "105");
 		
-		allCars.add(c);
-		allCars.add(c1);
-		allCars.add(c2);
-		allCars.add(c3);
-		allCars.add(c4);
-		allCars.add(c5);
-		allCars.add(c6);
-		allCars.add(c7);
+		//allCars.add(c);
+		//allCars.add(c1);
+		//allCars.add(c2);
+		//allCars.add(c3);
+		//allCars.add(c4);
+		//allCars.add(c5);
+		//allCars.add(c6);
+		//allCars.add(c7);
 		
-		final int timeSlice = 125; 
+		final int timeSlice = 250; 
 		Timer timer = new  Timer (timeSlice, new ActionListener () {
 		public void actionPerformed (ActionEvent e) {
 		//	p.removeAll();

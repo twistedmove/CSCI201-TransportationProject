@@ -66,6 +66,60 @@ public class Location implements Serializable {
 		l.milesToBranch = this.milesToPrev;
 	}
 	
+	public double distToPointAway(int pointsAway) { 
+		/* positive pointsAway looks at the location pointsAway ahead of the current location. 
+		 * For example, pointsAway = 1 would look at the "next" location. pointsAway = -2 would look at the previous of the previous location. 
+		 */
+		Location away = cloneLocation(this);
+		
+		
+		if (pointsAway > 0) {
+			for (int i = 0; i < pointsAway; i++) {
+				away = cloneLocation(away.next);
+			}
+			return getDistanceFromLatLonInM(this.latitude, this.longitude, away.latitude, away.longitude);
+		}
+		else if (pointsAway < 0) {
+			for (int i = 0; i < pointsAway; i++) {
+				away = cloneLocation(away.previous);
+			}
+			return getDistanceFromLatLonInM(this.latitude, this.longitude, away.latitude, away.longitude);
+		}
+		
+		// if the locations are equal, distance is 0
+		return 0;
+	}
+	
+	public Location getLocationAway(int pointsAway) {
+		Location away = cloneLocation(this);
+		
+		if (pointsAway > 0) {
+			for (int i = 0; i < pointsAway; i++) {
+				away = cloneLocation(away.next);
+			}
+			return away;
+		}
+		else if (pointsAway < 0) {
+			for (int i = 0; i < pointsAway; i++) {
+				away = cloneLocation(away.previous);
+			}
+			return away;
+		}
+		return this;
+	}
+	
+	public Location cloneLocation(Location l) {
+		Location ln = new Location(l.latitude, l.longitude, l.freeway, l.branchNum);
+		ln.isFirst = l.isFirst;
+		ln.isLast = l.isLast;
+		ln.milesToBranch = l.milesToBranch;
+		ln.milesToNext = l.milesToNext;
+		ln.milesToPrev = l.milesToPrev;
+		ln.next = l.next;
+		ln.point = l.point;
+		ln.previous = ln.previous;
+		return ln;
+	}
 	/**
 	 * @return the latitude
 	 */
