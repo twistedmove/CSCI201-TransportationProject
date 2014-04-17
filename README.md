@@ -20,7 +20,7 @@ Requirements
 > [X] Car will move on roadway 
 
 [] Display flow of traffic <br/>
-> [] Provide user means of fastest route from start to finish
+> [] Provide user means of fastest route from start to finish <br/>
 > [] Provide estimated time to reach destination based on speed limit and speeds
 
 [] View historical data to determine best days to travel to destination
