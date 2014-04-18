@@ -50,4 +50,8 @@ public class Ramp {
 	public Ramp getPrevious() {
 		return previous;
 	}
+	
+	public Location getLocation(){
+		return l;
+	}
 }

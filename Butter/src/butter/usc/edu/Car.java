@@ -123,7 +123,7 @@ public class Car {
 					slopeX = tempX / (double)divisions;
 					slopeY = tempY / (double)divisions;
 					sloped = true;
-					System.out.println("Dividing into " + divisions);
+//					System.out.println("Dividing into " + divisions);
 				}
 				else { // This includes slopeDone
 					coordinateIndex++;
@@ -149,18 +149,15 @@ public class Car {
 					sloped = true;
 				}
 				else {
-					System.out.println("here5");
 					coordinateIndex--;
 				}
 
 			}
 			// Not going beyond the bounds of the path
 			if (((increased && coordinateIndex < PathBank.allLocations.get(freewayIndex).size()) || (!increased && coordinateIndex >= 0)) && !sloped && !PathBank.allLocations.get(freewayIndex).get(coordinateIndex).isFirst && !PathBank.allLocations.get(freewayIndex).get(coordinateIndex).isLast) {
-				System.out.println("here6");
 				this.point = PathBank.allLocations.get(freewayIndex).get(coordinateIndex).point;
 			}
 			if (numPointsToNextRamp == 0) {
-				System.out.println("here7");
 				// fix the freeway index, 
 				this.rampIndex++;
 				this.rampName = RampBank.allRamps.get(freewayIndex).get(rampIndex).name;

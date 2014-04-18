@@ -2,7 +2,6 @@ package butter.usc.edu;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -17,7 +16,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Vector;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
@@ -39,7 +37,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
-import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.EtchedBorder;
@@ -84,7 +81,6 @@ public class ButterGUI extends JFrame implements MouseListener{
 	private static JComboBox toRamp;
 	private JTextArea jta;
 	private TrafficHistoryDatabase trafficHistoryDatabase;
-	private static DFSGraph dfsg;
 	
 	
 	
@@ -97,6 +93,7 @@ public class ButterGUI extends JFrame implements MouseListener{
 	@SuppressWarnings("unused")
 	private PathBank pb;
 	private RampBank rb;
+	private Dijkstras dj;
 
 	public ButterGUI () {
 		this.setMinimumSize(new Dimension(1200,720));
@@ -125,24 +122,23 @@ public class ButterGUI extends JFrame implements MouseListener{
 	
 		try {
 			trafficHistoryDatabase = new TrafficHistoryDatabase();
-		//	trafficHistoryDatabase.start();
+//			trafficHistoryDatabase.start();
 		} catch (SQLException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		carTimer = new CarTimer(mapPanel);
 		new Thread(carTimer).start();
-//	
+	
 		Car c = new Car(1,60, "West", "Western Avenue, Normandie Avenue", "10");
-		Car c1 = new Car(2,90, "North","Tujunga Avenue", "101");
+		Car c1 = new Car(2,90, "West","Tujunga Avenue", "101");
 		
 		Car c2 = new Car(3,30, "East","Crenshaw Boulevard", "105");
 		Car c3 = new Car(4,60, "North","Sherman Way", "405");
 		Car c4 = new Car(5,20, "North","Sherman Way", "405");
 		Car c5 = new Car(6,80, "East", "Western Avenue, Normandie Avenue", "10");
-		Car c6 = new Car(7,45, "South","Los Angeles Street", "101");
+		Car c6 = new Car(7,45, "East","Los Angeles Street", "101");
 		Car c7 = new Car(8,70, "West","Crenshaw Boulevard", "105");
-		
 		
 		allCarsWrapper.allCars.add(c);
 		allCarsWrapper.allCars.add(c1);
@@ -151,7 +147,6 @@ public class ButterGUI extends JFrame implements MouseListener{
 		allCarsWrapper.allCars.add(c4);
 		allCarsWrapper.allCars.add(c5);
 		allCarsWrapper.allCars.add(c6);
-		
 		allCarsWrapper.allCars.add(c7);
 		
 		mapPanel.repaint();
@@ -290,7 +285,7 @@ public class ButterGUI extends JFrame implements MouseListener{
 				searchButton.setForeground(Color.WHITE);
 				searchButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						depthFirstSearch();
+						dijskstraPath();
 					}
 				});
 			    
@@ -381,90 +376,84 @@ public class ButterGUI extends JFrame implements MouseListener{
 				this.pack();		
 	}
 	
-	public static int depthFirstSearch(){
-		Node n = null;
-		// setting up the root node for the search
-		if (fromHighway.getSelectedItem().equals("US 101")){
-			int num = 0;
-			for (int i=0; i<RampBank.ramps101.size(); i++){
-				if (RampBank.ramps101.get(i).name == fromRamp.getSelectedItem()){
-					num = RampBank.ramps101.get(i).indexOfCoordinate;
-				}
+
+	public void dijskstraPath(){
+		
+		dj = new Dijkstras();
+		Vector<Vertex> vertexList = new Vector<Vertex>();
+		Vector<Integer> indexList = new Vector<Integer>();
+		
+		// 101,105,10,405
+		// setting up all vertices for all freeway
+		int a = 0;
+		for (int i =0; i<RampBank.allRamps.size(); i++){
+			for (int j =0; j<RampBank.allRamps.get(i).size(); j++){
+					Vertex v = new Vertex(RampBank.allRamps.get(i).get(j).name);
+					vertexList.add(v);
+					indexList.add(RampBank.allRamps.get(i).get(j).indexOfCoordinate + a);
 			}
-			Location l = PathBank.locations101.get(num);
-			n = new Node(l);
-		} else if (fromHighway.getSelectedItem().equals("I-10")){
-			int num = 0;
-			for (int i=0; i<RampBank.ramps10.size(); i++){
-				if (RampBank.ramps10.get(i).name == fromRamp.getSelectedItem()){
-					num = RampBank.ramps10.get(i).indexOfCoordinate;
-				}
-			}
-			Location l = PathBank.locations10.get(num);
-			n = new Node(l);
-		} else if (fromHighway.getSelectedItem().equals("I-105")){
-			int num = 0;
-			for (int i=0; i<RampBank.ramps105.size(); i++){
-				if (RampBank.ramps105.get(i).name == fromRamp.getSelectedItem()){
-					num = RampBank.ramps105.get(i).indexOfCoordinate;
-				}
-			}
-			Location l = PathBank.locations105.get(num);
-			n = new Node(l);
-		} else if (fromHighway.getSelectedItem().equals("I-405")){
-			int num = 0;
-			for (int i=0; i<RampBank.ramps405.size(); i++){
-				if (RampBank.ramps405.get(i).name == fromRamp.getSelectedItem()){
-					num = RampBank.ramps405.get(i).indexOfCoordinate;
-				}
-			}
-			Location l = PathBank.locations405.get(num);
-			n = new Node(l);
+			a += RampBank.allRamps.get(i).size();
 		}
-		
-		// adding nodes to nodelist
-		dfsg = new DFSGraph();
-		for (int i=0; i < PathBank.allLocations.size();i++){
-			for (int j=0; j < PathBank.allLocations.get(i).size(); j++){
-				dfsg.addNode(new Node(PathBank.allLocations.get(i).get(j)));
-			}
-		}
-		
-		dfsg.setInitialRoot(n);
-		
-		// connecting nodes
-		// each freeway has 1 next null and 1 previous null locations
-		for (int i=0; i<dfsg.nodeList.size(); i++){
-			if (dfsg.nodeList.get(i).getLocation().branch != null){
-				int index = findIndexofLocation(dfsg.nodeList.get(i).getLocation().branch);
-				if (index != -1){
-					dfsg.connectNode(dfsg.nodeList.get(i), dfsg.nodeList.get(index));
-				}
-			} else if (dfsg.nodeList.get(i).getLocation().next!= null){
-				int index = findIndexofLocation(dfsg.nodeList.get(i).getLocation().next);
-				if (index != -1){
-					dfsg.connectNode(dfsg.nodeList.get(i), dfsg.nodeList.get(index));
-				}
-			}
-		}
-		
-		
-		
-		dfsg.depthfirstsearch();
-		System.out.println("done");
-		return 0;
-	}
 	
-	public static int findIndexofLocation(Location l){
-		int val = -1;
-		for (int i =0; i<dfsg.nodeList.size(); i++){
-			if (l == dfsg.nodeList.get(i).getLocation()){
-				val = i;
-			}
-		}
-		return val;
-	}
+		// vertexlist size is 145
+		// vertexlist has all ramps from all 4 freeways
 		
+		// setting up all edges for 10 freeway WITH branches
+		for (int i=0; i<vertexList.size()-1; i++){
+			for (int j=0; j<RampBank.ramps10.size(); j++){
+				if (RampBank.ramps10.get(j).equals(vertexList.get(i).name)){
+					if (RampBank.ramps10.get(j).getLocation().next == null){
+						vertexList.get(i).adjacencies = new Edge[]{
+							new Edge(vertexList.get(i-1),0),
+						};
+					} else if (RampBank.ramps10.get(j).getLocation().previous == null){
+						vertexList.get(i).adjacencies = new Edge[]{
+							new Edge(vertexList.get(i+1),0),
+						};	
+					} else if(RampBank.ramps10.get(j).getLocation().branch == null){
+						vertexList.get(i).adjacencies = new Edge[]{
+							new Edge(vertexList.get(i+1),0),
+							new Edge(vertexList.get(i-1),0)
+						};
+					} else if (PathBank.locations10.get(j).branch != null){
+						int tempLoca = 0;
+						for (int z=0; z<vertexList.size(); z++){
+							if (vertexList.get(z).getName().equals(RampBank.ramps10.get(j).name)){
+								tempLoca = z;
+							}
+						}
+						vertexList.get(i).adjacencies = new Edge[]{
+							new Edge(vertexList.get(i+1),0),
+							new Edge(vertexList.get(i-1),0),
+							new Edge(vertexList.get(tempLoca), 0)
+						};
+					}
+
+				}
+			}
+		}		
+
+		System.out.println("WIN");
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	}
+
+	
+	
+	
 	
 	public static void main(String[] args) throws IOException {
 		try {
