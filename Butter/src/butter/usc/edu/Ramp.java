@@ -11,6 +11,9 @@ public class Ramp {
 	int freeway;
 	int indexOfCoordinate;
 	Location l;
+	Ramp previous;
+	Ramp next;
+	
 	//double latitude;
 	//double longitude;
 	/*
@@ -26,9 +29,25 @@ public class Ramp {
 		this.freeway = freeway;
 		this.indexOfCoordinate = indexOfCoordinate;
 		this.l = l;
+		this.previous = null;
+		this.next = null;
 		//System.out.println(name + ", " + indexOfCoordinate + " lat, long: " + l.getLatitude() + ", " + l.getLongitude());
 	}
+
 	public int getIndexOfCoordinate() {
 		return indexOfCoordinate;
+	}
+	
+	public void setPreviousRamp(Ramp prev) {
+		this.previous = prev;
+		if(prev != null) prev.next = this;
+	}
+	
+	public Ramp getNext() {
+		return next;
+	}
+	
+	public Ramp getPrevious() {
+		return previous;
 	}
 }

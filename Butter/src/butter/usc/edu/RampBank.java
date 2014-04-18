@@ -43,6 +43,24 @@ public class RampBank {
 			ramps405.add(new Ramp(rampNames[3][i], 405, indices405[i], PathBank.locations405.get(indices405[i])));
 		}
 		
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		
+		for (int i = 1; i < ramps101.size(); i++) {
+			ramps101.get(i).setPreviousRamp(ramps101.get(i-1));
+		}
+
+		for (int i = 1; i < ramps105.size(); i++) {
+			ramps105.get(i).setPreviousRamp(ramps105.get(i-1));
+		}
+
+		for (int i = 1; i < ramps10.size(); i++) {
+			ramps10.get(i).setPreviousRamp(ramps10.get(i-1));
+		}
+
+		for (int i = 1; i < ramps405.size(); i++) {
+			ramps405.get(i).setPreviousRamp(ramps405.get(i-1));
+		}
+		
 		allRamps.add(ramps101);
 		allRamps.add(ramps105);
 		allRamps.add(ramps10);

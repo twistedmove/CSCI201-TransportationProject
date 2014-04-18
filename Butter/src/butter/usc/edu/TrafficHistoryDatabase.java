@@ -326,9 +326,10 @@ public class TrafficHistoryDatabase extends Thread {
 	 * @return
 	 * @throws SQLException 
 	 */
-	public double getEdgeAverageTime(String direction, Ramp ramp) throws SQLException {
-		double time = 0;
+	public double getEdgeAverageTime(String direction, Ramp ramp) throws SQLException, Exception {
 		double distance = 0;
+		Ramp nextRamp = null;
+		
 		String sql = "SELECT " + SPEED_LABEL
 				+ " FROM " + CURRENT_TABLE + " WHERE " 
 					+ FREEWAY_LABEL + "=" + ramp.freeway + " AND " 
@@ -339,18 +340,80 @@ public class TrafficHistoryDatabase extends Thread {
 		resultSet = preparedStatement.executeQuery();
 		
 		speed = resultSet.getDouble(SPEED_LABEL);
-						
-		return speed;
+		
+		if(ramp.freeway == 101) {
+			if(direction.equals(Car.NORTH)) {
+				nextRamp = ramp.getNext();
+			}
+			else if(direction.equals(Car.SOUTH)) {
+				nextRamp = ramp.getPrevious();
+			}
+			else {
+				System.out.println("101 wrong direction!");
+				throw new Exception("101 Wrong direction!");
+			}
+			
+			for(int i=ramp.indexOfCoordinate; i < nextRamp.indexOfCoordinate; ++i) {
+				distance += PathBank.locations101.get(i).milesToNext;
+			}
+		}
+		else if(ramp.freeway == 405) {
+			if(direction.equals(Car.NORTH)) {
+				nextRamp = ramp.getNext();
+			}
+			else if(direction.equals(Car.SOUTH)) {
+				nextRamp = ramp.getPrevious();
+			}
+			else {
+				System.out.println("405 wrong direction!");
+				throw new Exception("405 Wrong direction!");
+			}
+			
+			for(int i=ramp.indexOfCoordinate; i < nextRamp.indexOfCoordinate; ++i) {
+				distance += PathBank.locations405.get(i).milesToNext;
+			}
+		}
+		else if(ramp.freeway == 10) {
+			if(direction.equals(Car.EAST)) {
+				nextRamp = ramp.getPrevious();
+			}
+			else if(direction.equals(Car.WEST)) {
+				nextRamp = ramp.getNext();
+			}
+			else {
+				System.out.println("10 wrong direction!");
+				throw new Exception("10 Wrong direction!");
+			}
+			
+			for(int i=ramp.indexOfCoordinate; i < nextRamp.indexOfCoordinate; ++i) {
+				distance += PathBank.locations10.get(i).milesToNext;
+			}
+		}
+		else if(ramp.freeway == 105) {
+			if(direction.equals(Car.EAST)) {
+				nextRamp = ramp.getNext();
+			}
+			else if(direction.equals(Car.WEST)) {
+				nextRamp = ramp.getPrevious();
+			}
+			else {
+				System.out.println("105 wrong direction!");
+				throw new Exception("105 Wrong direction!");
+			}
+			
+			for(int i=ramp.indexOfCoordinate; i < nextRamp.indexOfCoordinate; ++i) {
+				distance += PathBank.locations105.get(i).milesToNext;
+			}
+		}
+		
+		return distance/speed;
 	}
 	
 	private String escapeCommas(String s) {
 		int index = s.indexOf(", ");
-//		System.out.println("NOT ESCAPED: " + s);
 		if(index > 0) {
-//			System.out.println("YES");
 			s = s.replaceAll(",\\s+", " ");
 		}
-//		System.out.println("ESCAPED: " + s);
 		return s;
 	}
 
