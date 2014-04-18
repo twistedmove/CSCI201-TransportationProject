@@ -9,9 +9,16 @@ public class DFSGraph {
 	public int[][] adjacent;
 	public int size;
 	
-	DFSGraph(Node n){
-		setRoot(n);
+	DFSGraph(){
 		nodeList = new ArrayList<Node>();
+	}
+	
+	public void setInitialRoot(Node n){
+		for (int i =0;i<nodeList.size(); i++){
+			if (n.getLocation().getLatitude() == nodeList.get(i).getLocation().getLatitude() && n.getLocation().getLongitude() == nodeList.get(i).getLocation().getLongitude()){
+				this.root = nodeList.get(i);
+			}
+		}
 	}
 	
 	public void setRoot(Node n){
@@ -39,15 +46,19 @@ public class DFSGraph {
 	}
 	
 	public Node getChildNode(Node n){
-		int index = nodeList.indexOf(n); 
+		int index = nodeList.indexOf(n);
+		int j=0;
 		if (index != -1){
-			for (int j=0; j < size; j++){	
-				if(adjacent[index][j] == 1 && nodeList.get(j).visited == false){
-					return nodeList.get(j);
+			System.out.println("What");
+			while(j<size){
+				if (adjacent[index][j] == 1 && ((Node)nodeList.get(j)).visited == false){
+					return (Node)nodeList.get(j);
 				}
+				j++;
 			}
+		} else if (index == -1){
+			System.out.println("NEGATIVE ONE");
 		}
-		
 		return null;
 	}
 	
@@ -63,7 +74,7 @@ public class DFSGraph {
 		stack.push(root);
 		root.visited = true;
 		while(!stack.isEmpty()){
-			Node n = stack.peek();
+			Node n = (Node)stack.peek();
 			Node child = getChildNode(n);
 			if(child != null){
 				child.visited=true;

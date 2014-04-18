@@ -273,10 +273,11 @@ public class ButterGUI extends JFrame implements MouseListener{
 				JPanel informationArea = new JPanel();
 					informationArea.setBounds(907, 168, 287, 394);
 					informationArea.setBorder (new TitledBorder(new EtchedBorder(), "Information"));
-				jta = new JTextArea (24, 23);
+				jta = new JTextArea (23, 23);
 			    	jta.setEditable (false);
 			    JScrollPane scrollPane = new JScrollPane (jta);
 			    	scrollPane.setVerticalScrollBarPolicy (ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+			    	scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 			    informationArea.add(scrollPane);
 				
 				
@@ -397,7 +398,7 @@ public class ButterGUI extends JFrame implements MouseListener{
 					num = RampBank.ramps10.get(i).indexOfCoordinate;
 				}
 			}
-			Location l = PathBank.locations101.get(num);
+			Location l = PathBank.locations10.get(num);
 			n = new Node(l);
 		} else if (fromHighway.getSelectedItem().equals("I-105")){
 			int num = 0;
@@ -406,7 +407,7 @@ public class ButterGUI extends JFrame implements MouseListener{
 					num = RampBank.ramps105.get(i).indexOfCoordinate;
 				}
 			}
-			Location l = PathBank.locations101.get(num);
+			Location l = PathBank.locations105.get(num);
 			n = new Node(l);
 		} else if (fromHighway.getSelectedItem().equals("I-405")){
 			int num = 0;
@@ -415,17 +416,19 @@ public class ButterGUI extends JFrame implements MouseListener{
 					num = RampBank.ramps405.get(i).indexOfCoordinate;
 				}
 			}
-			Location l = PathBank.locations101.get(num);
+			Location l = PathBank.locations405.get(num);
 			n = new Node(l);
 		}
 		
 		// adding nodes to nodelist
-		dfsg = new DFSGraph(n);
+		dfsg = new DFSGraph();
 		for (int i=0; i < PathBank.allLocations.size();i++){
 			for (int j=0; j < PathBank.allLocations.get(i).size(); j++){
 				dfsg.addNode(new Node(PathBank.allLocations.get(i).get(j)));
 			}
 		}
+		
+		dfsg.setInitialRoot(n);
 		
 		// connecting nodes
 		// each freeway has 1 next null and 1 previous null locations
