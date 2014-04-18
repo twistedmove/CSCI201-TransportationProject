@@ -196,32 +196,32 @@ public class TrafficHistoryDatabase extends Thread {
 		}
 	}
 	
-	/**
-	 * Moves the data in the current data table to the historical table
-	 */
-	private void moveCurrentToHistorical() {
-		try {
-			preparedStatement = connection.prepareStatement(SELECT_CURRENT_STMT);
-			resultSet = preparedStatement.executeQuery();
-			
-			while(resultSet.next()) {
-				extractData();
-				
-				preparedStatement = connection.prepareStatement(INSERT_HISTORICAL_STMT);
-				preparedStatement.setInt(1, id);
-				preparedStatement.setDouble(2, speed);
-				preparedStatement.setString(3, direction);
-				preparedStatement.setString(4, ramp);
-				preparedStatement.setString(5, freeway);
-				preparedStatement.setTimestamp(6, datetime);
-				
-				preparedStatement.executeUpdate();
-			}
-			System.out.println("Data moved to historical table");
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
+//	/**
+//	 * Moves the data in the current data table to the historical table
+//	 */
+//	private void moveCurrentToHistorical() {
+//		try {
+//			preparedStatement = connection.prepareStatement(SELECT_CURRENT_STMT);
+//			resultSet = preparedStatement.executeQuery();
+//			
+//			while(resultSet.next()) {
+//				extractData();
+//				
+//				preparedStatement = connection.prepareStatement(INSERT_HISTORICAL_STMT);
+//				preparedStatement.setInt(1, id);
+//				preparedStatement.setDouble(2, speed);
+//				preparedStatement.setString(3, direction);
+//				preparedStatement.setString(4, ramp);
+//				preparedStatement.setString(5, freeway);
+//				preparedStatement.setTimestamp(6, datetime);
+//				
+//				preparedStatement.executeUpdate();
+//			}
+//			System.out.println("Data moved to historical table");
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		}
+//	}
 	
 	/**
 	 * Extracts data from result set.
@@ -245,9 +245,14 @@ public class TrafficHistoryDatabase extends Thread {
 	private void addNewCarData() {
 		try {
 			String sql = "";
-			moveCurrentToHistorical();
+//			moveCurrentToHistorical();
 			for(Car c : ButterGUI.allCarsWrapper.allCars) {
 				sql = "INSERT INTO " + CURRENT_TABLE + " VALUES (" + c.insertString() + ",?)";
+				preparedStatement = connection.prepareStatement(sql);
+				preparedStatement.setTimestamp(1, new Timestamp(new java.util.Date().getTime()));
+				preparedStatement.executeUpdate();
+				
+				sql = "INSERT INTO " + HISTORICAL_TABLE + " VALUES (" + c.insertString() + ",?)";
 				preparedStatement = connection.prepareStatement(sql);
 				preparedStatement.setTimestamp(1, new Timestamp(new java.util.Date().getTime()));
 				preparedStatement.executeUpdate();
@@ -312,6 +317,32 @@ public class TrafficHistoryDatabase extends Thread {
 		}
 	}
 	
+	/**
+	 * Calculates the average speed of a freeway for path edges.
+	 * @param freeway - int representing freeway name (110, 10, 105, 405)
+	 * @param direction - String representing direction of travel; use strings in Car class
+	 * @param start
+	 * @param end
+	 * @return
+	 * @throws SQLException 
+	 */
+	public double getEdgeAverageTime(String direction, Ramp ramp) throws SQLException {
+		double time = 0;
+		double distance = 0;
+		String sql = "SELECT " + SPEED_LABEL
+				+ " FROM " + CURRENT_TABLE + " WHERE " 
+					+ FREEWAY_LABEL + "=" + ramp.freeway + " AND " 
+					+ DIRECTION_LABEL + "=" + direction + " AND "
+					+ RAMP_LABEL + "=" + ramp.name;
+		
+		preparedStatement = connection.prepareStatement(sql);
+		resultSet = preparedStatement.executeQuery();
+		
+		speed = resultSet.getDouble(SPEED_LABEL);
+						
+		return speed;
+	}
+	
 	private String escapeCommas(String s) {
 		int index = s.indexOf(", ");
 //		System.out.println("NOT ESCAPED: " + s);
@@ -323,11 +354,21 @@ public class TrafficHistoryDatabase extends Thread {
 		return s;
 	}
 
-
+//
 //	public static void main(String[] args) {
 //		Vector<Car> cars = new Vector<Car>();
-//		TrafficHistoryDatabase t = new TrafficHistoryDatabase(cars);
-//		t.start();
+//		TrafficHistoryDatabase t;
+//		try {
+//			t = new TrafficHistoryDatabase();
+//			cars = CarDeserializer.deserializeArrayFromURL(TrafficHistoryDatabase.SERVER_URL);
+//			t.addNewCarData(cars);
+//		} catch (SQLException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 //	}
 
 }
