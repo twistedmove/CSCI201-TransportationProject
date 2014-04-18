@@ -327,6 +327,7 @@ public class TrafficHistoryDatabase extends Thread {
 	 * @throws SQLException 
 	 */
 	public double getEdgeAverageTime(String direction, Ramp ramp) throws SQLException, Exception {
+		double time = 0;
 		double distance = 0;
 		Ramp nextRamp = null;
 		
