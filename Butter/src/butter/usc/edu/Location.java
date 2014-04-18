@@ -70,12 +70,14 @@ public class Location implements Serializable {
 		/* positive pointsAway looks at the location pointsAway ahead of the current location. 
 		 * For example, pointsAway = 1 would look at the "next" location. pointsAway = -2 would look at the previous of the previous location. 
 		 */
+		
 		Location away = cloneLocation(this);
-
+		
 		if (pointsAway > 0) {
 			for (int i = 0; i < pointsAway; i++) {
 				away = cloneLocation(away.next);
 			}
+
 			return getDistanceFromLatLonInM(this.latitude, this.longitude, away.latitude, away.longitude);
 		}
 		else if (pointsAway < 0) {
@@ -109,7 +111,6 @@ public class Location implements Serializable {
 
 	public Location cloneLocation(Location l) {
 		Location ln = null;
-		if (l != null) {
 			ln = new Location(l.latitude, l.longitude, l.freeway, l.branchNum);
 			ln.isFirst = l.isFirst;
 			ln.isLast = l.isLast;
@@ -119,7 +120,8 @@ public class Location implements Serializable {
 			ln.next = l.next;
 			ln.point = l.point;
 			ln.previous = l.previous;
-		}
+			ln.latitude = l.latitude;
+			ln.longitude = l.longitude;
 		return ln;
 	}
 	/**
