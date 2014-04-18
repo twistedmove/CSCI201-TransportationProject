@@ -139,9 +139,9 @@ public class ButterGUI extends JFrame implements MouseListener{
 		Car c2 = new Car(3,30, "East","Crenshaw Boulevard", "105");
 		Car c3 = new Car(4,60, "North","Sherman Way", "405");
 		Car c4 = new Car(5,20, "North","Sherman Way", "405");
-		Car c5 = new Car(6,20, "East", "Western Avenue, Normandie Avenue", "10");
+		Car c5 = new Car(6,80, "East", "Western Avenue, Normandie Avenue", "10");
 		Car c6 = new Car(7,45, "East","Los Angeles Street", "101");
-		Car c7 = new Car(8,50, "West","Crenshaw Boulevard", "105");
+		Car c7 = new Car(8,70, "West","Crenshaw Boulevard", "105");
 		
 		allCarsWrapper.allCars.add(c);
 		allCarsWrapper.allCars.add(c1);
