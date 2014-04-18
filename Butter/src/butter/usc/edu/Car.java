@@ -91,7 +91,7 @@ public class Car {
 		else {
 			int pointsToMove = 0;
 			if (direction.equals(NORTH) ){
-				if (freewayIndex == 3 && !PathBank.allLocations.get(freewayIndex).get(coordinateIndex).isLast) { // If on the 405
+				if ((freewayIndex == 3 || freewayIndex == 0) && !PathBank.allLocations.get(freewayIndex).get(coordinateIndex).isLast) { // If on the 405
 					pointsToMove = 1;
 					while ((milesPerTimeDiv - Math.abs(PathBank.allLocations.get(freewayIndex).get(coordinateIndex).distToPointAway(pointsToMove))) > .01 && !PathBank.allLocations.get(freewayIndex).get(coordinateIndex).getLocationAway(pointsToMove+1).isLast) {
 						if (PathBank.allLocations.get(freewayIndex).get(coordinateIndex).getLocationAway(pointsToMove+1).isLast) {
@@ -122,7 +122,7 @@ public class Car {
 				}
 			}
 			else if (direction.equals(SOUTH)) { 
-				if (freewayIndex == 3 && !PathBank.allLocations.get(freewayIndex).get(coordinateIndex).isFirst) { // If on the 405
+				if ((freewayIndex == 3 || freewayIndex == 0) && !PathBank.allLocations.get(freewayIndex).get(coordinateIndex).isFirst) { // If on the 405
 					pointsToMove = -1;
 					while ((milesPerTimeDiv - PathBank.allLocations.get(freewayIndex).get(coordinateIndex).distToPointAway(pointsToMove)) > .01 && !PathBank.allLocations.get(freewayIndex).get(coordinateIndex).getLocationAway(pointsToMove).isFirst) {
 						if (PathBank.allLocations.get(freewayIndex).get(coordinateIndex).getLocationAway(pointsToMove - 1).isFirst) {
@@ -175,7 +175,7 @@ public class Car {
 						increased = true;
 					}
 				}
-				else if ((freewayIndex == 0 || freewayIndex == 2) && !PathBank.allLocations.get(freewayIndex).get(coordinateIndex).isFirst) {
+				else if ((freewayIndex == 2) && !PathBank.allLocations.get(freewayIndex).get(coordinateIndex).isFirst) {
 					pointsToMove = -1;
 					while (!PathBank.allLocations.get(freewayIndex).get(coordinateIndex).getLocationAway(pointsToMove).isFirst && (milesPerTimeDiv - PathBank.allLocations.get(freewayIndex).get(coordinateIndex).distToPointAway(pointsToMove)) > .01) {
 						if (PathBank.allLocations.get(freewayIndex).get(coordinateIndex).getLocationAway(pointsToMove - 1).isFirst) {
@@ -227,7 +227,7 @@ public class Car {
 						coordinateIndex--;
 					}
 				}
-				else if ((freewayIndex == 0 || freewayIndex == 2) && !PathBank.allLocations.get(freewayIndex).get(coordinateIndex).isLast) { // 101
+				else if ((freewayIndex == 2) && !PathBank.allLocations.get(freewayIndex).get(coordinateIndex).isLast) { // 101
 					pointsToMove = 1;
 					while ((milesPerTimeDiv - PathBank.allLocations.get(freewayIndex).get(coordinateIndex).distToPointAway(pointsToMove)) > .005 && !PathBank.allLocations.get(freewayIndex).get(coordinateIndex).getLocationAway(pointsToMove).isLast) {
 						if (PathBank.allLocations.get(freewayIndex).get(coordinateIndex).getLocationAway(pointsToMove + 1).isLast) {

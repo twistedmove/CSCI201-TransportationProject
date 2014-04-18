@@ -184,7 +184,7 @@ public class TrafficHistoryDatabase extends Thread {
 			while(true) {
 				getData();
 				System.out.println("*** SLEEPING ***");
-				Thread.sleep(10000); // 3 minutes = 180000 ms
+				Thread.sleep(180000); // 3 minutes = 180000 ms
 				System.out.println("*** AWAKE ***");
 			}
 		} catch (IOException e) {
