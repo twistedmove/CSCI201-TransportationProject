@@ -28,4 +28,7 @@ public class Ramp {
 		this.l = l;
 		//System.out.println(name + ", " + indexOfCoordinate + " lat, long: " + l.getLatitude() + ", " + l.getLongitude());
 	}
+	public int getIndexOfCoordinate() {
+		return indexOfCoordinate;
+	}
 }
