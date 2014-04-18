@@ -54,9 +54,9 @@ public class Car {
 		milesPerTimeDiv = speed / secPerHour / updatePerSec;
 		findIfIncrease();
 		System.out.println("Car " + id + " with speed: " + speed + " miles per time div: " + milesPerTimeDiv);
-		System.out.println("Ramp index: " + rampIndex);
+		//System.out.println("Ramp index: " + rampIndex);
 		updatePointsToNextRamp();
-		System.out.println(RampBank.allRamps.get(freewayIndex).get(rampIndex).name + " index coordinate: " + RampBank.allRamps.get(freewayIndex).get(rampIndex).indexOfCoordinate);
+		//System.out.println(RampBank.allRamps.get(freewayIndex).get(rampIndex).name + " index coordinate: " + RampBank.allRamps.get(freewayIndex).get(rampIndex).indexOfCoordinate);
 
 		//System.out.println("lat, long: " + RampBank.allRamps.get(freewayIndex).get(rampIndex).l.getLatitude() + ", " + RampBank.allRamps.get(freewayIndex).get(rampIndex).l.getLongitude() + ". " + point);
 	}
@@ -74,7 +74,6 @@ public class Car {
 	public static int getRampIndex(Car c) {
 		for (int i = 0; i < RampBank.rampNames[c.freewayIndex].length; i++) {
 			if (c.rampName.equals(RampBank.rampNames[c.freewayIndex][i])) {
-				System.out.println("Ramp index: " + i);
 				return i;
 			}
 		}
@@ -102,15 +101,14 @@ public class Car {
 			if (increaseOnPath && !PathBank.allLocations.get(freewayIndex).get(coordinateIndex).isLast){
 				pointsToMove = 1;
 				numPointsToNextRamp--;
-				System.out.println("Car " + id + " direction " + direction);
 				while (!PathBank.allLocations.get(freewayIndex).get(coordinateIndex).getLocationAway(pointsToMove).isLast && !PathBank.allLocations.get(freewayIndex).get(coordinateIndex).getLocationAway(pointsToMove + 1).isLast && (milesPerTimeDiv - Math.abs(PathBank.allLocations.get(freewayIndex).get(coordinateIndex).distToPointAway(pointsToMove))) > .01) {
-//					if (PathBank.allLocations.get(freewayIndex).get(coordinateIndex).getLocationAway(pointsToMove+1).isLast) {
-//						break;
-//					}
-//					else {
-						pointsToMove++;
-						coordinateIndex++;
-						numPointsToNextRamp--;
+					//					if (PathBank.allLocations.get(freewayIndex).get(coordinateIndex).getLocationAway(pointsToMove+1).isLast) {
+					//						break;
+					//					}
+					//					else {
+					pointsToMove++;
+					coordinateIndex++;
+					numPointsToNextRamp--;
 					//}
 				}
 				tempX = PathBank.allLocations.get(freewayIndex).get(coordinateIndex).getLocationAway(pointsToMove).point.x - PathBank.allLocations.get(freewayIndex).get(coordinateIndex).point.x;
@@ -123,7 +121,6 @@ public class Car {
 					slopeX = tempX / (double)divisions;
 					slopeY = tempY / (double)divisions;
 					sloped = true;
-//					System.out.println("Dividing into " + divisions);
 				}
 				else { // This includes slopeDone
 					coordinateIndex++;
@@ -134,9 +131,9 @@ public class Car {
 				pointsToMove = -1;
 				numPointsToNextRamp--;
 				while (!PathBank.allLocations.get(freewayIndex).get(coordinateIndex).getLocationAway(pointsToMove).isFirst && !PathBank.allLocations.get(freewayIndex).get(coordinateIndex).getLocationAway(pointsToMove - 1).isFirst && (milesPerTimeDiv - PathBank.allLocations.get(freewayIndex).get(coordinateIndex).distToPointAway(pointsToMove)) > .01) {
-						pointsToMove--;
-						coordinateIndex--;
-						numPointsToNextRamp--;
+					pointsToMove--;
+					coordinateIndex--;
+					numPointsToNextRamp--;
 				}
 				tempX = PathBank.allLocations.get(freewayIndex).get(coordinateIndex).getLocationAway(pointsToMove).point.x - PathBank.allLocations.get(freewayIndex).get(coordinateIndex).point.x;
 				tempY = PathBank.allLocations.get(freewayIndex).get(coordinateIndex).getLocationAway(pointsToMove).point.y - PathBank.allLocations.get(freewayIndex).get(coordinateIndex).point.y;
@@ -151,18 +148,33 @@ public class Car {
 				else {
 					coordinateIndex--;
 				}
-
 			}
 			// Not going beyond the bounds of the path
 			if (((increased && coordinateIndex < PathBank.allLocations.get(freewayIndex).size()) || (!increased && coordinateIndex >= 0)) && !sloped && !PathBank.allLocations.get(freewayIndex).get(coordinateIndex).isFirst && !PathBank.allLocations.get(freewayIndex).get(coordinateIndex).isLast) {
 				this.point = PathBank.allLocations.get(freewayIndex).get(coordinateIndex).point;
 			}
-			if (numPointsToNextRamp == 0) {
+			if (numPointsToNextRamp <= 0) {
 				// fix the freeway index, 
-				this.rampIndex++;
-				this.rampName = RampBank.allRamps.get(freewayIndex).get(rampIndex).name;
-				System.out.println("Updated to ramp: " + rampName);
-				updatePointsToNextRamp();
+				if (increaseOnPath) {
+					if (rampIndex < RampBank.allIndices[freewayIndex].length - 1) {
+						rampIndex++;
+						rampName = RampBank.allRamps.get(freewayIndex).get(rampIndex).name;
+						updatePointsToNextRamp();
+					}
+					else {
+						numPointsToNextRamp = 0;
+					}
+				}
+				else {
+					if (rampIndex > 0) {
+						rampIndex--;
+						rampName = RampBank.allRamps.get(freewayIndex).get(rampIndex).name;
+						updatePointsToNextRamp();
+					}
+					else {
+						numPointsToNextRamp = 0;
+					}
+				}
 			}
 			slopeDone = false;
 		}
@@ -198,19 +210,17 @@ public class Car {
 	}
 
 	public void updatePointsToNextRamp() {
-		System.out.println("Car " + id + " Ramp index: " + rampIndex);
-		/*
 		if (increaseOnPath) {
-			System.out.println("ramp index: " + rampIndex);
-			System.out.println("Total ramps: " + RampBank.allRamps.get(freewayIndex).size());
-			System.out.println(RampBank.allRamps.get(freewayIndex).get(rampIndex).name);
-			numPointsToNextRamp = RampBank.allIndices[freewayIndex][rampIndex+1] - this.rampIndex;
-			//numPointsToNextRamp = RampBank.allRamps.get(freewayIndex).get(rampIndex + 1).indexOfCoordinate - this.rampIndex;
+			if (rampIndex < RampBank.allIndices[freewayIndex].length - 1) {
+				numPointsToNextRamp = RampBank.allIndices[freewayIndex][rampIndex + 1] - RampBank.allIndices[freewayIndex][rampIndex];
+			}
 		}
 		else {
-			numPointsToNextRamp = RampBank.allRamps.get(freewayIndex).get(rampIndex - 1).indexOfCoordinate - this.rampIndex;
+			if (rampIndex > 0) {
+				numPointsToNextRamp = RampBank.allIndices[freewayIndex][rampIndex] - RampBank.allIndices[freewayIndex][rampIndex-1];
+			}
 		}
-		 */
+
 	}
 
 	public int getId() {
