@@ -26,7 +26,7 @@ public class Car {
 	public static final int updatePerSec = 16; // 4 or 8?
 	public static final double secPerHour = 360.00;
 
-	public double milesPerTimeDiv;	// Miles Per Hour
+	public double milesPerTimeDiv;
 	private Boolean sloped = false;
 	private double slopeX, slopeY;
 	private int counter;
@@ -108,7 +108,7 @@ public class Car {
 					slopeY = tempY / (double)divisions;
 					sloped = true;
 				}
-				else { // This includes slopeDone
+				else {
 					coordinateIndex++;
 					increased = true;
 				}
@@ -135,12 +135,10 @@ public class Car {
 					coordinateIndex--;
 				}
 			}
-			// Not going beyond the bounds of the path
 			if (((increased && coordinateIndex < PathBank.allLocations.get(freewayIndex).size()) || (!increased && coordinateIndex >= 0)) && !sloped && !PathBank.allLocations.get(freewayIndex).get(coordinateIndex).isFirst && !PathBank.allLocations.get(freewayIndex).get(coordinateIndex).isLast) {
 				this.point = PathBank.allLocations.get(freewayIndex).get(coordinateIndex).point;
 			}
 			if (numPointsToNextRamp <= 0) {
-				// fix the freeway index, 
 				if (increaseOnPath) {
 					if (rampIndex < RampBank.allIndices[freewayIndex].length - 1) {
 						rampIndex++;
@@ -149,7 +147,6 @@ public class Car {
 						if (this.TextIsDisplayed) {
 							TrafficHistoryDatabase.dataPullThread.getDataPullLock().lock();
 							ButterGUI.updateTextCarInfo(this);
-//							System.out.println("UPDATING RAMP TEXT!!!!!!!!!!!!!!!!!!!!!!!");
 							TrafficHistoryDatabase.dataPullThread.getDataPullCondition().signal();
 							TrafficHistoryDatabase.dataPullThread.getDataPullLock().unlock();
 						}
@@ -166,7 +163,6 @@ public class Car {
 						if (this.TextIsDisplayed) {
 							TrafficHistoryDatabase.dataPullThread.getDataPullLock().lock();
 							ButterGUI.updateTextCarInfo(this);
-//							System.out.println("UPDATING RAMP TEXT!!!!!!!!!!!!!!!!!!!!!!!");
 							TrafficHistoryDatabase.dataPullThread.getDataPullCondition().signal();
 							TrafficHistoryDatabase.dataPullThread.getDataPullLock().unlock();
 						}

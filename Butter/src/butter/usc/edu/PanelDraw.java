@@ -22,21 +22,12 @@ public class PanelDraw extends JPanel{
 	protected void paintComponent(Graphics g) {
 		super.paintComponents(g);			
 
-		Image car0GreenEast = null, car0GreenNorth = null, car0GreenSouth = null, car0GreenWest = null, car0YellowEast = null, car0YellowNorth = null, car0YellowSouth = null, car0YellowWest = null, car0RedEast = null, car0RedNorth = null, car0RedSouth = null, car0RedWest = null;
+		Image car0GreenEast = null, car0YellowEast = null, car0RedEast = null;
 
 		try {
 			car0GreenEast = ImageIO.read(new File("assets/images/car0greeneast.gif"));
-			car0GreenNorth = ImageIO.read(new File("assets/images/car0greennorth.gif"));
-			car0GreenSouth = ImageIO.read(new File("assets/images/car0greensouth.gif"));
-			car0GreenWest = ImageIO.read(new File("assets/images/car0greenwest.gif"));
 			car0YellowEast = ImageIO.read(new File("assets/images/car0yelloweast.gif"));
-			car0YellowNorth = ImageIO.read(new File("assets/images/car0yellownorth.gif"));
-			car0YellowSouth = ImageIO.read(new File("assets/images/car0yellowsouth.gif"));
-			car0YellowWest = ImageIO.read(new File("assets/images/car0yellowwest.gif"));
 			car0RedEast = ImageIO.read(new File("assets/images/car0redeast.gif"));
-			car0RedNorth = ImageIO.read(new File("assets/images/car0rednorth.gif"));
-			car0RedSouth = ImageIO.read(new File("assets/images/car0redsouth.gif"));
-			car0RedWest = ImageIO.read(new File("assets/images/car0redwest.gif"));
 		} catch (IOException ex) {
 			System.out.println("No file exists.");
 		}
