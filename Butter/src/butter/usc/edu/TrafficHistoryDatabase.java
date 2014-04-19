@@ -334,8 +334,8 @@ public class TrafficHistoryDatabase extends Thread {
 		String sql = "SELECT " + SPEED_LABEL
 				+ " FROM " + CURRENT_TABLE + " WHERE " 
 					+ FREEWAY_LABEL + "=" + ramp.freeway + " AND " 
-					+ DIRECTION_LABEL + "=" + direction + " AND "
-					+ RAMP_LABEL + "=" + ramp.name;
+					+ DIRECTION_LABEL + "='" + direction + "' AND "
+					+ RAMP_LABEL + "='" + ramp.name + "'";
 		
 		preparedStatement = connection.prepareStatement(sql);
 		resultSet = preparedStatement.executeQuery();
