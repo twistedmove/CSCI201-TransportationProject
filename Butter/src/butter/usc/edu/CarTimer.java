@@ -19,10 +19,10 @@ public class CarTimer implements Runnable {
 			try {
 //				System.out.println("/// Got Lock ///");
 		    	mapPanel.updateUI();
-				for (int i = 0; i < ButterGUI.allCarsWrapper.allCars.size(); i++) {
+				for (int i = 0; i < ButterGUI.allCarsWrapper.allCars.size(); i++) { //  
 					ButterGUI.allCarsWrapper.allCars.get(i).updateSpeed();
 				}
-				for (int i = 0; i < ButterGUI.allCarsWrapper.allCars.size(); i++) {
+				for (int i = 0; i < ButterGUI.allCarsWrapper.allCars.size(); i++) { //  ButterGUI.allCarsWrapper.allCars.size()
 					if(ButterGUI.allCarsWrapper.allCars.get(i).point == null) System.out.println("NULL: " + ButterGUI.allCarsWrapper.allCars.get(i));
 				}
 				mapPanel.repaint();
@@ -37,7 +37,7 @@ public class CarTimer implements Runnable {
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
-		final int timeSlice = 250; 
+		final int timeSlice = 163; 
 		System.out.println("Starting CarTimer");
 		Timer timer = new  Timer (timeSlice, new ActionListener () {
 		public void actionPerformed (ActionEvent e) {

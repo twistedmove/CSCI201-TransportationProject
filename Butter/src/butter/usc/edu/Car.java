@@ -22,7 +22,7 @@ public class Car {
 	public static final String WEST = "West";
 	public static final String NORTH = "North";
 	public static final String SOUTH = "South";
-	public static final int updatePerSec = 4; // 4 or 8?
+	public static final int updatePerSec = 16; // 4 or 8?
 	public static final double secPerHour = 360.00;
 
 	public double milesPerTimeDiv;	// Miles Per Hour
