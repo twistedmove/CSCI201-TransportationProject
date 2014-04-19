@@ -289,7 +289,7 @@ public class ButterGUI extends JFrame implements MouseListener{
 				searchButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						try {
-							dijskstraPath();
+							List<Vertex> path = dijskstraPath();
 						} catch (SQLException sqle) {
 							sqle.printStackTrace();
 						} catch (Exception ee) {
@@ -386,10 +386,11 @@ public class ButterGUI extends JFrame implements MouseListener{
 	}
 	
 
-	public void dijskstraPath() throws SQLException, Exception{
+	public List<Vertex> dijskstraPath() throws SQLException, Exception{
 		
 		Vector<Vertex> vertexList = new Vector<Vertex>();
 		Vector<Integer> indexList = new Vector<Integer>();
+		List<Vertex> path = null;
 		
 		// Setting up vertices
 		int a = 0;
@@ -592,13 +593,13 @@ public class ButterGUI extends JFrame implements MouseListener{
 				jta.setText(jta.getText() + "From: " + fromHighway.getSelectedItem() + " - " + fromRamp.getSelectedItem() + "\n");
 				jta.setText(jta.getText() + "To: " + toHighway.getSelectedItem() + " - " + toRamp.getSelectedItem() + "\n");
 				jta.setText(jta.getText() + "            Time to Destination: " + (v.minDistance * 60.0) + " minutes \n");
-				List<Vertex> path = getShortestPathTo(v);
+				path = getShortestPathTo(v);
 				System.out.println("Path: " + path);
 				gotDestination = true;
 			}
 		}
 		gotDestination = false;
-				
+		return path;
 	}
 
 	
