@@ -410,7 +410,6 @@ public class ButterGUI extends JFrame implements MouseListener{
 			for (int j=0; j<RampBank.ramps10.size(); j++){
 				if (RampBank.ramps10.get(j).name.equals(vertexList.get(i).name)){
 					if (RampBank.ramps10.get(j).getLocation().next == null){
-						System.out.println(TrafficHistoryDatabase.getEdgeAverageTime(Car.EAST, RampBank.ramps10.get(j)));
 							vertexList.get(i).adjacencies = new Edge[]{
 								new Edge(vertexList.get(i-1), TrafficHistoryDatabase.getEdgeAverageTime(Car.EAST, RampBank.ramps10.get(j))),
 							};

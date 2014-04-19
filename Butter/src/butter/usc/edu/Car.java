@@ -48,7 +48,6 @@ public class Car {
 		this.coordinateIndex = RampBank.allRamps.get(freewayIndex).get(rampIndex).indexOfCoordinate;
 		milesPerTimeDiv = speed / secPerHour / updatePerSec;
 		findIfIncrease();
-		System.out.println("Car " + id + " with speed: " + speed + " miles per time div: " + milesPerTimeDiv);
 		updatePointsToNextRamp();
 	}
 
