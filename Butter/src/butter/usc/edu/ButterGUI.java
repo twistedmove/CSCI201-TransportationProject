@@ -110,7 +110,7 @@ public class ButterGUI extends JFrame implements MouseListener{
 		this.getContentPane().setLayout(null);
 		this.addWindowListener(new WindowAdapter() {
 		public void windowClosing(WindowEvent e) {
-//			    trafficHistoryDatabase.dropDatabase();
+			    trafficHistoryDatabase.dropDatabase();
 			}
 		});
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
