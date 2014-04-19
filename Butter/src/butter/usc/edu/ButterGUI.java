@@ -428,6 +428,7 @@ public class ButterGUI extends JFrame implements MouseListener{
 						for (int z=0; z<vertexList.size(); z++){
 							if (vertexList.get(z).getName().equals(RampBank.ramps10.get(j).name)){
 								tempLoca = z;
+								System.out.println("TRUE");
 							}
 						}
 							vertexList.get(i).adjacencies = new Edge[]{
@@ -582,17 +583,21 @@ public class ButterGUI extends JFrame implements MouseListener{
 		
 		
 		computePaths(vertexList.get(startIndex));
+		boolean gotDestination = false;
+		
 		for (int i=0; i< vertexList.size(); i++){
 			Vertex v = vertexList.get(i);
-			if (toRamp.getSelectedItem().equals(v.getName())){				
+			if (toRamp.getSelectedItem().equals(v.getName()) && !gotDestination){				
 				jta.setText("");
 				jta.setText(jta.getText() + "From: " + fromHighway.getSelectedItem() + " - " + fromRamp.getSelectedItem() + "\n");
 				jta.setText(jta.getText() + "To: " + toHighway.getSelectedItem() + " - " + toRamp.getSelectedItem() + "\n");
 				jta.setText(jta.getText() + "            Time to Destination: " + (v.minDistance * 60.0) + " minutes \n");
 				List<Vertex> path = getShortestPathTo(v);
-				System.out.println("Path: " + path);  
+				System.out.println("Path: " + path);
+				gotDestination = true;
 			}
 		}
+		gotDestination = false;
 				
 	}
 
