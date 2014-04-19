@@ -75,6 +75,7 @@ public class ButterGUI extends JFrame implements MouseListener{
 	public JPanel mapPanel;
 	public PanelDraw mapPicPanel;
 	public JLabel picLabel;
+	public static boolean noCar;
 	@SuppressWarnings("rawtypes")
 	private static JComboBox fromHighway;
 	@SuppressWarnings("rawtypes")
@@ -587,9 +588,9 @@ public class ButterGUI extends JFrame implements MouseListener{
 				jta.setText("");
 				jta.setText(jta.getText() + "From: " + fromHighway.getSelectedItem() + " - " + fromRamp.getSelectedItem() + "\n");
 				jta.setText(jta.getText() + "To: " + toHighway.getSelectedItem() + " - " + toRamp.getSelectedItem() + "\n");
-				jta.setText(jta.getText() + "            Time to Destination: " + (v.minDistance * 60) + " minutes \n");
-				//List<Vertex> path = getShortestPathTo(v);
-				//System.out.println("Path: " + path);  
+				jta.setText(jta.getText() + "            Time to Destination: " + (v.minDistance * 60.0) + " minutes \n");
+				List<Vertex> path = getShortestPathTo(v);
+				System.out.println("Path: " + path);  
 			}
 		}
 				
@@ -648,9 +649,12 @@ public class ButterGUI extends JFrame implements MouseListener{
 	public void mouseClicked(MouseEvent e) {
 		for (int i=0; i<allCarsWrapper.allCars.size(); i++){
 			if (allCarsWrapper.allCars.get(i).checkPoint(e.getX(), e.getY())){
+				noCar = false;
 				setFocusCar(i);
 				setTextCarInfo(i);
 				break;
+			} else {
+				noCar = true;
 			}
 		}
 	}

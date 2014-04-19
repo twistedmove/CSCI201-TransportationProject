@@ -145,7 +145,9 @@ public class Car {
 						updatePointsToNextRamp();
 						if (this.TextIsDisplayed) {
 							TrafficHistoryDatabase.dataPullThread.getDataPullLock().lock();
-							ButterGUI.updateTextCarInfo(this);
+							if (!ButterGUI.noCar){
+								ButterGUI.updateTextCarInfo(this);
+							}
 							TrafficHistoryDatabase.dataPullThread.getDataPullCondition().signal();
 							TrafficHistoryDatabase.dataPullThread.getDataPullLock().unlock();
 						}
@@ -161,7 +163,9 @@ public class Car {
 						updatePointsToNextRamp();
 						if (this.TextIsDisplayed) {
 							TrafficHistoryDatabase.dataPullThread.getDataPullLock().lock();
-							ButterGUI.updateTextCarInfo(this);
+							if (!ButterGUI.noCar){
+								ButterGUI.updateTextCarInfo(this);
+							}
 							TrafficHistoryDatabase.dataPullThread.getDataPullCondition().signal();
 							TrafficHistoryDatabase.dataPullThread.getDataPullLock().unlock();
 						}
