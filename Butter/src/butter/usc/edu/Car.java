@@ -34,6 +34,7 @@ public class Car {
 	private Boolean slopeDone = false;
 	private int numPointsToNextRamp;
 	public Boolean increaseOnPath = false;
+	public Boolean TextIsDisplayed = false;
 
 
 	//	public Car() {
@@ -160,6 +161,9 @@ public class Car {
 						rampIndex++;
 						rampName = RampBank.allRamps.get(freewayIndex).get(rampIndex).name;
 						updatePointsToNextRamp();
+						if (this.TextIsDisplayed) {
+							ButterGUI.updateTextCarInfo(this);
+						}
 					}
 					else {
 						numPointsToNextRamp = 0;
@@ -170,6 +174,9 @@ public class Car {
 						rampIndex--;
 						rampName = RampBank.allRamps.get(freewayIndex).get(rampIndex).name;
 						updatePointsToNextRamp();
+						if (this.TextIsDisplayed) {
+							ButterGUI.updateTextCarInfo(this);
+						}
 					}
 					else {
 						numPointsToNextRamp = 0;

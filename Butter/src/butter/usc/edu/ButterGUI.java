@@ -84,7 +84,7 @@ public class ButterGUI extends JFrame implements MouseListener{
 	private static JComboBox fromRamp;
 	@SuppressWarnings("rawtypes")
 	private static JComboBox toRamp;
-	private JTextArea jta;
+	private static JTextArea jta;
 	private TrafficHistoryDatabase trafficHistoryDatabase;
 	
 	
@@ -138,13 +138,13 @@ public class ButterGUI extends JFrame implements MouseListener{
 		
 		/*
 		Car c = new Car(1,60, "West", "Western Avenue, Normandie Avenue", "10");
-		Car c1 = new Car(2,90, "West","Tujunga Avenue", "101");
+		Car c1 = new Car(2,90, "South","Tujunga Avenue", "101");
 		
 		Car c2 = new Car(3,30, "East","Crenshaw Boulevard", "105");
 		Car c3 = new Car(4,60, "North","Sherman Way", "405");
 		Car c4 = new Car(5,20, "North","Sherman Way", "405");
 		Car c5 = new Car(6,80, "East", "Western Avenue, Normandie Avenue", "10");
-		Car c6 = new Car(7,45, "East","Los Angeles Street", "101");
+		Car c6 = new Car(7,45, "North","Los Angeles Street", "101");
 		Car c7 = new Car(8,70, "West","Crenshaw Boulevard", "105");
 		
 		allCarsWrapper.allCars.add(c);
@@ -612,14 +612,42 @@ public class ButterGUI extends JFrame implements MouseListener{
 	public void mouseClicked(MouseEvent e) {
 		for (int i=0; i<allCarsWrapper.allCars.size(); i++){
 			if (allCarsWrapper.allCars.get(i).checkPoint(e.getX(), e.getY())){
-				jta.setText("");
-				jta.setText(jta.getText() + "Butter - Car: " + allCarsWrapper.allCars.get(i).getId() + "\n");
-				jta.setText(jta.getText() + "            Speed: " + allCarsWrapper.allCars.get(i).getSpeed() + "\n");
-				jta.setText(jta.getText() + "            Freeway: " + allCarsWrapper.allCars.get(i).getFreeway() + "\n");			
-				jta.setText(jta.getText() + "            Direction: " + allCarsWrapper.allCars.get(i).getDirection() + "\n");		
-				jta.setText(jta.getText() + "            Ramp: " + allCarsWrapper.allCars.get(i).getRamp() + "\n");
+				setFocusCar(i);
+				setTextCarInfo(i);
+				break;
+//				jta.setText("");
+//				jta.setText(jta.getText() + "Butter - Car: " + allCarsWrapper.allCars.get(i).getId() + "\n");
+//				jta.setText(jta.getText() + "            Speed: " + allCarsWrapper.allCars.get(i).getSpeed() + "\n");
+//				jta.setText(jta.getText() + "            Freeway: " + allCarsWrapper.allCars.get(i).getFreeway() + "\n");			
+//				jta.setText(jta.getText() + "            Direction: " + allCarsWrapper.allCars.get(i).getDirection() + "\n");		
+//				jta.setText(jta.getText() + "            Ramp: " + allCarsWrapper.allCars.get(i).getRamp() + "\n");
 			}
 		}
+	}
+	
+	public void setTextCarInfo(int carIndex) {
+		jta.setText("");
+		jta.setText(jta.getText() + "Butter - Car: " + allCarsWrapper.allCars.get(carIndex).getId() + "\n");
+		jta.setText(jta.getText() + "            Speed: " + allCarsWrapper.allCars.get(carIndex).getSpeed() + "\n");
+		jta.setText(jta.getText() + "            Freeway: " + allCarsWrapper.allCars.get(carIndex).getFreeway() + "\n");			
+		jta.setText(jta.getText() + "            Direction: " + allCarsWrapper.allCars.get(carIndex).getDirection() + "\n");		
+		jta.setText(jta.getText() + "            Ramp: " + allCarsWrapper.allCars.get(carIndex).getRamp() + "\n");
+	}
+	
+	public static void updateTextCarInfo(Car c) {
+		jta.setText("");
+		jta.setText(jta.getText() + "Butter - Car: " + c.getId() + "\n");
+		jta.setText(jta.getText() + "            Speed: " + c.getSpeed() + "\n");
+		jta.setText(jta.getText() + "            Freeway: " + c.getFreeway() + "\n");			
+		jta.setText(jta.getText() + "            Direction: " + c.getDirection() + "\n");		
+		jta.setText(jta.getText() + "            Ramp: " + c.getRamp() + "\n");
+	}
+	
+	public void setFocusCar(int carIndex) {
+		for (int i=0; i<allCarsWrapper.allCars.size(); i++){
+			allCarsWrapper.allCars.get(i).TextIsDisplayed = false;
+		}
+		allCarsWrapper.allCars.get(carIndex).TextIsDisplayed = true;
 	}
 
 	@Override
