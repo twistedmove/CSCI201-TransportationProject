@@ -69,7 +69,7 @@ public class GraphChartWindow extends JFrame{
 
 		Vector cols = new Vector();
 		cols.addElement(new String("Car ID"));
-		for(int i = 1; i<data[0].length; i++)
+		for(int i = 1; i<data[0].length-1; i++)
 		{
 			cols.addElement(new String("Time Interval " + i));
 		}
@@ -124,7 +124,7 @@ public class GraphChartWindow extends JFrame{
 	{
 		Vector cols = new Vector();
 		cols.addElement(new String("Car ID"));
-		for(int i = 1; i<data[0].length; i++)
+		for(int i = 1; i<data[0].length-1; i++)
 		{
 			cols.addElement(new String("Time Interval " + i));
 		}
@@ -153,8 +153,8 @@ public class GraphChartWindow extends JFrame{
 		String direction = null;
 		String ramp = null;
 		String freeway = null;
-		Timestamp datetime = null;
-
+		int serverCall = 0;
+		
 		ArrayList< ArrayList<Double> > theCars = new ArrayList< ArrayList<Double> >();
 
 		//Connecting to database
@@ -169,8 +169,6 @@ public class GraphChartWindow extends JFrame{
 			resultSet = preparedStatement.executeQuery();
 			//Pulling Data
 			boolean stillTraversing = true;
-			Timestamp currentTime =  Timestamp.valueOf("2007-09-23 10:10:10.0");
-			int numTimeIntervals = 0;
 			while(resultSet.next())
 			{
 				id = resultSet.getInt("id");
@@ -178,15 +176,14 @@ public class GraphChartWindow extends JFrame{
 				direction = resultSet.getString("direction");
 				ramp = resultSet.getString("ramp");
 				freeway = resultSet.getString("freeway");
-				datetime = resultSet.getTimestamp("timestamp");
+				serverCall =  resultSet.getInt("serverCalls");
 
-				System.out.println(currentTime.toString() + " vs " + datetime.toString());
 				if(selectedFreeway == "All Freeways" || selectedFreeway == freeway)
 				{
 					if(theCars.size() <= id)
 					{
 						theCars.add(new ArrayList<Double>());
-						for(int i= 1; i<numTimeIntervals; i++)
+						for(int i= 1; i<serverCall; i++)
 						{
 							theCars.get(id).add(0.0);
 						}
@@ -194,23 +191,17 @@ public class GraphChartWindow extends JFrame{
 					theCars.get(id).add(speed);
 				}
 				
-				if(datetime.after(currentTime))
-				{
-					currentTime = datetime;
-					numTimeIntervals++;
-				}
 			}
 
 			for(int i = 0; i<theCars.size(); i++)
 			{
-				while(theCars.get(i).size()<= numTimeIntervals)
+				while(theCars.get(i).size()<= serverCall)
 				{
 					theCars.get(i).add(0.0);
 				}
 			}
 
-			System.out.println("numintervals: " + numTimeIntervals);//TODO
-			Object[][] data = new Object[theCars.size()][numTimeIntervals+2];
+			Object[][] data = new Object[theCars.size()][serverCall+2];
 			
 
 			for(int i = 0; i<theCars.size(); i++)
@@ -218,7 +209,6 @@ public class GraphChartWindow extends JFrame{
 				data[i][0] = i;
 				for(int j = 0 ; j<theCars.get(i).size(); j++)
 				{
-					System.out.println(j);//TODO
 					data[i][j+1] = theCars.get(i).get(j);
 				}
 			}
@@ -281,7 +271,7 @@ public class GraphChartWindow extends JFrame{
 			{
 				allLines.add(new XYSeries("Car " + data[i][0]));
 
-				for(int j=1; j<data[i].length; j++)
+				for(int j=1; j<data[i].length-1; j++)
 				{
 					double a = Double.parseDouble(data[i][j].toString());
 					allLines.get(i).add(j, a);//change to show timestamp?TODO

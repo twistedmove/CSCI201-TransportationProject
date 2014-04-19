@@ -41,14 +41,14 @@ public class TrafficHistoryDatabase extends Thread {
 	private final String DIRECTION_LABEL = "direction";
 	private final String RAMP_LABEL = "ramp";
 	private final String FREEWAY_LABEL = "freeway";
-	private final String DATETIME_LABEL = "timestamp";
+	private final String CALLS_LABEL = "serverCalls";
 	
 	private int id = 0;
 	private double speed = 0;
 	private String direction = null;
 	private String ramp = null;
 	private String freeway = null;
-	private Timestamp datetime = null;
+	private int serverCall = 0;
 	
 	int serverCalls;
 	
@@ -124,7 +124,7 @@ public class TrafficHistoryDatabase extends Thread {
 					+ DIRECTION_LABEL + " VARCHAR(255),"
 					+ RAMP_LABEL + " TEXT,"
 					+ FREEWAY_LABEL + " INT NOT NULL,"
-					+ DATETIME_LABEL + " TIMESTAMP"
+					+ CALLS_LABEL + " INT NOT NULL"
 					+ ")";
 			statement = connection.createStatement();
 			statement.executeUpdate(sql);
@@ -146,7 +146,7 @@ public class TrafficHistoryDatabase extends Thread {
 					+ DIRECTION_LABEL + " VARCHAR(255),"
 					+ RAMP_LABEL + " TEXT,"
 					+ FREEWAY_LABEL + " INT NOT NULL,"
-					+ DATETIME_LABEL + " TIMESTAMP"
+					+ CALLS_LABEL + " INT NOT NULL"
 					+ ")";
 			statement = connection.createStatement();
 			statement.executeUpdate(sql);
@@ -184,7 +184,7 @@ public class TrafficHistoryDatabase extends Thread {
 			while(true) {
 				getData();
 				System.out.println("*** SLEEPING ***");
-				Thread.sleep(180000); // 3 minutes = 180000 ms
+				Thread.sleep(5000); // 3 minutes = 180000 ms
 				System.out.println("*** AWAKE ***");
 			}
 		} catch (IOException e) {
@@ -233,7 +233,7 @@ public class TrafficHistoryDatabase extends Thread {
 		direction = resultSet.getString(DIRECTION_LABEL);
 		ramp = resultSet.getString(RAMP_LABEL);
 		freeway = resultSet.getString(FREEWAY_LABEL);
-		datetime = resultSet.getTimestamp(DATETIME_LABEL);
+		serverCall = resultSet.getInt(CALLS_LABEL);
 	}
 	
 	/**
@@ -247,14 +247,12 @@ public class TrafficHistoryDatabase extends Thread {
 			String sql = "";
 //			moveCurrentToHistorical();
 			for(Car c : ButterGUI.allCarsWrapper.allCars) {
-				sql = "INSERT INTO " + CURRENT_TABLE + " VALUES (" + c.insertString() + ",?)";
+				sql = "INSERT INTO " + CURRENT_TABLE + " VALUES (" + c.insertString() + "," + serverCalls + ")";
 				preparedStatement = connection.prepareStatement(sql);
-				preparedStatement.setTimestamp(1, new Timestamp(new java.util.Date().getTime()));
 				preparedStatement.executeUpdate();
 				
-				sql = "INSERT INTO " + HISTORICAL_TABLE + " VALUES (" + c.insertString() + ",?)";
+				sql = "INSERT INTO " + HISTORICAL_TABLE + " VALUES (" + c.insertString() + "," + serverCalls + ")";
 				preparedStatement = connection.prepareStatement(sql);
-				preparedStatement.setTimestamp(1, new Timestamp(new java.util.Date().getTime()));
 				preparedStatement.executeUpdate();
 //				System.out.println("Inserted a new car.");
 			}
@@ -294,7 +292,7 @@ public class TrafficHistoryDatabase extends Thread {
 	public void exportToCSV(String filename) throws IOException {
 		FileWriter fw = new FileWriter(new File(filename));
 		PrintWriter pw = new PrintWriter(fw);
-		pw.println(ID_LABEL + "," + SPEED_LABEL + "," + DIRECTION_LABEL + "," + RAMP_LABEL + "," + FREEWAY_LABEL + "," + DATETIME_LABEL);
+		pw.println(ID_LABEL + "," + SPEED_LABEL + "," + DIRECTION_LABEL + "," + RAMP_LABEL + "," + FREEWAY_LABEL + "," + CALLS_LABEL);
 		try {
 			preparedStatement = connection.prepareStatement(SELECT_HISTORICAL_STMT);
 			resultSet = preparedStatement.executeQuery();
@@ -306,7 +304,7 @@ public class TrafficHistoryDatabase extends Thread {
 				pw.println(id + "," + speed + "," + direction + ", "
 						+ "" + ramp + ""
 								+ "," + freeway
-										+ "," + datetime + "\"");
+										+ "," + serverCall);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -327,7 +325,6 @@ public class TrafficHistoryDatabase extends Thread {
 	 * @throws SQLException 
 	 */
 	public double getEdgeAverageTime(String direction, Ramp ramp) throws SQLException, Exception {
-		double time = 0;
 		double distance = 0;
 		Ramp nextRamp = null;
 		
