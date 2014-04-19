@@ -12,6 +12,8 @@ import java.util.Vector;
  *
  */
 class TxtFormatException extends Exception {
+	private static final long serialVersionUID = 1L;
+
 	public TxtFormatException(String message) {
 		super(message);
 	}

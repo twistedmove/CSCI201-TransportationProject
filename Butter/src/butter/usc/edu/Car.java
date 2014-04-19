@@ -13,7 +13,6 @@ public class Car {
 	private double speed;
 	private String direction;
 	private String rampName;
-	//private Ramp recentRamp;
 	private String freeway;
 	private int freewayIndex;
 	private int rampIndex;
@@ -26,7 +25,7 @@ public class Car {
 	public static final int updatePerSec = 4; // 4 or 8?
 	public static final double secPerHour = 360.00;
 
-	public double milesPerTimeDiv;	// MPH
+	public double milesPerTimeDiv;	// Miles Per Hour
 	private Boolean sloped = false;
 	private double slopeX, slopeY;
 	private int counter;
@@ -37,9 +36,6 @@ public class Car {
 	public Boolean TextIsDisplayed = false;
 
 
-	//	public Car() {
-	//
-	//	}
 
 	public Car(int id, double speed, String direction, String ramp, String freeway) {
 		this.id = id;
@@ -49,17 +45,12 @@ public class Car {
 		this.freeway = freeway;
 		this.freewayIndex = getFreewayIndex(this);
 		this.rampIndex = getRampIndex(this);
-		//recentRamp = RampBank.allRamps.get(freewayIndex).get(rampIndex);
-		this.point = RampBank.allRamps.get(freewayIndex).get(rampIndex).l.point;// PathBank.allLocations.get(freewayIndex).get(rampIndex).point;
+		this.point = RampBank.allRamps.get(freewayIndex).get(rampIndex).l.point;
 		this.coordinateIndex = RampBank.allRamps.get(freewayIndex).get(rampIndex).indexOfCoordinate;
 		milesPerTimeDiv = speed / secPerHour / updatePerSec;
 		findIfIncrease();
 		System.out.println("Car " + id + " with speed: " + speed + " miles per time div: " + milesPerTimeDiv);
-		//System.out.println("Ramp index: " + rampIndex);
 		updatePointsToNextRamp();
-		//System.out.println(RampBank.allRamps.get(freewayIndex).get(rampIndex).name + " index coordinate: " + RampBank.allRamps.get(freewayIndex).get(rampIndex).indexOfCoordinate);
-
-		//System.out.println("lat, long: " + RampBank.allRamps.get(freewayIndex).get(rampIndex).l.getLatitude() + ", " + RampBank.allRamps.get(freewayIndex).get(rampIndex).l.getLongitude() + ". " + point);
 	}
 
 	public static int getFreewayIndex(Car c) {
@@ -103,14 +94,9 @@ public class Car {
 				pointsToMove = 1;
 				numPointsToNextRamp--;
 				while (!PathBank.allLocations.get(freewayIndex).get(coordinateIndex).getLocationAway(pointsToMove).isLast && !PathBank.allLocations.get(freewayIndex).get(coordinateIndex).getLocationAway(pointsToMove + 1).isLast && (milesPerTimeDiv - Math.abs(PathBank.allLocations.get(freewayIndex).get(coordinateIndex).distToPointAway(pointsToMove))) > .01) {
-					//					if (PathBank.allLocations.get(freewayIndex).get(coordinateIndex).getLocationAway(pointsToMove+1).isLast) {
-					//						break;
-					//					}
-					//					else {
 					pointsToMove++;
 					coordinateIndex++;
 					numPointsToNextRamp--;
-					//}
 				}
 				tempX = PathBank.allLocations.get(freewayIndex).get(coordinateIndex).getLocationAway(pointsToMove).point.x - PathBank.allLocations.get(freewayIndex).get(coordinateIndex).point.x;
 				tempY = PathBank.allLocations.get(freewayIndex).get(coordinateIndex).getLocationAway(pointsToMove).point.y - PathBank.allLocations.get(freewayIndex).get(coordinateIndex).point.y;
