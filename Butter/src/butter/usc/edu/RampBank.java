@@ -1,5 +1,6 @@
 package butter.usc.edu;
 
+import java.io.File;
 import java.util.Vector;
 /*
  *  RampBank class: creates all Ramps for all 4 freeways and stores the Ramps in a 2-dimensional vector--a vector of a vector. The String names of the ramps are stored in rampNames, a 2-dimension array
@@ -7,6 +8,11 @@ import java.util.Vector;
  */
 
 public class RampBank {
+	public static final int FREEWAY101 = 101;
+	public static final int FREEWAY10 = 10;
+	public static final int FREEWAY105 = 105;
+	public static final int FREEWAY405 = 405;
+	
 	public static Vector<Vector<Ramp>> allRamps;
 	public static Vector<Ramp> ramps101;
 	public static Vector<Ramp> ramps105;
@@ -22,49 +28,104 @@ public class RampBank {
 
 	public RampBank() {
 		allRamps = new Vector<Vector<Ramp>>();
-		ramps101 = new Vector<Ramp>();
-		ramps105 = new Vector<Ramp>();
-		ramps10 = new Vector<Ramp>();
-		ramps405 = new Vector<Ramp>();
-
-		for (int i = 0; i < num101ramps; i++) {
-			ramps101.add(new Ramp(rampNames[0][i], 101, indices101[i], PathBank.locations101.get(indices101[i])));
+		try {
+			ramps101 = FreewayParser.parseRamps(new File("CSV/101-ramps-tabs.txt"), FREEWAY101);
+			ramps105 = FreewayParser.parseRamps(new File("CSV/105-ramps-tabs.txt"), FREEWAY105);
+			ramps10 = FreewayParser.parseRamps(new File("CSV/10-ramps-tabs.txt"), FREEWAY10);
+			ramps405 = FreewayParser.parseRamps(new File("CSV/405-ramps-tabs.txt"), FREEWAY405);
+			System.out.println("Successfully read in ramps.");
+		} catch (TxtFormatException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
-		for (int i = 0; i < num105ramps; i++) {
-			ramps105.add(new Ramp(rampNames[1][i], 105, indices105[i], PathBank.locations105.get(indices105[i])));
-		}
-
-		for (int i = 0; i < num10ramps; i++) {
-			ramps10.add(new Ramp(rampNames[2][i], 110, indices10[i], PathBank.locations10.get(indices10[i])));
-		}
-
-		for (int i = 0; i < num405ramps; i++) {
-			ramps405.add(new Ramp(rampNames[3][i], 405, indices405[i], PathBank.locations405.get(indices405[i])));
-		}
+//		for (int i = 0; i < num101ramps; i++) {
+//			ramps101.add(new Ramp(rampNames[0][i], 101, indices101[i], PathBank.locations101.get(indices101[i])));
+//		}
+//
+//		for (int i = 0; i < num105ramps; i++) {
+//			ramps105.add(new Ramp(rampNames[1][i], 105, indices105[i], PathBank.locations105.get(indices105[i])));
+//		}
+//
+//		for (int i = 0; i < num10ramps; i++) {
+//			ramps10.add(new Ramp(rampNames[2][i], 110, indices10[i], PathBank.locations10.get(indices10[i])));
+//		}
+//
+//		for (int i = 0; i < num405ramps; i++) {
+//			ramps405.add(new Ramp(rampNames[3][i], 405, indices405[i], PathBank.locations405.get(indices405[i])));
+//		}
 		
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		
-		for (int i = 1; i < ramps101.size(); i++) {
-			ramps101.get(i).setPreviousRamp(ramps101.get(i-1));
+		for (int i = 0; i < ramps101.size(); i++) {
+			if(i != 0 ) ramps101.get(i).setPreviousRamp(ramps101.get(i-1));
+			ramps101.get(i).setLocation(PathBank.locations101.get(ramps101.get(i).getIndexOfCoordinate()));
 		}
 
-		for (int i = 1; i < ramps105.size(); i++) {
-			ramps105.get(i).setPreviousRamp(ramps105.get(i-1));
+		for (int i = 0; i < ramps105.size(); i++) {
+			if(i != 0 )ramps105.get(i).setPreviousRamp(ramps105.get(i-1));
+			ramps105.get(i).setLocation(PathBank.locations105.get(ramps105.get(i).getIndexOfCoordinate()));
 		}
 
-		for (int i = 1; i < ramps10.size(); i++) {
-			ramps10.get(i).setPreviousRamp(ramps10.get(i-1));
+		for (int i = 0; i < ramps10.size(); i++) {
+			if(i != 0 )ramps10.get(i).setPreviousRamp(ramps10.get(i-1));
+			ramps10.get(i).setLocation(PathBank.locations10.get(ramps10.get(i).getIndexOfCoordinate()));
 		}
 
-		for (int i = 1; i < ramps405.size(); i++) {
-			ramps405.get(i).setPreviousRamp(ramps405.get(i-1));
+		for (int i = 0; i < ramps405.size(); i++) {
+			if(i != 0 )ramps405.get(i).setPreviousRamp(ramps405.get(i-1));
+			ramps405.get(i).setLocation(PathBank.locations405.get(ramps405.get(i).getIndexOfCoordinate()));
 		}
 		
 		allRamps.add(ramps101);
 		allRamps.add(ramps105);
 		allRamps.add(ramps10);
 		allRamps.add(ramps405);
+		
+		setBranches();
+	}
+	
+	private void setBranches() {
+		System.out.println("-----------------------------");
+		for (int i = 1; i < ramps101.size(); i++) {
+			if(!ramps101.get(i).branchName.equals("NULL")) {
+				for(Vector<Ramp> vr : allRamps) {
+					for(Ramp r : vr) {
+						if (r.name.equals(ramps101.get(i).branchName)) {
+							ramps101.get(i).setBranchRamp(r);
+							System.out.println("Branch set: " + ramps101.get(i).branchName + " --> " + r.name);
+						}
+					}
+				}
+			}
+		}
+
+		for (int i = 1; i < ramps10.size(); i++) {
+			if(!ramps10.get(i).branchName.equals("NULL")) {
+				for(Vector<Ramp> vr : allRamps) {
+					for(Ramp r : vr) {
+						if (r.name.equals(ramps10.get(i).branchName)) {
+							ramps10.get(i).setBranchRamp(r);
+							System.out.println("Branch set: " + ramps10.get(i).name + " --> " + r.name);
+						}
+					}
+				}
+			}
+		}
+
+		for (int i = 1; i < ramps405.size(); i++) {
+			if(!ramps405.get(i).branchName.equals("NULL")) {
+				for(Vector<Ramp> vr : allRamps) {
+					for(Ramp r : vr) {
+						if (r.name.equals(ramps405.get(i).branchName))  {
+							ramps405.get(i).setBranchRamp(r);
+							System.out.println("Branch set: " + ramps405.get(i).name + " --> " + r.name);
+						}
+					}
+				}
+			}
+		}
+		System.out.println("-----------------------------");
 	}
 	
 	// In order: 101, 105, 110, 405

@@ -26,6 +26,48 @@ class TxtFormatException extends Exception {
  */
 public class FreewayParser {
 	
+	static Vector<Ramp> parseRamps(File filename, int freeway) throws TxtFormatException {
+//		System.out.println("Freeway " + freeway);
+		try {
+			Vector<Ramp> ramps = new Vector<Ramp>();
+			
+			FileReader fr = new FileReader(filename);
+			BufferedReader br = new BufferedReader(fr);
+			String[] fields = br.readLine().split("[,]");
+			
+//			for(int i=0; i < fields.length; ++i) System.out.println(fields[i]);
+			
+			String rampName = "", branchName = "";
+			int index = 0;
+			String line = br.readLine();
+			while(line != null) {
+				for(int i=0; i < fields.length; ++i) fields[i] = "";
+				fields = line.split("[;]");
+				rampName = fields[0];
+//				System.out.println("Fields 0 " + fields[0]);
+//				System.out.println("Fields 1 " + fields[1]);
+				Integer i = new Integer(fields[1]);
+				index = new Integer(fields[1]).intValue();
+				branchName = fields[2];
+				
+				ramps.add(new Ramp(rampName, branchName, index, freeway));
+				line = br.readLine();
+			}
+			br.close();
+			/* Linking spaces */
+			for(int i=1; i < ramps.size(); ++i) {
+				ramps.get(i).setPreviousRamp(ramps.get(i-1));
+			}
+			return ramps;
+		} catch (NumberFormatException e) {
+//			e.printStackTrace();
+			throw new TxtFormatException("NFE: Error parsing ramps.");
+		} catch(IOException e) {
+			throw new TxtFormatException("IOE: Error parsing ramps.");
+//			e.printStackTrace();
+		}	
+	}
+	
 	static Vector<Location> parseFreeway(File filename, int freeway) throws TxtFormatException {
 		try {
 			Vector<Location> coordinates = new Vector<Location>();
@@ -39,6 +81,7 @@ public class FreewayParser {
 			String line = br.readLine();
 			double lat=0, lon=0; int branch =0 ;
 			while(line != null) {
+				for(int i=0; i < fields.length; ++i) fields[i] = "";
 				fields = line.split("[,]");
 				lat = new Double(fields[0]).doubleValue();
 				lon = new Double(fields[1]).doubleValue();
@@ -50,22 +93,14 @@ public class FreewayParser {
 			br.close();
 			/* Linking spaces */
 			for(int i=1; i < coordinates.size(); ++i) {
-				if(i == 0) {
-					coordinates.get(i).setPrev(coordinates.get(coordinates.size()-1));
-				}
-				else if(i == coordinates.size()-1) {
-					coordinates.get(i).setPrev(coordinates.get(i-1));
-				}
-				else {
-					coordinates.get(i).setPrev(coordinates.get(i-1));
-				}
+				coordinates.get(i).setPrev(coordinates.get(i-1));
 			}
 			return coordinates;
 		} catch (NumberFormatException e) {
 //			e.printStackTrace();
-			throw new TxtFormatException("parseSpaces");
+			throw new TxtFormatException("Error parsing freeways.");
 		} catch(IOException e) {
-			throw new TxtFormatException("parseSpaces");
+			throw new TxtFormatException("Error parsing freeways.");
 //			e.printStackTrace();
 		}	
 	}

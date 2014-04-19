@@ -21,46 +21,14 @@ public class PathBank {
 	// {latitude, longitude}
 	
 	public PathBank() throws TxtFormatException {
-//		locations101 = new Vector<Location>();
-//		locations105 = new Vector<Location>();
-//		locations10 = new Vector<Location>();
-//		locations405 = new Vector<Location>();
-//
-//
-//		for (int i = 0; i < coordinates101.length; i++) {
-//			locations101.add(new Location(coordinates101[i][0], coordinates101[i][1], FREEWAY101));
-//		}
-//		for (int i = 0; i < coordinates105.length; i++) {
-//			locations105.add(new Location(coordinates105[i][0], coordinates105[i][1], FREEWAY105));
-//		}
-//		for (int i = 0; i < coordinates10.length; i++) {
-//			locations10.add(new Location(coordinates10[i][0], coordinates10[i][1], FREEWAY10));
-//		}
-//		for (int i = 0; i < coordinates405.length; i++) {
-//			locations405.add(new Location(coordinates405[i][0], coordinates405[i][1], FREEWAY405));
-//		}
 		
-		locations101 = FreewayParser.parseFreeway(new File("101-path.csv"), FREEWAY101);
-		locations105 = FreewayParser.parseFreeway(new File("105-path.csv"), FREEWAY105);
-		locations10 = FreewayParser.parseFreeway(new File("10-path.csv"), FREEWAY10);
-		locations405 = FreewayParser.parseFreeway(new File("405-path.csv"), FREEWAY405);
+		locations101 = FreewayParser.parseFreeway(new File("CSV/101-path.csv"), FREEWAY101);
+		locations105 = FreewayParser.parseFreeway(new File("CSV/105-path.csv"), FREEWAY105);
+		locations10 = FreewayParser.parseFreeway(new File("CSV/10-path.csv"), FREEWAY10);
+		locations405 = FreewayParser.parseFreeway(new File("CSV/405-path.csv"), FREEWAY405);
 		
 		findIntersections();
 		System.out.println("Successfully read in all freeway coordinates.");
-		
-		// Setting the nexts and prevs
-//		for (int i = 1; i < coordinates101.length; i++) { // start second in, end last
-//			locations101.get(i).setPrevVector(locations101.get(i-1)); // sets i-1's next to i
-//		}
-//		for (int i = 1; i < coordinates105.length; i++) {
-//			locations105.get(i).setPrevVector(locations105.get(i-1));
-//		}
-//		for (int i = 1; i < coordinates10.length; i++) {
-//			locations10.get(i).setPrevVector(locations10.get(i-1));
-//		}
-//		for (int i = 1; i < coordinates405.length; i++) {
-//			locations405.get(i).setPrevVector(locations405.get(i-1));
-//		}
 		
 		locations405.get(0).setFirst(); 
 		locations101.get(0).setFirst();

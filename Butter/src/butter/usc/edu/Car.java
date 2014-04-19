@@ -2,6 +2,7 @@ package butter.usc.edu;
 
 import java.awt.Point;
 import java.awt.geom.Rectangle2D;
+import java.util.Vector;
 
 /**
  * Car class, so far only holding the essential values of a car as outlined in test.json
@@ -44,6 +45,7 @@ public class Car {
 		this.freeway = freeway;
 		this.freewayIndex = getFreewayIndex(this);
 		this.rampIndex = getRampIndex(this);
+//		System.out.println("Rampindex: " + RampBank.allRamps.get(freewayIndex).get(rampIndex).l);
 		this.point = RampBank.allRamps.get(freewayIndex).get(rampIndex).l.point;
 		this.coordinateIndex = RampBank.allRamps.get(freewayIndex).get(rampIndex).indexOfCoordinate;
 		milesPerTimeDiv = speed / secPerHour / updatePerSec;
@@ -62,6 +64,14 @@ public class Car {
 	}
 
 	public static int getRampIndex(Car c) {
+//		for(Vector<Ramp> vr : RampBank.allRamps) {
+//			for(Ramp r : vr) {
+//				if(c.rampName.equals(r.name)) {
+//					
+//				}
+//			}
+//		}
+		
 		for (int i = 0; i < RampBank.rampNames[c.freewayIndex].length; i++) {
 			if (c.rampName.equals(RampBank.rampNames[c.freewayIndex][i])) {
 				return i;
