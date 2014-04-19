@@ -289,7 +289,7 @@ public class ButterGUI extends JFrame implements MouseListener{
 				searchButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						try {
-							LIST<VECtor>  d = dijskstraPath();
+							List<Vertex> path = dijskstraPath();
 						} catch (SQLException sqle) {
 							sqle.printStackTrace();
 						} catch (Exception ee) {
