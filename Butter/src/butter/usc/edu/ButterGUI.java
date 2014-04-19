@@ -628,7 +628,7 @@ public class ButterGUI extends JFrame implements MouseListener{
 	public void setTextCarInfo(int carIndex) {
 		jta.setText("");
 		jta.setText(jta.getText() + "Butter - Car: " + allCarsWrapper.allCars.get(carIndex).getId() + "\n");
-		jta.setText(jta.getText() + "            Speed: " + allCarsWrapper.allCars.get(carIndex).getSpeed() + "\n");
+		jta.setText(jta.getText() + "            Speed: " + allCarsWrapper.allCars.get(carIndex).getSpeed() + "mph \n");
 		jta.setText(jta.getText() + "            Freeway: " + allCarsWrapper.allCars.get(carIndex).getFreeway() + "\n");			
 		jta.setText(jta.getText() + "            Direction: " + allCarsWrapper.allCars.get(carIndex).getDirection() + "\n");		
 		jta.setText(jta.getText() + "            Ramp: " + allCarsWrapper.allCars.get(carIndex).getRamp() + "\n");
@@ -637,7 +637,7 @@ public class ButterGUI extends JFrame implements MouseListener{
 	public static void updateTextCarInfo(Car c) {
 		jta.setText("");
 		jta.setText(jta.getText() + "Butter - Car: " + c.getId() + "\n");
-		jta.setText(jta.getText() + "            Speed: " + c.getSpeed() + "\n");
+		jta.setText(jta.getText() + "            Speed: " + c.getSpeed() + " mph \n");
 		jta.setText(jta.getText() + "            Freeway: " + c.getFreeway() + "\n");			
 		jta.setText(jta.getText() + "            Direction: " + c.getDirection() + "\n");		
 		jta.setText(jta.getText() + "            Ramp: " + c.getRamp() + "\n");
