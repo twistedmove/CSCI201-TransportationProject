@@ -232,11 +232,17 @@ public class GraphChartWindow extends JFrame{
 						}
 					}
 				}
+			}	
+
+			int totalSize=theCars.size();
+			if(theCars.size()>=50)
+			{
+				totalSize = 50;
 			}
-			Object[][] data = new Object[theCars.size()][serverCall+2];
+			
+			Object[][] data = new Object[totalSize][serverCall+2];
 
-
-			for(int i = 0; i<theCars.size(); i++)
+			for(int i = 0; i<totalSize; i++)
 			{
 				data[i][0] = theCars.get(i).get(0).intValue();
 				for(int j = 1; j<theCars.get(i).size(); j++)
@@ -282,7 +288,7 @@ public class GraphChartWindow extends JFrame{
 		protected void paintComponent(Graphics g) {
 			super.paintComponent(g);
 			setLayout(null);
-			g.drawImage(theGraph,0,0,null);
+			g.drawImage(theGraph,0,0,818, 498,null);
 		}
 	}
 	//------ Graph Creator ------
@@ -323,7 +329,7 @@ public class GraphChartWindow extends JFrame{
 					true, 								// Use tooltips
 					false 								// Configure chart to generate URLs?
 					);
-			theGraph = chart.createBufferedImage(818, 498);
+			theGraph = chart.createBufferedImage(818 * 1, 498 * 1);
 		}
 	}
 }
