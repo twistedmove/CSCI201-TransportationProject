@@ -3,6 +3,7 @@ package butter.usc.edu;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -107,6 +108,7 @@ public class ButterGUI extends JFrame implements MouseListener{
 
 
 	public ButterGUI () {
+		this.setIconImage(Toolkit.getDefaultToolkit().getImage("assets/images/buttericon.gif"));   
 		this.setMinimumSize(new Dimension(1200,720));
 		this.setResizable(false);
 		this.setLocationRelativeTo(null);
@@ -584,7 +586,6 @@ public class ButterGUI extends JFrame implements MouseListener{
 					for (int l=0; l<RampBank.allRamps.get(k).size(); l++){
 						for (int j =0; j<path.size(); j++){
 							if (RampBank.allRamps.get(k).get(l).name.equals(path.get(j).getName())){
-								System.out.println("Path: " + path.get(j));
 								Marker mark = new Marker(RampBank.allRamps.get(k).get(l).getLocation().point.x, RampBank.allRamps.get(k).get(l).getLocation().point.y);
 								locationMarkers.add(mark);
 							}
