@@ -220,22 +220,22 @@ public class TrafficHistoryDatabase extends Thread {
 	 * @throws IOException
 	 */
 	private void getData() throws IOException {
-		System.out.println("*** Attempting to get data ***");
+//		System.out.println("*** Attempting to get data ***");
 		boolean gotLock = false;
 		while(!gotLock) {
 			gotLock = ButterGUI.allCarsWrapper.getLock().tryLock();
-			System.out.println("*** Waiting for lock ***");
+//			System.out.println("*** Waiting for lock ***");
 		}
-		System.out.println("*** Got lock: " + gotLock + " ***");
+//		System.out.println("*** Got lock: " + gotLock + " ***");
 		try {
-			System.out.println("CALLING SERVER - 10 SECS.");
+//			System.out.println("CALLING SERVER - 10 SECS.");
 			serverCalls++;
-			System.out.println("CALL " + serverCalls);
+//			System.out.println("CALL " + serverCalls);
 			ButterGUI.allCarsWrapper.allCars = CarDeserializer.deserializeArrayFromURL(SERVER_URL);
 			addNewCarData();
 		} finally {
 			ButterGUI.allCarsWrapper.getLock().unlock();
-			System.out.println("** Releasing lock **");
+//			System.out.println("** Releasing lock **");
 		}
 	}
 	
@@ -246,9 +246,9 @@ public class TrafficHistoryDatabase extends Thread {
 		try {
 			while(true) {
 				getData();
-				System.out.println("*** SLEEPING ***");
+//				System.out.println("*** SLEEPING ***");
 				Thread.sleep(180000); // 3 minutes = 180000 ms
-				System.out.println("*** AWAKE ***");
+//				System.out.println("*** AWAKE ***");
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -284,7 +284,7 @@ public class TrafficHistoryDatabase extends Thread {
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.execute();
 //			moveCurrentToHistorical();
-			System.out.println("DELETED");
+//			System.out.println("DELETED");
 			for(Car c : ButterGUI.allCarsWrapper.allCars) {
 				sql = "INSERT INTO " + CURRENT_TABLE + " VALUES (" + c.insertString() + "," + serverCalls + ")";
 				preparedStatement = connection.prepareStatement(sql);
@@ -383,12 +383,16 @@ public class TrafficHistoryDatabase extends Thread {
 			s += resultSet.getDouble(SPEED_LABEL);
 			++num;
 		}
+//		System.out.println("************************");
+//		System.out.println("S: " + s);
+//		System.out.println("NUM: " + num);
 		
 		if(num == 0) {
 			return 0;
 		}
 		else {
 			double avgSpeed = s/num;
+//			System.out.println("AVGSPEED: " + avgSpeed);
 		
 			if(ramp.freeway == 101) {
 				if(direction.equals(Car.NORTH)) {
@@ -403,8 +407,17 @@ public class TrafficHistoryDatabase extends Thread {
 				}
 				
 				if(nextRamp != null) {
-					for(int i=ramp.indexOfCoordinate; i < nextRamp.indexOfCoordinate; ++i) {
-						distance += PathBank.locations101.get(i).milesToNext;
+//					System.out.println("\t\t" + ramp.name + "(" + ramp.indexOfCoordinate + ")"
+//							+ " --> " + nextRamp.name + "(" + nextRamp.indexOfCoordinate + ")");
+					if(nextRamp.indexOfCoordinate > ramp.indexOfCoordinate) {
+						for(int i=ramp.indexOfCoordinate; i < nextRamp.indexOfCoordinate; ++i) {
+							distance += PathBank.locations101.get(i).milesToNext;
+						}
+					}
+					else {
+						for(int i=nextRamp.indexOfCoordinate; i < ramp.indexOfCoordinate; ++i) {
+							distance += PathBank.locations101.get(i).milesToNext;
+						}
 					}
 				}
 			}
@@ -421,8 +434,17 @@ public class TrafficHistoryDatabase extends Thread {
 				}
 				
 				if(nextRamp != null) {
-					for(int i=ramp.indexOfCoordinate; i < nextRamp.indexOfCoordinate; ++i) {
-						distance += PathBank.locations405.get(i).milesToNext;
+//					System.out.println("\t\t" + ramp.name + "(" + ramp.indexOfCoordinate + ")"
+//							+ " --> " + nextRamp.name + "(" + nextRamp.indexOfCoordinate + ")");
+					if(nextRamp.indexOfCoordinate > ramp.indexOfCoordinate) {
+						for(int i=ramp.indexOfCoordinate; i < nextRamp.indexOfCoordinate; ++i) {
+							distance += PathBank.locations405.get(i).milesToNext;
+						}
+					}
+					else {
+						for(int i=nextRamp.indexOfCoordinate; i < ramp.indexOfCoordinate; ++i) {
+							distance += PathBank.locations405.get(i).milesToNext;
+						}
 					}
 				}
 			}
@@ -439,8 +461,17 @@ public class TrafficHistoryDatabase extends Thread {
 				}
 				
 				if(nextRamp != null) {
-					for(int i=ramp.indexOfCoordinate; i < nextRamp.indexOfCoordinate; ++i) {
-						distance += PathBank.locations10.get(i).milesToNext;
+//					System.out.println("\t\t" + ramp.name + "(" + ramp.indexOfCoordinate + ")"
+//							+ " --> " + nextRamp.name + "(" + nextRamp.indexOfCoordinate + ")");
+					if(nextRamp.indexOfCoordinate > ramp.indexOfCoordinate) {
+						for(int i=ramp.indexOfCoordinate; i < nextRamp.indexOfCoordinate; ++i) {
+							distance += PathBank.locations10.get(i).milesToNext;
+						}
+					}
+					else {
+						for(int i=nextRamp.indexOfCoordinate; i < ramp.indexOfCoordinate; ++i) {
+							distance += PathBank.locations10.get(i).milesToNext;
+						}
 					}
 				}
 			}
@@ -457,13 +488,25 @@ public class TrafficHistoryDatabase extends Thread {
 				}
 				
 				if(nextRamp != null) {
-					for(int i=ramp.indexOfCoordinate; i < nextRamp.indexOfCoordinate; ++i) {
-						distance += PathBank.locations105.get(i).milesToNext;
+//					System.out.println("\t\t" + ramp.name + "(" + ramp.indexOfCoordinate + ")"
+//							+ " --> " + nextRamp.name + "(" + nextRamp.indexOfCoordinate + ")");
+					if(nextRamp.indexOfCoordinate > ramp.indexOfCoordinate) {
+						for(int i=ramp.indexOfCoordinate; i < nextRamp.indexOfCoordinate; ++i) {
+							distance += PathBank.locations105.get(i).milesToNext;
+						}
+					}
+					else {
+						for(int i=nextRamp.indexOfCoordinate; i < ramp.indexOfCoordinate; ++i) {
+							distance += PathBank.locations105.get(i).milesToNext;
+						}
 					}
 				}
 			}
-			
-			return distance/avgSpeed;
+//			System.out.println("DISTANCE: " + distance);
+			double time = distance/avgSpeed;
+//			System.out.println("TIME: " + time);
+//			System.out.println("************************");
+			return time;
 		}
 	}
 	
