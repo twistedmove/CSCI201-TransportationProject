@@ -32,9 +32,7 @@ public class TrafficHistoryDatabase extends Thread {
 	private static PreparedStatement preparedStatement = null;
 	private static ResultSet resultSet = null;
 	
-	private final String SELECT_CURRENT_STMT = "SELECT * FROM " + CURRENT_TABLE; // TO SELECT ALL FROM CURRENT TABLE (1 ROW)
 	private final String SELECT_HISTORICAL_STMT = "SELECT * FROM " + HISTORICAL_TABLE; // TO SELECT ALL FROM CURRENT TABLE (1 ROW)
-	private final String INSERT_HISTORICAL_STMT = "INSERT INTO " + HISTORICAL_TABLE + " VALUES (?,?,?,?,?,?)"; // INSERT ID, SPEED, DIR, RAMP, FREEWAY, DATETIME
 	
 	private final static String ID_LABEL = "id";
 	private final static String SPEED_LABEL = "speed";
@@ -51,13 +49,56 @@ public class TrafficHistoryDatabase extends Thread {
 	private int serverCall = 0;
 	
 	int serverCalls;
+	DataPullThread dataPullThread;
 	
 //	public static final String SERVER_URL = "http://www-scf.usc.edu/~csci201/mahdi_project/project_data.json";
 	public static final String SERVER_URL = "http://www-scf.usc.edu/~csci201/mahdi_project/test.json";
 	
-//	private CarDeserializer carDeserializer = new CarDeserializer(SERVER_URL);
-	
-//	private Vector<Car> allCars;
+	class DataPullThread extends Thread {
+		
+		public void run() {
+			try {
+				while(true) {
+					updateCurrentRamps();
+					Thread.sleep(5000);
+				}
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		
+		/**
+		 * Updates the car ramps in current table.
+		 * @throws SQLException 
+		 */
+		private void updateCurrentRamps() throws SQLException {
+			System.out.println("&&&& Attempting to update RAMPS &&&&");
+			boolean gotLock = false;
+			while(!gotLock) {
+				gotLock = ButterGUI.allCarsWrapper.getLock().tryLock();
+				System.out.println("&&&& Waiting for lock &&&&");
+			}
+			System.out.println("&&&& Got lock: " + gotLock + " &&&&");
+			try {
+				for(int i=0; i < ButterGUI.allCarsWrapper.allCars.size(); ++i) {
+					String sql = "UPDATE " + CURRENT_TABLE + " SET " + RAMP_LABEL 
+							+ "='" + ButterGUI.allCarsWrapper.allCars.get(i).getRamp() 
+							+ "' WHERE " + ID_LABEL + "=" + i;
+					
+					preparedStatement = connection.prepareStatement(sql);
+					preparedStatement.execute();
+				}
+			} finally {
+				ButterGUI.allCarsWrapper.getLock().unlock();
+				System.out.println("&&&& Releasing lock &&&&");
+			}
+		}
+	}
 	
 	public TrafficHistoryDatabase() throws SQLException {
 		super();
@@ -65,6 +106,8 @@ public class TrafficHistoryDatabase extends Thread {
 		createCurrentTrafficTable();
 		createHistoricalTrafficTable();
 		serverCalls = 0;
+		dataPullThread = new DataPullThread();
+		dataPullThread.start();
 	}
 	
 	/**
@@ -156,29 +199,6 @@ public class TrafficHistoryDatabase extends Thread {
 		}
 	}
 	
-	/**
-	 * Updates the car ramps in current table.
-	 */
-//	private void updateCurrentRamps() {
-//		System.out.println("*** Attempting to update data ***");
-//		boolean gotLock = false;
-//		while(!gotLock) {
-//			gotLock = ButterGUI.allCarsWrapper.getLock().tryLock();
-//			System.out.println("*** Waiting for lock ***");
-//		}
-//		System.out.println("*** Got lock: " + gotLock + " ***");
-//		try {
-//			for(int i=0; i < ButterGUI.allCarsWrapper.allCars.size(); ++i) {
-//				String sql = "UPDATE " + CURRENT_TABLE + " SET " + RAMP_LABEL 
-//						+ "=" + ButterGUI.allCarsWrapper.allCars.get(i).getRamp() 
-//						+ " WHERE " + ID_LABEL + "=" + i;
-//			}
-//		} finally {
-//			ButterGUI.allCarsWrapper.getLock().unlock();
-//			System.out.println("** Releasing lock **");
-//		}
-//	}
-	
 	/** 
 	 * Acquires lock on cars and gets data
 	 * @throws IOException
@@ -211,7 +231,7 @@ public class TrafficHistoryDatabase extends Thread {
 			while(true) {
 				getData();
 				System.out.println("*** SLEEPING ***");
-				Thread.sleep(5000); // 3 minutes = 180000 ms
+				Thread.sleep(180000); // 3 minutes = 180000 ms
 				System.out.println("*** AWAKE ***");
 			}
 		} catch (IOException e) {
@@ -222,33 +242,6 @@ public class TrafficHistoryDatabase extends Thread {
 			System.out.println("TrafficHistoryDatabase.run(): InterruptedException: " + e.getMessage());
 		}
 	}
-	
-//	/**
-//	 * Moves the data in the current data table to the historical table
-//	 */
-//	private void moveCurrentToHistorical() {
-//		try {
-//			preparedStatement = connection.prepareStatement(SELECT_CURRENT_STMT);
-//			resultSet = preparedStatement.executeQuery();
-//			
-//			while(resultSet.next()) {
-//				extractData();
-//				
-//				preparedStatement = connection.prepareStatement(INSERT_HISTORICAL_STMT);
-//				preparedStatement.setInt(1, id);
-//				preparedStatement.setDouble(2, speed);
-//				preparedStatement.setString(3, direction);
-//				preparedStatement.setString(4, ramp);
-//				preparedStatement.setString(5, freeway);
-//				preparedStatement.setTimestamp(6, datetime);
-//				
-//				preparedStatement.executeUpdate();
-//			}
-//			System.out.println("Data moved to historical table");
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-//		}
-//	}
 	
 	/**
 	 * Extracts data from result set.
@@ -271,8 +264,11 @@ public class TrafficHistoryDatabase extends Thread {
 	 */
 	private void addNewCarData() {
 		try {
-			String sql = "";
+			String sql = "DELETE FROM " + CURRENT_TABLE;
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.execute();
 //			moveCurrentToHistorical();
+			System.out.println("DELETED");
 			for(Car c : ButterGUI.allCarsWrapper.allCars) {
 				sql = "INSERT INTO " + CURRENT_TABLE + " VALUES (" + c.insertString() + "," + serverCalls + ")";
 				preparedStatement = connection.prepareStatement(sql);
