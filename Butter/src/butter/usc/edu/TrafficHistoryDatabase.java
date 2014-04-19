@@ -24,30 +24,30 @@ public class TrafficHistoryDatabase extends Thread {
 	private final String DATABASE = "traffic_history";
 	
 	/** The name of the table we are testing with */
-	private final String CURRENT_TABLE = "current_traffic_data";
-	private final String HISTORICAL_TABLE = "historical_traffic_data";
+	private final static String CURRENT_TABLE = "current_traffic_data";
+	private final static String HISTORICAL_TABLE = "historical_traffic_data";
 	
-	private Connection connection = null;
-	private Statement statement = null;
-	private PreparedStatement preparedStatement = null;
-	private ResultSet resultSet = null;
+	private static Connection connection = null;
+	private static Statement statement = null;
+	private static PreparedStatement preparedStatement = null;
+	private static ResultSet resultSet = null;
 	
 	private final String SELECT_CURRENT_STMT = "SELECT * FROM " + CURRENT_TABLE; // TO SELECT ALL FROM CURRENT TABLE (1 ROW)
 	private final String SELECT_HISTORICAL_STMT = "SELECT * FROM " + HISTORICAL_TABLE; // TO SELECT ALL FROM CURRENT TABLE (1 ROW)
 	private final String INSERT_HISTORICAL_STMT = "INSERT INTO " + HISTORICAL_TABLE + " VALUES (?,?,?,?,?,?)"; // INSERT ID, SPEED, DIR, RAMP, FREEWAY, DATETIME
 	
-	private final String ID_LABEL = "id";
-	private final String SPEED_LABEL = "speed";
-	private final String DIRECTION_LABEL = "direction";
-	private final String RAMP_LABEL = "ramp";
-	private final String FREEWAY_LABEL = "freeway";
-	private final String DATETIME_LABEL = "timestamp";
+	private final static String ID_LABEL = "id";
+	private final static String SPEED_LABEL = "speed";
+	private final static String DIRECTION_LABEL = "direction";
+	private final static String RAMP_LABEL = "ramp";
+	private final static String FREEWAY_LABEL = "freeway";
+	private final static String DATETIME_LABEL = "timestamp";
 	
 	private int id = 0;
-	private double speed = 0;
-	private String direction = null;
-	private String ramp = null;
-	private String freeway = null;
+	private static double speed = 0;
+	private static String direction = null;
+	private static String ramp = null;
+	private static String freeway = null;
 	private Timestamp datetime = null;
 	
 	int serverCalls;
@@ -156,6 +156,33 @@ public class TrafficHistoryDatabase extends Thread {
 		}
 	}
 	
+	/**
+	 * Updates the car ramps in current table.
+	 */
+//	private void updateCurrentRamps() {
+//		System.out.println("*** Attempting to update data ***");
+//		boolean gotLock = false;
+//		while(!gotLock) {
+//			gotLock = ButterGUI.allCarsWrapper.getLock().tryLock();
+//			System.out.println("*** Waiting for lock ***");
+//		}
+//		System.out.println("*** Got lock: " + gotLock + " ***");
+//		try {
+//			for(int i=0; i < ButterGUI.allCarsWrapper.allCars.size(); ++i) {
+//				String sql = "UPDATE " + CURRENT_TABLE + " SET " + RAMP_LABEL 
+//						+ "=" + ButterGUI.allCarsWrapper.allCars.get(i).getRamp() 
+//						+ " WHERE " + ID_LABEL + "=" + i;
+//			}
+//		} finally {
+//			ButterGUI.allCarsWrapper.getLock().unlock();
+//			System.out.println("** Releasing lock **");
+//		}
+//	}
+	
+	/** 
+	 * Acquires lock on cars and gets data
+	 * @throws IOException
+	 */
 	private void getData() throws IOException {
 		System.out.println("*** Attempting to get data ***");
 		boolean gotLock = false;
@@ -326,9 +353,9 @@ public class TrafficHistoryDatabase extends Thread {
 	 * @return
 	 * @throws SQLException 
 	 */
-	public double getEdgeAverageTime(String direction, Ramp ramp) throws SQLException, Exception {
-		double time = 0;
+	public static double getEdgeAverageTime(String direction, Ramp ramp) throws SQLException, Exception {
 		double distance = 0;
+		int s = 0;
 		Ramp nextRamp = null;
 		
 		String sql = "SELECT " + SPEED_LABEL
@@ -336,78 +363,90 @@ public class TrafficHistoryDatabase extends Thread {
 					+ FREEWAY_LABEL + "=" + ramp.freeway + " AND " 
 					+ DIRECTION_LABEL + "='" + direction + "' AND "
 					+ RAMP_LABEL + "='" + ramp.name + "'";
+
 		
 		preparedStatement = connection.prepareStatement(sql);
 		resultSet = preparedStatement.executeQuery();
 		
-		speed = resultSet.getDouble(SPEED_LABEL);
-		
-		if(ramp.freeway == 101) {
-			if(direction.equals(Car.NORTH)) {
-				nextRamp = ramp.getNext();
-			}
-			else if(direction.equals(Car.SOUTH)) {
-				nextRamp = ramp.getPrevious();
-			}
-			else {
-				System.out.println("101 wrong direction!");
-				throw new Exception("101 Wrong direction!");
-			}
-			
-			for(int i=ramp.indexOfCoordinate; i < nextRamp.indexOfCoordinate; ++i) {
-				distance += PathBank.locations101.get(i).milesToNext;
-			}
-		}
-		else if(ramp.freeway == 405) {
-			if(direction.equals(Car.NORTH)) {
-				nextRamp = ramp.getNext();
-			}
-			else if(direction.equals(Car.SOUTH)) {
-				nextRamp = ramp.getPrevious();
-			}
-			else {
-				System.out.println("405 wrong direction!");
-				throw new Exception("405 Wrong direction!");
-			}
-			
-			for(int i=ramp.indexOfCoordinate; i < nextRamp.indexOfCoordinate; ++i) {
-				distance += PathBank.locations405.get(i).milesToNext;
-			}
-		}
-		else if(ramp.freeway == 10) {
-			if(direction.equals(Car.EAST)) {
-				nextRamp = ramp.getPrevious();
-			}
-			else if(direction.equals(Car.WEST)) {
-				nextRamp = ramp.getNext();
-			}
-			else {
-				System.out.println("10 wrong direction!");
-				throw new Exception("10 Wrong direction!");
-			}
-			
-			for(int i=ramp.indexOfCoordinate; i < nextRamp.indexOfCoordinate; ++i) {
-				distance += PathBank.locations10.get(i).milesToNext;
-			}
-		}
-		else if(ramp.freeway == 105) {
-			if(direction.equals(Car.EAST)) {
-				nextRamp = ramp.getNext();
-			}
-			else if(direction.equals(Car.WEST)) {
-				nextRamp = ramp.getPrevious();
-			}
-			else {
-				System.out.println("105 wrong direction!");
-				throw new Exception("105 Wrong direction!");
-			}
-			
-			for(int i=ramp.indexOfCoordinate; i < nextRamp.indexOfCoordinate; ++i) {
-				distance += PathBank.locations105.get(i).milesToNext;
-			}
+		int num = 0;
+		while(resultSet.next()) {
+			s += resultSet.getDouble(SPEED_LABEL);
+			++num;
 		}
 		
-		return distance/speed;
+		if(num == 0) {
+			return 0;
+		}
+		else {
+			double avgSpeed = s/num;
+		
+			if(ramp.freeway == 101) {
+				if(direction.equals(Car.NORTH)) {
+					nextRamp = ramp.getNext();
+				}
+				else if(direction.equals(Car.SOUTH)) {
+					nextRamp = ramp.getPrevious();
+				}
+				else {
+					System.out.println("101 wrong direction!");
+					throw new Exception("101 Wrong direction!");
+				}
+				
+				for(int i=ramp.indexOfCoordinate; i < nextRamp.indexOfCoordinate; ++i) {
+					distance += PathBank.locations101.get(i).milesToNext;
+				}
+			}
+			else if(ramp.freeway == 405) {
+				if(direction.equals(Car.NORTH)) {
+					nextRamp = ramp.getNext();
+				}
+				else if(direction.equals(Car.SOUTH)) {
+					nextRamp = ramp.getPrevious();
+				}
+				else {
+					System.out.println("405 wrong direction!");
+					throw new Exception("405 Wrong direction!");
+				}
+				
+				for(int i=ramp.indexOfCoordinate; i < nextRamp.indexOfCoordinate; ++i) {
+					distance += PathBank.locations405.get(i).milesToNext;
+				}
+			}
+			else if(ramp.freeway == 10) {
+				if(direction.equals(Car.EAST)) {
+					nextRamp = ramp.getPrevious();
+				}
+				else if(direction.equals(Car.WEST)) {
+					nextRamp = ramp.getNext();
+				}
+				else {
+					System.out.println("10 wrong direction!");
+					throw new Exception("10 Wrong direction!");
+				}
+				
+				for(int i=ramp.indexOfCoordinate; i < nextRamp.indexOfCoordinate; ++i) {
+					distance += PathBank.locations10.get(i).milesToNext;
+				}
+			}
+			else if(ramp.freeway == 105) {
+				if(direction.equals(Car.EAST)) {
+					nextRamp = ramp.getNext();
+				}
+				else if(direction.equals(Car.WEST)) {
+					nextRamp = ramp.getPrevious();
+				}
+				else {
+					System.out.println("105 wrong direction!");
+					throw new Exception("105 Wrong direction!");
+				}
+				
+				for(int i=ramp.indexOfCoordinate; i < nextRamp.indexOfCoordinate; ++i) {
+					distance += PathBank.locations105.get(i).milesToNext;
+				}
+			}
+			
+			return distance/avgSpeed;
+		}
 	}
 	
 	private String escapeCommas(String s) {
