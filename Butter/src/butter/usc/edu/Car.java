@@ -18,6 +18,8 @@ public class Car {
 	private int rampIndex;
 	private int coordinateIndex;
 	public Point point;
+	public Point previousPoint;
+	private double radiansToRotate;
 	public static final String EAST = "East";
 	public static final String WEST = "West";
 	public static final String NORTH = "North";
@@ -46,6 +48,7 @@ public class Car {
 		this.freewayIndex = getFreewayIndex(this);
 		this.rampIndex = getRampIndex(this);
 		this.point = RampBank.allRamps.get(freewayIndex).get(rampIndex).l.point;
+		previousPoint = point;
 		this.coordinateIndex = RampBank.allRamps.get(freewayIndex).get(rampIndex).indexOfCoordinate;
 		milesPerTimeDiv = speed / secPerHour / updatePerSec;
 		findIfIncrease();
@@ -74,6 +77,9 @@ public class Car {
 	}
 
 	public void updateSpeed() {
+		//previousPoint = point;
+//		oldX = point.x;
+//		oldY = point.y;
 		Boolean increased = false;
 		double tempX = 0;
 		double tempY = 0;
@@ -221,7 +227,45 @@ public class Car {
 				numPointsToNextRamp = RampBank.allIndices[freewayIndex][rampIndex] - RampBank.allIndices[freewayIndex][rampIndex-1];
 			}
 		}
+	}
+	
+	public double getRadiansToRotate(){
+		Point aim = null;
+		if (increaseOnPath) {
+			if (rampIndex < RampBank.allIndices[freewayIndex].length - 1) {
+				aim = RampBank.allRamps.get(freewayIndex).get(rampIndex + 1).l.point;
+			}
+		}
+		else {
+			if (rampIndex > 0) {
+				aim = RampBank.allRamps.get(freewayIndex).get(rampIndex - 1).l.point;
+			}
+		}
+		if (aim != null) {
+			radiansToRotate = Math.atan2(aim.y - point.y, aim.x - point.x);
+		}
+		
+		if (radiansToRotate < 0) {
+			radiansToRotate += 2*Math.PI;
+		}
+		System.out.println("Rads: " + radiansToRotate + " " + point + " " + aim);
+		System.out.println("Degrees: " + Math.toDegrees(radiansToRotate));
 
+		return radiansToRotate;
+	}
+	public void startRadian() {
+		if (direction.equals(WEST)) {
+			radiansToRotate = Math.PI;
+		}
+		else if (direction.equals(EAST)) {
+			radiansToRotate = 0;
+		}
+		else if (direction.equals(NORTH)) {
+			radiansToRotate = Math.PI / 2.0;
+		}
+		if (direction.equals(SOUTH)) {
+			radiansToRotate = Math.PI * (4.0/3.0);
+		}
 	}
 
 	public int getId() {

@@ -37,7 +37,8 @@ public class CarTimer implements Runnable {
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
-		final int timeSlice = 163; 
+		final int timeSlice = 63;
+		
 		System.out.println("Starting CarTimer");
 		Timer timer = new  Timer (timeSlice, new ActionListener () {
 		public void actionPerformed (ActionEvent e) {
