@@ -47,5 +47,14 @@ public class PanelDraw extends JPanel{
 			}
 			g2d.setTransform(old);
 		}
+		
+		for (int i =0; i<ButterGUI.getLocationMarkers().size(); i++){
+			Marker m = ButterGUI.getLocationMarkers().get(i);
+			m.paintLocMarkers(g);		
+		}
+		
+		
+		
+		
 	}
 }

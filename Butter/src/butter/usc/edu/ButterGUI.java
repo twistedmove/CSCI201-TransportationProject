@@ -90,6 +90,9 @@ public class ButterGUI extends JFrame implements MouseListener{
 	private JPanel fromDestinationPanel;
 	private JPanel destinationPanel;
 	private JPanel toDestinationPanel;
+	private static Vector<Marker> locationMarkers;
+	private boolean clearLocation;
+	private JButton searchButton;
 	
 	
 	
@@ -116,7 +119,9 @@ public class ButterGUI extends JFrame implements MouseListener{
 			}
 		});
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+		clearLocation = false;
 		allCarsWrapper = new AllCarsWrapper();
+		locationMarkers = new Vector<Marker>();
 		try {
 			pb = new PathBank();
 		} catch (TxtFormatException tfe) {
@@ -285,19 +290,28 @@ public class ButterGUI extends JFrame implements MouseListener{
 				
 				
 			    // BUTTONS
-				JButton searchButton = new JButton("Find Route");
+				searchButton = new JButton();
+				searchButton.setText("Find Route");
 				searchButton.setBounds(907, 134, 287, 30);
 				searchButton.setBackground(new Color(59, 89, 182));
 				searchButton.setForeground(Color.WHITE);
 				searchButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						try {
-							List<Vertex> path = dijskstraPath();
-							routePanel.drawRoute(path);
-						} catch (SQLException sqle) {
-							sqle.printStackTrace();
-						} catch (Exception ee) {
-							ee.printStackTrace();
+						if (!clearLocation){
+							try {
+								List<Vertex> path = dijskstraPath();
+								routePanel.drawRoute(path);
+							} catch (SQLException sqle) {
+								sqle.printStackTrace();
+							} catch (Exception ee) {
+								ee.printStackTrace();
+							}
+							clearLocation = true;
+							searchButton.setText("Clear");
+						} else if(clearLocation){
+							locationMarkers.clear();
+							clearLocation = false;
+							searchButton.setText("Find Route");							
 						}
 					}
 				});
@@ -412,65 +426,31 @@ public class ButterGUI extends JFrame implements MouseListener{
 		// Vertexlist has all ramps from all 4 freeways	
 		// Setting up all edges for all freeways including branches
 		for (int i=0; i<vertexList.size(); i++){
-			
 			for (int j=0; j<RampBank.ramps10.size(); j++){
 				if (RampBank.ramps10.get(j).name.equals(vertexList.get(i).name)){
 					if (RampBank.ramps10.get(j).getLocation().next == null){
 							vertexList.get(i).adjacencies = new Edge[]{
-								new Edge(vertexList.get(i-1), TrafficHistoryDatabase.getEdgeAverageTime(Car.EAST, RampBank.ramps10.get(j))),
+								new Edge(vertexList.get(i-1), TrafficHistoryDatabase.getEdgeAverageTime(Car.WEST, RampBank.ramps10.get(j))),
 							};
 					} else if (RampBank.ramps10.get(j).getLocation().previous == null){
 							vertexList.get(i).adjacencies = new Edge[]{
-								new Edge(vertexList.get(i+1),TrafficHistoryDatabase.getEdgeAverageTime(Car.WEST, RampBank.ramps10.get(j))),
+								new Edge(vertexList.get(i+1),TrafficHistoryDatabase.getEdgeAverageTime(Car.EAST, RampBank.ramps10.get(j))),
 							};
 					} else if(RampBank.ramps10.get(j).getLocation().branch == null){
 							vertexList.get(i).adjacencies = new Edge[]{
-								new Edge(vertexList.get(i+1),TrafficHistoryDatabase.getEdgeAverageTime(Car.WEST, RampBank.ramps10.get(j))),
-								new Edge(vertexList.get(i-1),TrafficHistoryDatabase.getEdgeAverageTime(Car.EAST, RampBank.ramps10.get(j)))
+								new Edge(vertexList.get(i+1),TrafficHistoryDatabase.getEdgeAverageTime(Car.EAST, RampBank.ramps10.get(j))),
+								new Edge(vertexList.get(i-1),TrafficHistoryDatabase.getEdgeAverageTime(Car.WEST, RampBank.ramps10.get(j)))
 							};
 					} else if (RampBank.ramps10.get(j).getLocation().branch != null){
 						int tempLoca = 0;
 						for (int z=0; z<vertexList.size(); z++){
-							if (vertexList.get(z).getName().equals(RampBank.ramps10.get(j).name)){
-								tempLoca = z;
-								System.out.println("TRUE");
-							}
-						}
-							vertexList.get(i).adjacencies = new Edge[]{
-								new Edge(vertexList.get(i+1),TrafficHistoryDatabase.getEdgeAverageTime(Car.WEST, RampBank.ramps10.get(j))),
-								new Edge(vertexList.get(i-1),TrafficHistoryDatabase.getEdgeAverageTime(Car.EAST, RampBank.ramps10.get(j))),
-								new Edge(vertexList.get(tempLoca), 0)
-							};
-					}
-
-				}
-			}
-			
-			for (int j=0; j<RampBank.ramps10.size(); j++){
-				if (RampBank.ramps10.get(j).name.equals(vertexList.get(i).name)){
-					if (RampBank.ramps10.get(j).getLocation().next == null){
-							vertexList.get(i).adjacencies = new Edge[]{
-								new Edge(vertexList.get(i-1), TrafficHistoryDatabase.getEdgeAverageTime(Car.EAST, RampBank.ramps10.get(j))),
-							};
-					} else if (RampBank.ramps10.get(j).getLocation().previous == null){
-							vertexList.get(i).adjacencies = new Edge[]{
-								new Edge(vertexList.get(i+1),TrafficHistoryDatabase.getEdgeAverageTime(Car.WEST, RampBank.ramps10.get(j))),
-							};
-					} else if(RampBank.ramps10.get(j).getLocation().branch == null){
-							vertexList.get(i).adjacencies = new Edge[]{
-								new Edge(vertexList.get(i+1),TrafficHistoryDatabase.getEdgeAverageTime(Car.WEST, RampBank.ramps10.get(j))),
-								new Edge(vertexList.get(i-1),TrafficHistoryDatabase.getEdgeAverageTime(Car.EAST, RampBank.ramps10.get(j)))
-							};
-					} else if (RampBank.ramps10.get(j).getLocation().branch != null){
-						int tempLoca = 0;
-						for (int z=0; z<vertexList.size(); z++){
-							if (vertexList.get(z).getName().equals(RampBank.ramps10.get(j).name)){
+							if (vertexList.get(z).getName().equals(RampBank.ramps10.get(j).getLocation().branch)){ //TODO
 								tempLoca = z;
 							}
 						}
 							vertexList.get(i).adjacencies = new Edge[]{
-								new Edge(vertexList.get(i+1),TrafficHistoryDatabase.getEdgeAverageTime(Car.WEST, RampBank.ramps10.get(j))),
-								new Edge(vertexList.get(i-1),TrafficHistoryDatabase.getEdgeAverageTime(Car.EAST, RampBank.ramps10.get(j))),
+								new Edge(vertexList.get(i+1),TrafficHistoryDatabase.getEdgeAverageTime(Car.EAST, RampBank.ramps10.get(j))),
+								new Edge(vertexList.get(i-1),TrafficHistoryDatabase.getEdgeAverageTime(Car.WEST, RampBank.ramps10.get(j))),
 								new Edge(vertexList.get(tempLoca), 0)
 							};
 					}
@@ -498,7 +478,7 @@ public class ButterGUI extends JFrame implements MouseListener{
 					} else if (RampBank.ramps101.get(j).getLocation().branch != null){
 						int tempLoca = 0;
 						for (int z=0; z<vertexList.size(); z++){
-							if (vertexList.get(z).getName().equals(RampBank.ramps101.get(j).name)){
+							if (vertexList.get(z).getName().equals(RampBank.ramps101.get(j).getLocation().branch)){ //TODO
 								tempLoca = z;
 							}
 						}
@@ -530,7 +510,7 @@ public class ButterGUI extends JFrame implements MouseListener{
 					} else if (RampBank.ramps405.get(j).getLocation().branch != null){
 						int tempLoca = 0;
 						for (int z=0; z<vertexList.size(); z++){
-							if (vertexList.get(z).getName().equals(RampBank.ramps405.get(j).name)){
+							if (vertexList.get(z).getName().equals(RampBank.ramps405.get(j).getLocation().branch)){ //TODO
 								tempLoca = z;
 							}
 						}
@@ -548,27 +528,27 @@ public class ButterGUI extends JFrame implements MouseListener{
 				if (RampBank.ramps105.get(j).name.equals(vertexList.get(i).name)){
 					if (RampBank.ramps105.get(j).getLocation().next == null){
 						vertexList.get(i).adjacencies = new Edge[]{
-							new Edge(vertexList.get(i-1),TrafficHistoryDatabase.getEdgeAverageTime(Car.EAST, RampBank.ramps105.get(j))),
+							new Edge(vertexList.get(i-1),TrafficHistoryDatabase.getEdgeAverageTime(Car.WEST, RampBank.ramps105.get(j))),
 						};
 					} else if (RampBank.ramps105.get(j).getLocation().previous == null){
 						vertexList.get(i).adjacencies = new Edge[]{
-							new Edge(vertexList.get(i+1),TrafficHistoryDatabase.getEdgeAverageTime(Car.WEST, RampBank.ramps105.get(j))),
+							new Edge(vertexList.get(i+1),TrafficHistoryDatabase.getEdgeAverageTime(Car.EAST, RampBank.ramps105.get(j))),
 						};	
 					} else if(RampBank.ramps105.get(j).getLocation().branch == null){
 						vertexList.get(i).adjacencies = new Edge[]{
-							new Edge(vertexList.get(i+1),TrafficHistoryDatabase.getEdgeAverageTime(Car.WEST, RampBank.ramps105.get(j))),
-							new Edge(vertexList.get(i-1),TrafficHistoryDatabase.getEdgeAverageTime(Car.EAST, RampBank.ramps105.get(j)))
+							new Edge(vertexList.get(i+1),TrafficHistoryDatabase.getEdgeAverageTime(Car.EAST, RampBank.ramps105.get(j))),
+							new Edge(vertexList.get(i-1),TrafficHistoryDatabase.getEdgeAverageTime(Car.WEST, RampBank.ramps105.get(j)))
 						};
 					} else if (RampBank.ramps105.get(j).getLocation().branch != null){
 						int tempLoca = 0;
 						for (int z=0; z<vertexList.size(); z++){
-							if (vertexList.get(z).getName().equals(RampBank.ramps105.get(j).name)){
+							if (vertexList.get(z).getName().equals(RampBank.ramps105.get(j).getLocation().branch)){ //TODO
 								tempLoca = z;
 							}
 						}
 						vertexList.get(i).adjacencies = new Edge[]{
-							new Edge(vertexList.get(i+1),TrafficHistoryDatabase.getEdgeAverageTime(Car.WEST, RampBank.ramps105.get(j))),
-							new Edge(vertexList.get(i-1),TrafficHistoryDatabase.getEdgeAverageTime(Car.EAST, RampBank.ramps105.get(j))),
+							new Edge(vertexList.get(i+1),TrafficHistoryDatabase.getEdgeAverageTime(Car.EAST, RampBank.ramps105.get(j))),
+							new Edge(vertexList.get(i-1),TrafficHistoryDatabase.getEdgeAverageTime(Car.WEST, RampBank.ramps105.get(j))),
 							new Edge(vertexList.get(tempLoca), 0)
 						};
 					}
@@ -598,7 +578,23 @@ public class ButterGUI extends JFrame implements MouseListener{
 				jta.setText(jta.getText() + "To: " + toHighway.getSelectedItem() + " - " + toRamp.getSelectedItem() + "\n");
 				jta.setText(jta.getText() + "            Time to Destination: " + (v.minDistance * 60.0) + " minutes \n");
 				path = getShortestPathTo(v);
-				System.out.println("Path: " + path);
+				
+				if (locationMarkers.size() > 1){
+					locationMarkers.clear();
+				}
+				
+				for (int k=0; k<RampBank.allRamps.size(); k++){
+					for (int l=0; l<RampBank.allRamps.get(k).size(); l++){
+						for (int j =0; j<path.size(); j++){
+							if (RampBank.allRamps.get(k).get(l).name.equals(path.get(j).getName())){
+								System.out.println("Path: " + path.get(j));
+								Marker mark = new Marker(RampBank.allRamps.get(k).get(l).getLocation().point.x, RampBank.allRamps.get(k).get(l).getLocation().point.y);
+								locationMarkers.add(mark);
+							}
+						}
+					}
+				}
+				mapPicPanel.repaint();
 				gotDestination = true;
 			}
 		}
@@ -632,6 +628,9 @@ public class ButterGUI extends JFrame implements MouseListener{
             }
         }
     }
+	
+
+	
 	
     public static List<Vertex> getShortestPathTo(Vertex target){
         List<Vertex> path = new ArrayList<Vertex>();
@@ -705,4 +704,8 @@ public class ButterGUI extends JFrame implements MouseListener{
 
 	@Override
 	public void mouseExited(MouseEvent e) {}
+
+	public static Vector<Marker> getLocationMarkers() {
+		return locationMarkers;
+	}
 }
