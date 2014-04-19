@@ -584,10 +584,13 @@ public class ButterGUI extends JFrame implements MouseListener{
 		computePaths(vertexList.get(startIndex));
 		for (int i=0; i< vertexList.size(); i++){
 			Vertex v = vertexList.get(i);
-			if (toRamp.getSelectedItem().equals(v.getName())){					
-			    System.out.println("Time to " + v + ": " + v.minDistance);
-			    List<Vertex> path = getShortestPathTo(v);
-			    System.out.println("Path: " + path);
+			if (toRamp.getSelectedItem().equals(v.getName())){				
+				jta.setText("");
+				jta.setText(jta.getText() + "From: " + fromHighway.getSelectedItem() + " - " + fromRamp.getSelectedItem() + "\n");
+				jta.setText(jta.getText() + "To: " + toHighway.getSelectedItem() + " - " + toRamp.getSelectedItem() + "\n");
+				jta.setText(jta.getText() + "            Time to Destination: " + (v.minDistance * 60) + " minutes \n");
+				//List<Vertex> path = getShortestPathTo(v);
+				//System.out.println("Path: " + path);  
 			}
 		}
 				

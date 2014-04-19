@@ -237,8 +237,8 @@ public class Car {
 		if (radiansToRotate < 0) {
 			radiansToRotate += 2*Math.PI;
 		}
-		System.out.println("Rads: " + radiansToRotate + " " + point + " " + aim);
-		System.out.println("Degrees: " + Math.toDegrees(radiansToRotate));
+		//System.out.println("Rads: " + radiansToRotate + " " + point + " " + aim);
+		//System.out.println("Degrees: " + Math.toDegrees(radiansToRotate));
 
 		return radiansToRotate;
 	}
