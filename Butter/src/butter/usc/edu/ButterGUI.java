@@ -73,6 +73,7 @@ public class ButterGUI extends JFrame implements MouseListener{
 	private static final long serialVersionUID = 367534120156013938L;
 
 	public JPanel mapPanel;
+	public RoutePanel routePanel;
 	public PanelDraw mapPicPanel;
 	public JLabel picLabel;
 	public static boolean noCar;
@@ -172,6 +173,8 @@ public class ButterGUI extends JFrame implements MouseListener{
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void setupButterGUI(){	
+		
+		routePanel = new RoutePanel();
 		// MAP STUFF
 				mapPanel = new JPanel();
 				mapPanel.setLocation(0, 0);
@@ -290,6 +293,7 @@ public class ButterGUI extends JFrame implements MouseListener{
 					public void actionPerformed(ActionEvent e) {
 						try {
 							List<Vertex> path = dijskstraPath();
+							routePanel.drawRoute(path);
 						} catch (SQLException sqle) {
 							sqle.printStackTrace();
 						} catch (Exception ee) {
