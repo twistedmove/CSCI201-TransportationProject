@@ -99,7 +99,7 @@ public class GraphChartWindow extends JFrame{
 		getContentPane().add(GraphPanel);
 
 		//SelectFreeway ComboBox
-		String[] freeways = {"All Freeways", "10", "Freeway 2", "Freeway 3"};			//TODO change these to the correct freeways
+		String[] freeways = {"All Freeways", "10", "101", "105", "405"};			//TODO change these to the correct freeways
 		JComboBox freewayComboBox = new JComboBox(freeways);
 		freewayComboBox.setBounds(32, 6, 156, 27);
 		getContentPane().add(freewayComboBox);
@@ -130,7 +130,6 @@ public class GraphChartWindow extends JFrame{
 		}
 		DefaultTableModel tableModel = new DefaultTableModel(data, cols.toArray());
 		tableModel.setColumnIdentifiers(cols);
-
 		theTable.setModel(tableModel);
 	}
 
@@ -154,8 +153,9 @@ public class GraphChartWindow extends JFrame{
 		String ramp = null;
 		String freeway = null;
 		int serverCall = 0;
-		
+
 		ArrayList< ArrayList<Double> > theCars = new ArrayList< ArrayList<Double> >();
+		ArrayList<String> freeways = new ArrayList<String>();
 
 		//Connecting to database
 		try {
@@ -168,7 +168,6 @@ public class GraphChartWindow extends JFrame{
 			preparedStatement = connection.prepareStatement("SELECT * FROM " + HISTORICAL_TABLE);
 			resultSet = preparedStatement.executeQuery();
 			//Pulling Data
-			boolean stillTraversing = true;
 			while(resultSet.next())
 			{
 				id = resultSet.getInt("id");
@@ -178,19 +177,28 @@ public class GraphChartWindow extends JFrame{
 				freeway = resultSet.getString("freeway");
 				serverCall =  resultSet.getInt("serverCalls");
 
-				if(selectedFreeway == "All Freeways" || selectedFreeway == freeway)
+				int findRightID = -1;
+				for(int i = 0; i< theCars.size(); i++)
 				{
-					if(theCars.size() <= id)
+					if(theCars.get(i).get(0) == id)
 					{
-						theCars.add(new ArrayList<Double>());
-						for(int i= 1; i<serverCall; i++)
-						{
-							theCars.get(id).add(0.0);
-						}
+						findRightID = id;
+						break;
 					}
-					theCars.get(id).add(speed);
 				}
-				
+				if(findRightID == -1)
+				{
+					theCars.add(new ArrayList<Double>());
+					theCars.get(theCars.size()-1).add((double) id);
+					for(int i= 1; i<serverCall; i++)
+					{
+						theCars.get(id).add(0.0);
+					}
+					freeways.add(freeway);
+				}
+				findRightID = id;
+				theCars.get(findRightID).add(speed);
+				theCars.get(findRightID).size();
 			}
 
 			for(int i = 0; i<theCars.size(); i++)
@@ -200,16 +208,40 @@ public class GraphChartWindow extends JFrame{
 					theCars.get(i).add(0.0);
 				}
 			}
-
+			if(!selectedFreeway.equals("All Freeways"))
+			{
+				boolean a = false;
+				while(!a)
+				{
+					for(int i = 0; i<freeways.size(); i++)
+					{
+						if(!selectedFreeway.equals(freeways.get(i)))
+						{
+							if(theCars.size() == 1)
+							{
+								Object[][] data = {{"0"}};
+								return data;
+							}
+							theCars.remove(i);
+							freeways.remove(i);
+							break;
+						}
+						if(i == freeways.size()-1)
+						{
+							a = true;
+						}
+					}
+				}
+			}
 			Object[][] data = new Object[theCars.size()][serverCall+2];
-			
+
 
 			for(int i = 0; i<theCars.size(); i++)
 			{
-				data[i][0] = i;
-				for(int j = 0 ; j<theCars.get(i).size(); j++)
+				data[i][0] = theCars.get(i).get(0).intValue();
+				for(int j = 1; j<theCars.get(i).size(); j++)
 				{
-					data[i][j+1] = theCars.get(i).get(j);
+					data[i][j] = theCars.get(i).get(j);
 				}
 			}
 			return data;
@@ -240,6 +272,7 @@ public class GraphChartWindow extends JFrame{
 	}
 	//================================================================================================================================================
 	//Other classes
+
 	//================================================================================================================================================	
 
 	//------- Graph Display Panel-------
