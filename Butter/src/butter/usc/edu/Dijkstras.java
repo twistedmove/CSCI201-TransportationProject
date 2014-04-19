@@ -80,6 +80,7 @@ public class Dijkstras{
         return path;
     }
 
+/* 
     public static void main(String[] args){
       Vertex v0 = new Vertex("Harrisburg");
 		Vertex v1 = new Vertex("Baltimore");
@@ -114,5 +115,5 @@ public class Dijkstras{
 		    System.out.println("Path: " + path);
 		}
     }
-    
+*/    
 }

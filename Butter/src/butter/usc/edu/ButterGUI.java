@@ -24,7 +24,6 @@ import java.util.Vector;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-import java.util.List;
 
 import javax.imageio.ImageIO;
 import javax.swing.DefaultComboBoxModel;
@@ -86,6 +85,9 @@ public class ButterGUI extends JFrame implements MouseListener{
 	private static JComboBox toRamp;
 	private static JTextArea jta;
 	private TrafficHistoryDatabase trafficHistoryDatabase;
+	private JPanel fromDestinationPanel;
+	private JPanel destinationPanel;
+	private JPanel toDestinationPanel;
 	
 	
 	
@@ -96,8 +98,9 @@ public class ButterGUI extends JFrame implements MouseListener{
 	Image map;
 	@SuppressWarnings("unused")
 	private PathBank pb;
+	@SuppressWarnings("unused")
 	private RampBank rb;
-	private Dijkstras dj;
+
 
 	public ButterGUI () {
 		this.setMinimumSize(new Dimension(1200,720));
@@ -212,15 +215,15 @@ public class ButterGUI extends JFrame implements MouseListener{
 					mapPanel.add(jsp);
 		
 				// TO AND FROM SEARCH
-				JPanel destinationPanel = new JPanel();
+					destinationPanel = new JPanel();
 					destinationPanel.setLayout(null);
 					destinationPanel.setBounds(907, 5, 286, 125);
 					destinationPanel.setBorder(new TitledBorder("Destination"));
-				JPanel fromDestinationPanel = new JPanel();
+					fromDestinationPanel = new JPanel();
 					fromDestinationPanel.setLayout(null);
 					fromDestinationPanel.setBounds(4, 16, 278, 54);
 					fromDestinationPanel.setBorder(new TitledBorder("From")); 
-				JPanel toDestinationPanel = new JPanel();
+					toDestinationPanel = new JPanel();
 					toDestinationPanel.setLayout(null);
 					toDestinationPanel.setBounds(4, 66, 278, 54);
 					toDestinationPanel.setBorder(new TitledBorder("To")); 
@@ -231,14 +234,12 @@ public class ButterGUI extends JFrame implements MouseListener{
 					fromHighway.setSelectedIndex(0);
 					fromHighway.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent arg0) {
-							@SuppressWarnings("static-access")
-							DefaultComboBoxModel model = new DefaultComboBoxModel(rb.rampNames[fromHighway.getSelectedIndex()]);
+							DefaultComboBoxModel model = new DefaultComboBoxModel(RampBank.rampNames[fromHighway.getSelectedIndex()]);
 							fromRamp.setModel(model);
 						}
 					});
 					
-					@SuppressWarnings("static-access")
-					DefaultComboBoxModel model1 = new DefaultComboBoxModel(rb.rampNames[fromHighway.getSelectedIndex()]);
+					DefaultComboBoxModel model1 = new DefaultComboBoxModel(RampBank.rampNames[fromHighway.getSelectedIndex()]);
 					fromRamp = new JComboBox();
 					fromRamp.setModel(model1);
 					fromRamp.setBounds(82, 16, 190, 30);
@@ -248,14 +249,12 @@ public class ButterGUI extends JFrame implements MouseListener{
 					toHighway.setBounds(8, 16, 70, 30);
 					toHighway.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
-							@SuppressWarnings("static-access")
-							DefaultComboBoxModel model = new DefaultComboBoxModel(rb.rampNames[toHighway.getSelectedIndex()]);
+							DefaultComboBoxModel model = new DefaultComboBoxModel(RampBank.rampNames[toHighway.getSelectedIndex()]);
 							toRamp.setModel(model);						
 						}						
 					});
 					
-					@SuppressWarnings("static-access")
-					DefaultComboBoxModel model2 = new DefaultComboBoxModel(rb.rampNames[toHighway.getSelectedIndex()]);
+					DefaultComboBoxModel model2 = new DefaultComboBoxModel(RampBank.rampNames[toHighway.getSelectedIndex()]);
 					toRamp = new JComboBox();
 					toRamp.setModel(model2);
 					toRamp.setBounds(82, 16, 190, 30);
@@ -388,7 +387,6 @@ public class ButterGUI extends JFrame implements MouseListener{
 
 	public void dijskstraPath() throws SQLException, Exception{
 		
-		dj = new Dijkstras();
 		Vector<Vertex> vertexList = new Vector<Vertex>();
 		Vector<Integer> indexList = new Vector<Integer>();
 		
@@ -403,6 +401,8 @@ public class ButterGUI extends JFrame implements MouseListener{
 			a += RampBank.allRamps.get(i).size();
 		}
 	
+		
+
 		// Vertexlist has all ramps from all 4 freeways	
 		// Setting up all edges for all freeways including branches
 		for (int i=0; i<vertexList.size(); i++){
@@ -410,17 +410,18 @@ public class ButterGUI extends JFrame implements MouseListener{
 			for (int j=0; j<RampBank.ramps10.size(); j++){
 				if (RampBank.ramps10.get(j).name.equals(vertexList.get(i).name)){
 					if (RampBank.ramps10.get(j).getLocation().next == null){
+						System.out.println(TrafficHistoryDatabase.getEdgeAverageTime(Car.EAST, RampBank.ramps10.get(j)));
 							vertexList.get(i).adjacencies = new Edge[]{
-								new Edge(vertexList.get(i-1), trafficHistoryDatabase.getEdgeAverageTime(Car.EAST, RampBank.ramps10.get(j))),
+								new Edge(vertexList.get(i-1), TrafficHistoryDatabase.getEdgeAverageTime(Car.EAST, RampBank.ramps10.get(j))),
 							};
 					} else if (RampBank.ramps10.get(j).getLocation().previous == null){
 							vertexList.get(i).adjacencies = new Edge[]{
-								new Edge(vertexList.get(i+1),trafficHistoryDatabase.getEdgeAverageTime(Car.WEST, RampBank.ramps10.get(j))),
+								new Edge(vertexList.get(i+1),TrafficHistoryDatabase.getEdgeAverageTime(Car.WEST, RampBank.ramps10.get(j))),
 							};
 					} else if(RampBank.ramps10.get(j).getLocation().branch == null){
 							vertexList.get(i).adjacencies = new Edge[]{
-								new Edge(vertexList.get(i+1),trafficHistoryDatabase.getEdgeAverageTime(Car.WEST, RampBank.ramps10.get(j))),
-								new Edge(vertexList.get(i-1),trafficHistoryDatabase.getEdgeAverageTime(Car.EAST, RampBank.ramps10.get(j)))
+								new Edge(vertexList.get(i+1),TrafficHistoryDatabase.getEdgeAverageTime(Car.WEST, RampBank.ramps10.get(j))),
+								new Edge(vertexList.get(i-1),TrafficHistoryDatabase.getEdgeAverageTime(Car.EAST, RampBank.ramps10.get(j)))
 							};
 					} else if (RampBank.ramps10.get(j).getLocation().branch != null){
 						int tempLoca = 0;
@@ -430,8 +431,8 @@ public class ButterGUI extends JFrame implements MouseListener{
 							}
 						}
 							vertexList.get(i).adjacencies = new Edge[]{
-								new Edge(vertexList.get(i+1),trafficHistoryDatabase.getEdgeAverageTime(Car.WEST, RampBank.ramps10.get(j))),
-								new Edge(vertexList.get(i-1),trafficHistoryDatabase.getEdgeAverageTime(Car.EAST, RampBank.ramps10.get(j))),
+								new Edge(vertexList.get(i+1),TrafficHistoryDatabase.getEdgeAverageTime(Car.WEST, RampBank.ramps10.get(j))),
+								new Edge(vertexList.get(i-1),TrafficHistoryDatabase.getEdgeAverageTime(Car.EAST, RampBank.ramps10.get(j))),
 								new Edge(vertexList.get(tempLoca), 0)
 							};
 					}
@@ -443,16 +444,16 @@ public class ButterGUI extends JFrame implements MouseListener{
 				if (RampBank.ramps10.get(j).name.equals(vertexList.get(i).name)){
 					if (RampBank.ramps10.get(j).getLocation().next == null){
 							vertexList.get(i).adjacencies = new Edge[]{
-								new Edge(vertexList.get(i-1), trafficHistoryDatabase.getEdgeAverageTime(Car.EAST, RampBank.ramps10.get(j))),
+								new Edge(vertexList.get(i-1), TrafficHistoryDatabase.getEdgeAverageTime(Car.EAST, RampBank.ramps10.get(j))),
 							};
 					} else if (RampBank.ramps10.get(j).getLocation().previous == null){
 							vertexList.get(i).adjacencies = new Edge[]{
-								new Edge(vertexList.get(i+1),trafficHistoryDatabase.getEdgeAverageTime(Car.WEST, RampBank.ramps10.get(j))),
+								new Edge(vertexList.get(i+1),TrafficHistoryDatabase.getEdgeAverageTime(Car.WEST, RampBank.ramps10.get(j))),
 							};
 					} else if(RampBank.ramps10.get(j).getLocation().branch == null){
 							vertexList.get(i).adjacencies = new Edge[]{
-								new Edge(vertexList.get(i+1),trafficHistoryDatabase.getEdgeAverageTime(Car.WEST, RampBank.ramps10.get(j))),
-								new Edge(vertexList.get(i-1),trafficHistoryDatabase.getEdgeAverageTime(Car.EAST, RampBank.ramps10.get(j)))
+								new Edge(vertexList.get(i+1),TrafficHistoryDatabase.getEdgeAverageTime(Car.WEST, RampBank.ramps10.get(j))),
+								new Edge(vertexList.get(i-1),TrafficHistoryDatabase.getEdgeAverageTime(Car.EAST, RampBank.ramps10.get(j)))
 							};
 					} else if (RampBank.ramps10.get(j).getLocation().branch != null){
 						int tempLoca = 0;
@@ -462,8 +463,8 @@ public class ButterGUI extends JFrame implements MouseListener{
 							}
 						}
 							vertexList.get(i).adjacencies = new Edge[]{
-								new Edge(vertexList.get(i+1),trafficHistoryDatabase.getEdgeAverageTime(Car.WEST, RampBank.ramps10.get(j))),
-								new Edge(vertexList.get(i-1),trafficHistoryDatabase.getEdgeAverageTime(Car.EAST, RampBank.ramps10.get(j))),
+								new Edge(vertexList.get(i+1),TrafficHistoryDatabase.getEdgeAverageTime(Car.WEST, RampBank.ramps10.get(j))),
+								new Edge(vertexList.get(i-1),TrafficHistoryDatabase.getEdgeAverageTime(Car.EAST, RampBank.ramps10.get(j))),
 								new Edge(vertexList.get(tempLoca), 0)
 							};
 					}
@@ -477,16 +478,16 @@ public class ButterGUI extends JFrame implements MouseListener{
 				if (RampBank.ramps101.get(j).name.equals(vertexList.get(i).name)){
 					if (RampBank.ramps101.get(j).getLocation().next == null){
 						vertexList.get(i).adjacencies = new Edge[]{
-							new Edge(vertexList.get(i-1),trafficHistoryDatabase.getEdgeAverageTime(Car.SOUTH, RampBank.ramps101.get(j))),
+							new Edge(vertexList.get(i-1),TrafficHistoryDatabase.getEdgeAverageTime(Car.SOUTH, RampBank.ramps101.get(j))),
 						};
 					} else if (RampBank.ramps101.get(j).getLocation().previous == null){
 						vertexList.get(i).adjacencies = new Edge[]{
-							new Edge(vertexList.get(i+1),trafficHistoryDatabase.getEdgeAverageTime(Car.NORTH, RampBank.ramps101.get(j))),
+							new Edge(vertexList.get(i+1),TrafficHistoryDatabase.getEdgeAverageTime(Car.NORTH, RampBank.ramps101.get(j))),
 						};	
 					} else if(RampBank.ramps101.get(j).getLocation().branch == null){
 						vertexList.get(i).adjacencies = new Edge[]{
-							new Edge(vertexList.get(i+1),trafficHistoryDatabase.getEdgeAverageTime(Car.NORTH, RampBank.ramps101.get(j))),
-							new Edge(vertexList.get(i-1),trafficHistoryDatabase.getEdgeAverageTime(Car.SOUTH, RampBank.ramps101.get(j)))
+							new Edge(vertexList.get(i+1),TrafficHistoryDatabase.getEdgeAverageTime(Car.NORTH, RampBank.ramps101.get(j))),
+							new Edge(vertexList.get(i-1),TrafficHistoryDatabase.getEdgeAverageTime(Car.SOUTH, RampBank.ramps101.get(j)))
 						};
 					} else if (RampBank.ramps101.get(j).getLocation().branch != null){
 						int tempLoca = 0;
@@ -496,8 +497,8 @@ public class ButterGUI extends JFrame implements MouseListener{
 							}
 						}
 						vertexList.get(i).adjacencies = new Edge[]{
-							new Edge(vertexList.get(i+1),trafficHistoryDatabase.getEdgeAverageTime(Car.NORTH, RampBank.ramps101.get(j))),
-							new Edge(vertexList.get(i-1),trafficHistoryDatabase.getEdgeAverageTime(Car.SOUTH, RampBank.ramps101.get(j))),
+							new Edge(vertexList.get(i+1),TrafficHistoryDatabase.getEdgeAverageTime(Car.NORTH, RampBank.ramps101.get(j))),
+							new Edge(vertexList.get(i-1),TrafficHistoryDatabase.getEdgeAverageTime(Car.SOUTH, RampBank.ramps101.get(j))),
 							new Edge(vertexList.get(tempLoca), 0)
 						};
 					}
@@ -509,16 +510,16 @@ public class ButterGUI extends JFrame implements MouseListener{
 				if (RampBank.ramps405.get(j).name.equals(vertexList.get(i).name)){
 					if (RampBank.ramps405.get(j).getLocation().next == null){
 						vertexList.get(i).adjacencies = new Edge[]{
-							new Edge(vertexList.get(i-1),trafficHistoryDatabase.getEdgeAverageTime(Car.SOUTH, RampBank.ramps405.get(j))),
+							new Edge(vertexList.get(i-1),TrafficHistoryDatabase.getEdgeAverageTime(Car.SOUTH, RampBank.ramps405.get(j))),
 						};
 					} else if (RampBank.ramps405.get(j).getLocation().previous == null){
 						vertexList.get(i).adjacencies = new Edge[]{
-							new Edge(vertexList.get(i+1),trafficHistoryDatabase.getEdgeAverageTime(Car.NORTH, RampBank.ramps405.get(j))),
+							new Edge(vertexList.get(i+1),TrafficHistoryDatabase.getEdgeAverageTime(Car.NORTH, RampBank.ramps405.get(j))),
 						};	
 					} else if(RampBank.ramps405.get(j).getLocation().branch == null){
 						vertexList.get(i).adjacencies = new Edge[]{
-							new Edge(vertexList.get(i+1),trafficHistoryDatabase.getEdgeAverageTime(Car.NORTH, RampBank.ramps405.get(j))),
-							new Edge(vertexList.get(i-1),trafficHistoryDatabase.getEdgeAverageTime(Car.SOUTH, RampBank.ramps405.get(j)))
+							new Edge(vertexList.get(i+1),TrafficHistoryDatabase.getEdgeAverageTime(Car.NORTH, RampBank.ramps405.get(j))),
+							new Edge(vertexList.get(i-1),TrafficHistoryDatabase.getEdgeAverageTime(Car.SOUTH, RampBank.ramps405.get(j)))
 						};
 					} else if (RampBank.ramps405.get(j).getLocation().branch != null){
 						int tempLoca = 0;
@@ -528,8 +529,8 @@ public class ButterGUI extends JFrame implements MouseListener{
 							}
 						}
 						vertexList.get(i).adjacencies = new Edge[]{
-							new Edge(vertexList.get(i+1),trafficHistoryDatabase.getEdgeAverageTime(Car.NORTH, RampBank.ramps405.get(j))),
-							new Edge(vertexList.get(i-1),trafficHistoryDatabase.getEdgeAverageTime(Car.SOUTH, RampBank.ramps405.get(j))),
+							new Edge(vertexList.get(i+1),TrafficHistoryDatabase.getEdgeAverageTime(Car.NORTH, RampBank.ramps405.get(j))),
+							new Edge(vertexList.get(i-1),TrafficHistoryDatabase.getEdgeAverageTime(Car.SOUTH, RampBank.ramps405.get(j))),
 							new Edge(vertexList.get(tempLoca), 0)
 						};
 					}
@@ -541,16 +542,16 @@ public class ButterGUI extends JFrame implements MouseListener{
 				if (RampBank.ramps105.get(j).name.equals(vertexList.get(i).name)){
 					if (RampBank.ramps105.get(j).getLocation().next == null){
 						vertexList.get(i).adjacencies = new Edge[]{
-							new Edge(vertexList.get(i-1),trafficHistoryDatabase.getEdgeAverageTime(Car.EAST, RampBank.ramps105.get(j))),
+							new Edge(vertexList.get(i-1),TrafficHistoryDatabase.getEdgeAverageTime(Car.EAST, RampBank.ramps105.get(j))),
 						};
 					} else if (RampBank.ramps105.get(j).getLocation().previous == null){
 						vertexList.get(i).adjacencies = new Edge[]{
-							new Edge(vertexList.get(i+1),trafficHistoryDatabase.getEdgeAverageTime(Car.WEST, RampBank.ramps105.get(j))),
+							new Edge(vertexList.get(i+1),TrafficHistoryDatabase.getEdgeAverageTime(Car.WEST, RampBank.ramps105.get(j))),
 						};	
 					} else if(RampBank.ramps105.get(j).getLocation().branch == null){
 						vertexList.get(i).adjacencies = new Edge[]{
-							new Edge(vertexList.get(i+1),trafficHistoryDatabase.getEdgeAverageTime(Car.WEST, RampBank.ramps105.get(j))),
-							new Edge(vertexList.get(i-1),trafficHistoryDatabase.getEdgeAverageTime(Car.EAST, RampBank.ramps105.get(j)))
+							new Edge(vertexList.get(i+1),TrafficHistoryDatabase.getEdgeAverageTime(Car.WEST, RampBank.ramps105.get(j))),
+							new Edge(vertexList.get(i-1),TrafficHistoryDatabase.getEdgeAverageTime(Car.EAST, RampBank.ramps105.get(j)))
 						};
 					} else if (RampBank.ramps105.get(j).getLocation().branch != null){
 						int tempLoca = 0;
@@ -560,8 +561,8 @@ public class ButterGUI extends JFrame implements MouseListener{
 							}
 						}
 						vertexList.get(i).adjacencies = new Edge[]{
-							new Edge(vertexList.get(i+1),trafficHistoryDatabase.getEdgeAverageTime(Car.WEST, RampBank.ramps105.get(j))),
-							new Edge(vertexList.get(i-1),trafficHistoryDatabase.getEdgeAverageTime(Car.EAST, RampBank.ramps105.get(j))),
+							new Edge(vertexList.get(i+1),TrafficHistoryDatabase.getEdgeAverageTime(Car.WEST, RampBank.ramps105.get(j))),
+							new Edge(vertexList.get(i-1),TrafficHistoryDatabase.getEdgeAverageTime(Car.EAST, RampBank.ramps105.get(j))),
 							new Edge(vertexList.get(tempLoca), 0)
 						};
 					}
@@ -569,16 +570,25 @@ public class ButterGUI extends JFrame implements MouseListener{
 				}
 			}
 			
-				
-			
-			
 		}		
 
-		computePaths(vertexList.get(1));
-		for (Vertex v : vertexList){
-		    System.out.println("Distance to " + v + ": " + v.minDistance);
-		    List<Vertex> path = getShortestPathTo(v);
-		    System.out.println("Path: " + path);
+		
+		int startIndex = 0;
+		for (int i =0; i<vertexList.size(); i++){
+			if (fromRamp.getSelectedItem().equals(vertexList.get(i).getName())){
+				startIndex = i;
+			}
+		}
+		
+		
+		computePaths(vertexList.get(startIndex));
+		for (int i=0; i< vertexList.size(); i++){
+			Vertex v = vertexList.get(i);
+			if (toRamp.getSelectedItem().equals(v.getName())){					
+			    System.out.println("Time to " + v + ": " + v.minDistance);
+			    List<Vertex> path = getShortestPathTo(v);
+			    System.out.println("Path: " + path);
+			}
 		}
 				
 	}
