@@ -99,7 +99,7 @@ public class GraphChartWindow extends JFrame{
 		getContentPane().add(GraphPanel);
 
 		//SelectFreeway ComboBox
-		String[] freeways = {"All Freeways", "10", "101", "105", "405"};			//TODO change these to the correct freeways
+		String[] freeways = {"All Freeways", "10", "101", "105", "405"};
 		JComboBox freewayComboBox = new JComboBox(freeways);
 		freewayComboBox.setBounds(32, 6, 156, 27);
 		getContentPane().add(freewayComboBox);
@@ -116,10 +116,13 @@ public class GraphChartWindow extends JFrame{
 				GraphPanel.repaint();
 			}
 		});
-
 		setVisible(true);
 	}
-
+	
+/**
+ * Updates the Table with the new data. Replaces old table with a new one that takes into account
+ * the neccessary rows&columns from the new data.
+ */
 	void redrawTable()
 	{
 		Vector cols = new Vector();
@@ -131,7 +134,17 @@ public class GraphChartWindow extends JFrame{
 		DefaultTableModel tableModel = new DefaultTableModel(data, cols.toArray());
 		tableModel.setColumnIdentifiers(cols);
 		theTable.setModel(tableModel);
+		for(int i = 1; i<cols.size(); i++)	//Set width of every cell.
+		{
+			theTable.getColumnModel().getColumn(i).setPreferredWidth(110);
+		}
 	}
+	/**
+	 * Reconnects to the database and parses through the data. Keeps track of all the unique
+	 * cars and their speeds for each interval of time. Creates 2D Vector of all the cars and 
+	 * later converts it into an Object class to be returned at the end.
+	 * @return fully formatted Object class
+	 */
 
 	Object[][] convertTOData()
 	{
@@ -164,6 +177,7 @@ public class GraphChartWindow extends JFrame{
 		} catch (SQLException e) {System.out.println("Connection to database not acquired.");}
 		//========================
 
+		//Parsing through the database
 		try {
 			preparedStatement = connection.prepareStatement("SELECT * FROM " + HISTORICAL_TABLE);
 			resultSet = preparedStatement.executeQuery();
@@ -208,6 +222,7 @@ public class GraphChartWindow extends JFrame{
 					theCars.get(i).add(0.0);
 				}
 			}
+			//If "All Freeways" is not selected, delete unneeded datapoints.
 			if(!selectedFreeway.equals("All Freeways"))
 			{
 				boolean a = false;
@@ -217,7 +232,7 @@ public class GraphChartWindow extends JFrame{
 					{
 						if(!selectedFreeway.equals(freeways.get(i)))
 						{
-							if(theCars.size() == 1)
+							if(theCars.size() == 1)	//If no cars left in the vector, return empty Object.
 							{
 								Object[][] data = {{"0"}};
 								return data;
@@ -227,13 +242,11 @@ public class GraphChartWindow extends JFrame{
 							break;
 						}
 						if(i == freeways.size()-1)
-						{
 							a = true;
-						}
 					}
 				}
 			}	
-
+			//If number of cars exceed 50, cap at 50.
 			int totalSize=theCars.size();
 			if(theCars.size()>=50)
 			{
@@ -251,25 +264,14 @@ public class GraphChartWindow extends JFrame{
 				}
 			}
 			return data;
-			//===============
 		} catch (SQLException e) {System.out.println("Unable to grab data.");}
-
-
-
-
-		//TEMPORARY!!!!
-		if(selectedFreeway == "All Freeways")
-		{
-			Object[][] data = {{"1","100","400","150","150"},{"2","1","1","1","150"},{"3","1","1","1","150"}};
-			return data;
-		}
-		else
-		{
-			Object[][] data = {{"1","100","200","150"},{"2","300","350","200"}};
-			return data;
-		}
-
-		//===============================================
+		//===============
+		
+		//If connecting to database fails~
+		System.out.println("Could not grab data.");
+		Object[][] data = {{"0"}};
+		return data;
+		//===============
 	}
 
 	public static void main(String [] args)	
@@ -313,7 +315,7 @@ public class GraphChartWindow extends JFrame{
 				for(int j=1; j<data[i].length-1; j++)
 				{
 					double a = Double.parseDouble(data[i][j].toString());
-					allLines.get(i).add(j, a);//change to show timestamp?TODO
+					allLines.get(i).add(j, a);
 				}
 				dataset.addSeries(allLines.get(allLines.size()-1));
 			}
