@@ -93,7 +93,7 @@ public class RampBank {
 					for(Ramp r : vr) {
 						if (r.name.equals(ramps101.get(i).branchName)) {
 							ramps101.get(i).setBranchRamp(r);
-							System.out.println("Branch set: " + ramps101.get(i).branchName + " --> " + r.name);
+							System.out.println("Branch set: " + ramps101.get(i).name + " --> " + r.name);
 						}
 					}
 				}

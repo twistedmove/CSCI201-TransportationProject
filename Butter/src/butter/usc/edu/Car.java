@@ -36,6 +36,7 @@ public class Car {
 	private int numPointsToNextRamp;
 	public Boolean increaseOnPath = false;
 	public Boolean TextIsDisplayed = false;
+	private boolean atTheEnd = false;
 
 	public Car(int id, double speed, String direction, String ramp, String freeway) {
 		this.id = id;
@@ -81,6 +82,10 @@ public class Car {
 		return -1;
 	}
 
+	public boolean isAtTheEnd() {
+		return atTheEnd;
+	}
+	
 	public void updateSpeed() {
 		Boolean increased = false;
 		double tempX = 0;
@@ -143,6 +148,9 @@ public class Car {
 				else {
 					coordinateIndex--;
 				}
+			}
+			else {
+				atTheEnd = true;
 			}
 			if (((increased && coordinateIndex < PathBank.allLocations.get(freewayIndex).size()) || (!increased && coordinateIndex >= 0)) && !sloped && !PathBank.allLocations.get(freewayIndex).get(coordinateIndex).isFirst && !PathBank.allLocations.get(freewayIndex).get(coordinateIndex).isLast) {
 				this.point = PathBank.allLocations.get(freewayIndex).get(coordinateIndex).point;

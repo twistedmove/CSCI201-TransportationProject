@@ -32,6 +32,11 @@ public class PanelDraw extends JPanel{
 
 		g.clearRect(0, 0, getWidth(), getHeight() );
 		g.drawImage(map, 0, 0, null);
+		for(int i=0; i < ButterGUI.allCarsWrapper.allCars.size(); ++i) {
+			if(ButterGUI.allCarsWrapper.allCars.get(i).isAtTheEnd()) {
+				ButterGUI.allCarsWrapper.allCars.remove(i);
+			}
+		}
 		for (int i = 0; i < ButterGUI.allCarsWrapper.allCars.size(); i++) {
 			Graphics2D g2d=(Graphics2D)g;
 			AffineTransform old = g2d.getTransform();
