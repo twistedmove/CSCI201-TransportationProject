@@ -54,8 +54,8 @@ public class TrafficHistoryDatabase extends Thread {
 	int serverCalls;
 	static DataPullThread dataPullThread;
 	
-//	public static final String SERVER_URL = "http://www-scf.usc.edu/~csci201/mahdi_project/project_data.json";
-	public static final String SERVER_URL = "http://www-scf.usc.edu/~csci201/mahdi_project/test.json";
+	public static final String SERVER_URL = "http://www-scf.usc.edu/~csci201/mahdi_project/project_data.json";
+//	public static final String SERVER_URL = "http://www-scf.usc.edu/~csci201/mahdi_project/test.json";
 	
 	class DataPullThread extends Thread {
 		private Lock lock = new ReentrantLock();
@@ -84,13 +84,13 @@ public class TrafficHistoryDatabase extends Thread {
 		private void updateCurrentRamps() throws SQLException, InterruptedException {
 			this.lock.lock();
 			this.updateCondition.await();
-			System.out.println("&&&& Attempting to update RAMPS &&&&");
+//			System.out.println("&&&& Attempting to update RAMPS &&&&");
 			boolean gotLock = false;
 			while(!gotLock) {
 				gotLock = ButterGUI.allCarsWrapper.getLock().tryLock();
-				System.out.println("&&&& Waiting for lock &&&&");
+//				System.out.println("&&&& Waiting for lock &&&&");
 			}
-			System.out.println("&&&& Got lock: " + gotLock + " &&&&");
+//			System.out.println("&&&& Got lock: " + gotLock + " &&&&");
 			try {
 				for(int i=0; i < ButterGUI.allCarsWrapper.allCars.size(); ++i) {
 					String sql = "UPDATE " + CURRENT_TABLE + " SET " + RAMP_LABEL 
@@ -102,7 +102,7 @@ public class TrafficHistoryDatabase extends Thread {
 				}
 			} finally {
 				ButterGUI.allCarsWrapper.getLock().unlock();
-				System.out.println("&&&& Releasing lock &&&&");
+//				System.out.println("&&&& Releasing lock &&&&");
 			}
 			this.lock.unlock();
 		}
@@ -402,8 +402,10 @@ public class TrafficHistoryDatabase extends Thread {
 					throw new Exception("101 Wrong direction!");
 				}
 				
-				for(int i=ramp.indexOfCoordinate; i < nextRamp.indexOfCoordinate; ++i) {
-					distance += PathBank.locations101.get(i).milesToNext;
+				if(nextRamp != null) {
+					for(int i=ramp.indexOfCoordinate; i < nextRamp.indexOfCoordinate; ++i) {
+						distance += PathBank.locations101.get(i).milesToNext;
+					}
 				}
 			}
 			else if(ramp.freeway == 405) {
@@ -418,8 +420,10 @@ public class TrafficHistoryDatabase extends Thread {
 					throw new Exception("405 Wrong direction!");
 				}
 				
-				for(int i=ramp.indexOfCoordinate; i < nextRamp.indexOfCoordinate; ++i) {
-					distance += PathBank.locations405.get(i).milesToNext;
+				if(nextRamp != null) {
+					for(int i=ramp.indexOfCoordinate; i < nextRamp.indexOfCoordinate; ++i) {
+						distance += PathBank.locations405.get(i).milesToNext;
+					}
 				}
 			}
 			else if(ramp.freeway == 10) {
@@ -434,8 +438,10 @@ public class TrafficHistoryDatabase extends Thread {
 					throw new Exception("10 Wrong direction!");
 				}
 				
-				for(int i=ramp.indexOfCoordinate; i < nextRamp.indexOfCoordinate; ++i) {
-					distance += PathBank.locations10.get(i).milesToNext;
+				if(nextRamp != null) {
+					for(int i=ramp.indexOfCoordinate; i < nextRamp.indexOfCoordinate; ++i) {
+						distance += PathBank.locations10.get(i).milesToNext;
+					}
 				}
 			}
 			else if(ramp.freeway == 105) {
@@ -450,8 +456,10 @@ public class TrafficHistoryDatabase extends Thread {
 					throw new Exception("105 Wrong direction!");
 				}
 				
-				for(int i=ramp.indexOfCoordinate; i < nextRamp.indexOfCoordinate; ++i) {
-					distance += PathBank.locations105.get(i).milesToNext;
+				if(nextRamp != null) {
+					for(int i=ramp.indexOfCoordinate; i < nextRamp.indexOfCoordinate; ++i) {
+						distance += PathBank.locations105.get(i).milesToNext;
+					}
 				}
 			}
 			

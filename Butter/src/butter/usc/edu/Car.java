@@ -150,7 +150,7 @@ public class Car {
 						if (this.TextIsDisplayed) {
 							TrafficHistoryDatabase.dataPullThread.getDataPullLock().lock();
 							ButterGUI.updateTextCarInfo(this);
-							System.out.println("UPDATING RAMP TEXT!!!!!!!!!!!!!!!!!!!!!!!");
+//							System.out.println("UPDATING RAMP TEXT!!!!!!!!!!!!!!!!!!!!!!!");
 							TrafficHistoryDatabase.dataPullThread.getDataPullCondition().signal();
 							TrafficHistoryDatabase.dataPullThread.getDataPullLock().unlock();
 						}
@@ -167,7 +167,7 @@ public class Car {
 						if (this.TextIsDisplayed) {
 							TrafficHistoryDatabase.dataPullThread.getDataPullLock().lock();
 							ButterGUI.updateTextCarInfo(this);
-							System.out.println("UPDATING RAMP TEXT!!!!!!!!!!!!!!!!!!!!!!!");
+//							System.out.println("UPDATING RAMP TEXT!!!!!!!!!!!!!!!!!!!!!!!");
 							TrafficHistoryDatabase.dataPullThread.getDataPullCondition().signal();
 							TrafficHistoryDatabase.dataPullThread.getDataPullLock().unlock();
 						}
