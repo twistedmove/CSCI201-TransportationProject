@@ -18,7 +18,6 @@ public class Car {
 	private int rampIndex;
 	private int coordinateIndex;
 	public Point point;
-	public Point previousPoint;
 	private double radiansToRotate;
 	public static final String EAST = "East";
 	public static final String WEST = "West";
@@ -37,8 +36,6 @@ public class Car {
 	public Boolean increaseOnPath = false;
 	public Boolean TextIsDisplayed = false;
 
-
-
 	public Car(int id, double speed, String direction, String ramp, String freeway) {
 		this.id = id;
 		this.speed = speed;
@@ -48,7 +45,6 @@ public class Car {
 		this.freewayIndex = getFreewayIndex(this);
 		this.rampIndex = getRampIndex(this);
 		this.point = RampBank.allRamps.get(freewayIndex).get(rampIndex).l.point;
-		previousPoint = point;
 		this.coordinateIndex = RampBank.allRamps.get(freewayIndex).get(rampIndex).indexOfCoordinate;
 		milesPerTimeDiv = speed / secPerHour / updatePerSec;
 		findIfIncrease();
@@ -77,9 +73,6 @@ public class Car {
 	}
 
 	public void updateSpeed() {
-		//previousPoint = point;
-//		oldX = point.x;
-//		oldY = point.y;
 		Boolean increased = false;
 		double tempX = 0;
 		double tempY = 0;
