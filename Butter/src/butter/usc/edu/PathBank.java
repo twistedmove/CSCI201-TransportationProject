@@ -2,8 +2,6 @@ package butter.usc.edu;
 
 import java.io.File;
 import java.util.Vector;
-
-import org.jfree.layout.LCBLayout;
 /*
  * PathBank holds all Locations on the paths for each highway in a vector.
  * @author Kaitlyn

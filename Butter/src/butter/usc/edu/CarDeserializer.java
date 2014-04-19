@@ -1,8 +1,5 @@
 package butter.usc.edu;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
@@ -37,8 +34,8 @@ public class CarDeserializer {
 	static class CustomCarDeserializer implements JsonDeserializer<Car> {
 		@Override
 		public Car deserialize(final JsonElement json, final Type type,
-				final JsonDeserializationContext context) throws JsonParseException {
-			// TODO Auto-generated method stub
+			final JsonDeserializationContext context) throws JsonParseException {
+			
 			
 			final JsonObject jsonObject = json.getAsJsonObject();
 			final int id = jsonObject.get("id").getAsInt();
@@ -48,11 +45,6 @@ public class CarDeserializer {
 			final String freeway = jsonObject.get("freeway").getAsString();
 			
 			final Car c = new Car(id, speed, direction, ramp, freeway);
-//			c.setId(id);
-//			c.setSpeed(speed);
-//			c.setDirection(direction);
-//			c.setRamp(ramp);
-//			c.setFreeway(freeway);
 			return c;
 		}
 	}
