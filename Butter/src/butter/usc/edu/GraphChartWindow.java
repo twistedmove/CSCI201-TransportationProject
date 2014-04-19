@@ -40,12 +40,13 @@ import javax.swing.JComboBox;
 import javax.swing.JScrollPane;
 
 import java.awt.GridLayout;
+import javax.swing.JLabel;
 
 public class GraphChartWindow extends JFrame{
 	String selectedFreeway = "All Freeways";
 	BufferedImage theGraph;
 	Object[][] data;
-
+	int showNumCars = 20;
 	JTable theTable;
 
 	GraphChartWindow(){
@@ -97,7 +98,7 @@ public class GraphChartWindow extends JFrame{
 		final ChartPanel GraphPanel = new ChartPanel();
 		GraphPanel.setBounds(32, 35, 1130, 498);
 		getContentPane().add(GraphPanel);
-		
+
 		//SelectFreeway ComboBox
 		String[] freeways = {"All Freeways", "10", "101", "105", "405"};
 		JComboBox freewayComboBox = new JComboBox(freeways);
@@ -116,13 +117,40 @@ public class GraphChartWindow extends JFrame{
 				GraphPanel.repaint();
 			}
 		});
+
+		JLabel numCarsLabel = new JLabel("Number of Cars to Display:");
+		numCarsLabel.setBounds(909, 10, 176, 16);
+		getContentPane().add(numCarsLabel);
+
+		String[] numCarOptions = {"20", "30", "50", "All"};
+		JComboBox numCarsDisplayCombo = new JComboBox(numCarOptions);
+		numCarsDisplayCombo.setBounds(1085, 6, 73, 27);
+		getContentPane().add(numCarsDisplayCombo);
+		numCarsDisplayCombo.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent ae) {
+				JComboBox cb = (JComboBox)ae.getSource();
+				if((String)cb.getSelectedItem() == "All")
+				{
+					showNumCars = -1;
+				}
+				else
+				{
+					showNumCars = Integer.parseInt((String)cb.getSelectedItem());
+				}
+				//Updating everything!
+				data = convertTOData();
+				new Graph(data);
+				redrawTable();
+				GraphPanel.repaint();
+			}
+		});
 		setVisible(true);
 	}
-	
-/**
- * Updates the Table with the new data. Replaces old table with a new one that takes into account
- * the neccessary rows&columns from the new data.
- */
+
+	/**
+	 * Updates the Table with the new data. Replaces old table with a new one that takes into account
+	 * the neccessary rows&columns from the new data.
+	 */
 	void redrawTable()
 	{
 		Vector cols = new Vector();
@@ -246,16 +274,14 @@ public class GraphChartWindow extends JFrame{
 					}
 				}
 			}	
-			//If number of cars exceed 50, cap at 50.
-			int totalSize=theCars.size();
-			if(theCars.size()>=30)
-			{
-				totalSize = 30;
-			}
-			
+			//Display the correct number of cars.
+			int totalSize=showNumCars;
+			if(totalSize == -1)
+				totalSize = theCars.size();
+
 			//Convert 2D ArrayList into Object class.
 			Object[][] data = new Object[totalSize][serverCall+2];
-
+			
 			for(int i = 0; i<totalSize; i++)
 			{
 				data[i][0] = theCars.get(i).get(0).intValue();
@@ -267,7 +293,7 @@ public class GraphChartWindow extends JFrame{
 			return data;
 		} catch (SQLException e) {System.out.println("Unable to grab data.");}
 		//===============
-		
+		 
 		//If connecting to database fails~
 		System.out.println("Could not grab data.");
 		Object[][] data = {{"0"}};
