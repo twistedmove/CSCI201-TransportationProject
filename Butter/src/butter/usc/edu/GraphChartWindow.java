@@ -50,7 +50,7 @@ public class GraphChartWindow extends JFrame{
 
 	GraphChartWindow(){
 		super("Graph");
-		setSize(882, 814);
+		setSize(1196, 814);
 		setLocation(100,100);
 		setDefaultCloseOperation(this.DISPOSE_ON_CLOSE);
 		setResizable(false);
@@ -60,7 +60,7 @@ public class GraphChartWindow extends JFrame{
 		JPanel TablePanel = new JPanel();
 		TablePanel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		TablePanel.setBackground(new Color(176, 196, 222));
-		TablePanel.setBounds(32, 545, 818, 214);
+		TablePanel.setBounds(32, 545, 1130, 214);
 		TablePanel.setLayout(new GridLayout(0, 1, 0, 0));
 		getContentPane().add(TablePanel);
 
@@ -95,9 +95,9 @@ public class GraphChartWindow extends JFrame{
 
 		//Display graph.jpg panel
 		final ChartPanel GraphPanel = new ChartPanel();
-		GraphPanel.setBounds(32, 35, 818, 498);
+		GraphPanel.setBounds(32, 35, 1130, 498);
 		getContentPane().add(GraphPanel);
-
+		
 		//SelectFreeway ComboBox
 		String[] freeways = {"All Freeways", "10", "101", "105", "405"};
 		JComboBox freewayComboBox = new JComboBox(freeways);
@@ -141,7 +141,7 @@ public class GraphChartWindow extends JFrame{
 	}
 	/**
 	 * Reconnects to the database and parses through the data. Keeps track of all the unique
-	 * cars and their speeds for each interval of time. Creates 2D Vector of all the cars and 
+	 * cars and their speeds for each interval of time. Creates 2D Array of all the cars and 
 	 * later converts it into an Object class to be returned at the end.
 	 * @return fully formatted Object class
 	 */
@@ -173,7 +173,7 @@ public class GraphChartWindow extends JFrame{
 		//Connecting to database
 		try {
 			connection = DriverManager.getConnection(CONNECTION_URL + DATABASE, USERNAME, PASSWORD);
-			System.out.println("Connection to database acquired.");
+			System.out.println("Connection to database acquired.");//TODO delete
 		} catch (SQLException e) {System.out.println("Connection to database not acquired.");}
 		//========================
 
@@ -222,7 +222,7 @@ public class GraphChartWindow extends JFrame{
 					theCars.get(i).add(0.0);
 				}
 			}
-			//If "All Freeways" is not selected, delete unneeded datapoints.
+			//If "All Freeways" is not selected, delete unneeded data points.
 			if(!selectedFreeway.equals("All Freeways"))
 			{
 				boolean a = false;
@@ -248,11 +248,12 @@ public class GraphChartWindow extends JFrame{
 			}	
 			//If number of cars exceed 50, cap at 50.
 			int totalSize=theCars.size();
-			if(theCars.size()>=50)
+			if(theCars.size()>=30)
 			{
-				totalSize = 50;
+				totalSize = 30;
 			}
 			
+			//Convert 2D ArrayList into Object class.
 			Object[][] data = new Object[totalSize][serverCall+2];
 
 			for(int i = 0; i<totalSize; i++)
@@ -280,7 +281,7 @@ public class GraphChartWindow extends JFrame{
 	}
 	//================================================================================================================================================
 	//Other classes
-
+	//
 	//================================================================================================================================================	
 
 	//------- Graph Display Panel-------
@@ -290,21 +291,21 @@ public class GraphChartWindow extends JFrame{
 		protected void paintComponent(Graphics g) {
 			super.paintComponent(g);
 			setLayout(null);
-			g.drawImage(theGraph,0,0,818, 498,null);
+			g.drawImage(theGraph,0,0,null);
 		}
 	}
 	//------ Graph Creator ------
 	public class Graph {
 
+		/**
+		 * Creating the lines. Lines are called "series" and we add points using the ".add(int, int)" function.
+		 * -Each series represents each of the unique cars that we are currently keeping track of.
+		 * -The X-Coordinate represents each time interval (wave of data from the server)
+		 * -The Y-Coordinate represents the speeds that each of the cars are going.
+		 * 
+		 * Only cars of the selected freeway will be shown on the graph.
+		 */
 		Graph(Object[][] data){
-			/**
-			 * Creating the lines. Lines are called "series" and we add points using the ".add(int, int)" function.
-			 * -Each series represents each of the unique cars that we are currently keeping track of.
-			 * -The X-Coordinate represents each time interval (wave of data from the server)
-			 * -The Y-Coordinate represents the speeds that each of the cars are going.
-			 * 
-			 * Only cars of the selected freeway will be shown on the graph.
-			 */
 			XYSeriesCollection dataset = new XYSeriesCollection();
 
 			Vector<XYSeries> allLines = new Vector<XYSeries>();
@@ -331,10 +332,7 @@ public class GraphChartWindow extends JFrame{
 					true, 								// Use tooltips
 					false 								// Configure chart to generate URLs?
 					);
-			theGraph = chart.createBufferedImage(818 * 1, 498 * 1);
+			theGraph = chart.createBufferedImage(1130, 498);	//In case we want to "zoom out"
 		}
 	}
 }
-
-
-//http://dvillela.servehttp.com:4000/apostilas/jfreechart_tutorial.pdf
