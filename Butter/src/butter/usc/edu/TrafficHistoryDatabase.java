@@ -6,6 +6,9 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.*;
 import java.util.Vector;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Create the database if it does not exist. Use for inserting data into database.
@@ -49,18 +52,19 @@ public class TrafficHistoryDatabase extends Thread {
 	private int serverCall = 0;
 	
 	int serverCalls;
-	DataPullThread dataPullThread;
+	static DataPullThread dataPullThread;
 	
 //	public static final String SERVER_URL = "http://www-scf.usc.edu/~csci201/mahdi_project/project_data.json";
 	public static final String SERVER_URL = "http://www-scf.usc.edu/~csci201/mahdi_project/test.json";
 	
 	class DataPullThread extends Thread {
+		private Lock lock = new ReentrantLock();
+		private Condition updateCondition = lock.newCondition(); 
 		
 		public void run() {
 			try {
 				while(true) {
 					updateCurrentRamps();
-					Thread.sleep(5000);
 				}
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
@@ -75,8 +79,11 @@ public class TrafficHistoryDatabase extends Thread {
 		/**
 		 * Updates the car ramps in current table.
 		 * @throws SQLException 
+		 * @throws InterruptedException 
 		 */
-		private void updateCurrentRamps() throws SQLException {
+		private void updateCurrentRamps() throws SQLException, InterruptedException {
+			this.lock.lock();
+			this.updateCondition.await();
 			System.out.println("&&&& Attempting to update RAMPS &&&&");
 			boolean gotLock = false;
 			while(!gotLock) {
@@ -97,6 +104,15 @@ public class TrafficHistoryDatabase extends Thread {
 				ButterGUI.allCarsWrapper.getLock().unlock();
 				System.out.println("&&&& Releasing lock &&&&");
 			}
+			this.lock.unlock();
+		}
+		
+		public Lock getDataPullLock() {
+			return lock;
+		}
+		
+		public Condition getDataPullCondition() {
+			return updateCondition;
 		}
 	}
 	
@@ -450,6 +466,7 @@ public class TrafficHistoryDatabase extends Thread {
 		}
 		return s;
 	}
+
 
 //
 //	public static void main(String[] args) {

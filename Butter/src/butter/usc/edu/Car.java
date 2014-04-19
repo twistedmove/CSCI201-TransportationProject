@@ -148,7 +148,11 @@ public class Car {
 						rampName = RampBank.allRamps.get(freewayIndex).get(rampIndex).name;
 						updatePointsToNextRamp();
 						if (this.TextIsDisplayed) {
+							TrafficHistoryDatabase.dataPullThread.getDataPullLock().lock();
 							ButterGUI.updateTextCarInfo(this);
+							System.out.println("UPDATING RAMP TEXT!!!!!!!!!!!!!!!!!!!!!!!");
+							TrafficHistoryDatabase.dataPullThread.getDataPullCondition().signal();
+							TrafficHistoryDatabase.dataPullThread.getDataPullLock().unlock();
 						}
 					}
 					else {
@@ -161,7 +165,11 @@ public class Car {
 						rampName = RampBank.allRamps.get(freewayIndex).get(rampIndex).name;
 						updatePointsToNextRamp();
 						if (this.TextIsDisplayed) {
+							TrafficHistoryDatabase.dataPullThread.getDataPullLock().lock();
 							ButterGUI.updateTextCarInfo(this);
+							System.out.println("UPDATING RAMP TEXT!!!!!!!!!!!!!!!!!!!!!!!");
+							TrafficHistoryDatabase.dataPullThread.getDataPullCondition().signal();
+							TrafficHistoryDatabase.dataPullThread.getDataPullLock().unlock();
 						}
 					}
 					else {
