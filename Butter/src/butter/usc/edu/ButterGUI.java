@@ -555,7 +555,7 @@ public class ButterGUI extends JFrame implements MouseListener{
 				for (int k=0; k<RampBank.allRamps.size(); k++){
 					for (int l=0; l<RampBank.allRamps.get(k).size(); l++){
 						for (int j =0; j<path.size(); j++){
-							if (RampBank.allRamps.get(k).get(l).name.equals(path.get(j).getName())){
+							if ( RampBank.allRamps.get(k).get(l).name.equals(path.get(j).getName()) && RampBank.allRamps.get(k).get(l).freeway == path.get(j).freeway){
 								Marker mark = new Marker(RampBank.allRamps.get(k).get(l).getLocation().point.x, RampBank.allRamps.get(k).get(l).getLocation().point.y);
 								locationMarkers.add(mark);
 							}
