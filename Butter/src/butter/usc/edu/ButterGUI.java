@@ -406,161 +406,173 @@ public class ButterGUI extends JFrame implements MouseListener{
 	public List<Vertex> dijskstraPath() throws SQLException, Exception{
 		
 		Vector<Vertex> vertexList = new Vector<Vertex>();
-		Vector<Integer> indexList = new Vector<Integer>();
 		List<Vertex> path = null;
 		
 		// Setting up vertices
-		int a = 0;
 		for (int i =0; i<RampBank.allRamps.size(); i++){
 			for (int j =0; j<RampBank.allRamps.get(i).size(); j++){
 					Vertex v = new Vertex(RampBank.allRamps.get(i).get(j).name, RampBank.allRamps.get(i).get(j).freeway);
 					vertexList.add(v);
-					indexList.add(RampBank.allRamps.get(i).get(j).indexOfCoordinate + a);
 			}
-			a += RampBank.allRamps.get(i).size();
 		}
-	
-		
+
 
 		// Vertexlist has all ramps from all 4 freeways	
 		// Setting up all edges for all freeways including branches
+		
 		for (int i=0; i<vertexList.size(); i++){
-			for (int j=0; j<RampBank.ramps10.size(); j++){
-				if (RampBank.ramps10.get(j).name.equals(vertexList.get(i).name) && vertexList.get(i).freeway == 10){
-					if (RampBank.ramps10.get(j).getLocation().next == null){
-							vertexList.get(i).adjacencies = new Edge[]{
-								new Edge(vertexList.get(i-1), TrafficHistoryDatabase.getEdgeAverageTime(Car.WEST, RampBank.ramps10.get(j))),
-							};
-					} else if (RampBank.ramps10.get(j).getLocation().previous == null){
-							vertexList.get(i).adjacencies = new Edge[]{
-								new Edge(vertexList.get(i+1),TrafficHistoryDatabase.getEdgeAverageTime(Car.EAST, RampBank.ramps10.get(j))),
-							};
-					} else if(RampBank.ramps10.get(j).getLocation().branch == null){
-							vertexList.get(i).adjacencies = new Edge[]{
-								new Edge(vertexList.get(i+1),TrafficHistoryDatabase.getEdgeAverageTime(Car.EAST, RampBank.ramps10.get(j))),
-								new Edge(vertexList.get(i-1),TrafficHistoryDatabase.getEdgeAverageTime(Car.WEST, RampBank.ramps10.get(j)))
-							};
-					} else if (RampBank.ramps10.get(j).getLocation().branch != null && RampBank.ramps10.get(j).getBranchRamp() != null){
-						int tempLoca = 0;
-						for (int z=0; z<vertexList.size(); z++){
-							if (vertexList.get(z).getName().equals(RampBank.ramps10.get(j).getBranchRamp().name) && vertexList.get(z).freeway == 10){ //TODO
-								tempLoca = z;
+//			if (i < 57){
+				for (int j=0; j<RampBank.ramps10.size(); j++){	
+//					if (RampBank.ramps10.get(j).next == null){
+//						System.out.println("Next is null");
+//					}
+//					if (RampBank.ramps10.get(j).previous == null){
+//						System.out.println("Previous is null");
+//					}
+					
+					if (RampBank.ramps10.get(j).name.equals(vertexList.get(i).name) && vertexList.get(i).freeway == 10){
+						if (RampBank.ramps10.get(j).next == null){
+								vertexList.get(i).adjacencies = new Edge[]{
+									new Edge(vertexList.get(i-1), TrafficHistoryDatabase.getEdgeAverageTime(Car.EAST, RampBank.ramps10.get(j))),
+								};
+						} else if (RampBank.ramps10.get(j).previous == null){
+								vertexList.get(i).adjacencies = new Edge[]{
+									new Edge(vertexList.get(i+1),TrafficHistoryDatabase.getEdgeAverageTime(Car.WEST, RampBank.ramps10.get(j))),
+								};
+						} else if(RampBank.ramps10.get(j).branch == null){
+								vertexList.get(i).adjacencies = new Edge[]{
+									new Edge(vertexList.get(i+1),TrafficHistoryDatabase.getEdgeAverageTime(Car.WEST, RampBank.ramps10.get(j))),
+									new Edge(vertexList.get(i-1),TrafficHistoryDatabase.getEdgeAverageTime(Car.EAST, RampBank.ramps10.get(j)))
+								};
+						} else if (RampBank.ramps10.get(j).branch != null && RampBank.ramps10.get(j).getBranchRamp() != null){
+							int tempLoca = 0;
+							for (int z=0; z<vertexList.size(); z++){
+								if (vertexList.get(z).getName().equals(RampBank.ramps10.get(j).getBranchRamp().name) && vertexList.get(z).freeway == 10){ //TODO
+									tempLoca = z;
+								}
 							}
+								vertexList.get(i).adjacencies = new Edge[]{
+									new Edge(vertexList.get(i+1),TrafficHistoryDatabase.getEdgeAverageTime(Car.WEST, RampBank.ramps10.get(j))),
+									new Edge(vertexList.get(i-1),TrafficHistoryDatabase.getEdgeAverageTime(Car.EAST, RampBank.ramps10.get(j))),
+									new Edge(vertexList.get(tempLoca), 0)
+								};
 						}
+	
+					}
+				}
+//			}
+			
+
+//			if (i >= 57 && i < 78){
+				for (int j=0; j<RampBank.ramps101.size(); j++){
+					
+					if (RampBank.ramps101.get(j).name.equals(vertexList.get(i).name) && vertexList.get(i).freeway == 101){
+						if (RampBank.ramps101.get(j).next == null){
+						
 							vertexList.get(i).adjacencies = new Edge[]{
-								new Edge(vertexList.get(i+1),TrafficHistoryDatabase.getEdgeAverageTime(Car.EAST, RampBank.ramps10.get(j))),
-								new Edge(vertexList.get(i-1),TrafficHistoryDatabase.getEdgeAverageTime(Car.WEST, RampBank.ramps10.get(j))),
+								new Edge(vertexList.get(i-1),TrafficHistoryDatabase.getEdgeAverageTime(Car.NORTH, RampBank.ramps101.get(j))),
+							};
+						} else if (RampBank.ramps101.get(j).previous == null){
+							vertexList.get(i).adjacencies = new Edge[]{
+								new Edge(vertexList.get(i+1),TrafficHistoryDatabase.getEdgeAverageTime(Car.SOUTH, RampBank.ramps101.get(j))),
+							};	
+						} else if(RampBank.ramps101.get(j).branch == null){
+							vertexList.get(i).adjacencies = new Edge[]{
+								new Edge(vertexList.get(i+1),TrafficHistoryDatabase.getEdgeAverageTime(Car.SOUTH, RampBank.ramps101.get(j))),
+								new Edge(vertexList.get(i-1),TrafficHistoryDatabase.getEdgeAverageTime(Car.NORTH, RampBank.ramps101.get(j)))
+							};
+						} else if (RampBank.ramps101.get(j).branch != null && RampBank.ramps101.get(j).getBranchRamp() != null){
+							int tempLoca = 0;
+							for (int z=0; z<vertexList.size(); z++){
+								if (vertexList.get(z).getName().equals(RampBank.ramps101.get(j).getBranchRamp().name) && vertexList.get(z).freeway == 101){ //TODO
+									tempLoca = z;
+								}
+							}
+							vertexList.get(i).adjacencies = new Edge[]{
+								new Edge(vertexList.get(i+1),TrafficHistoryDatabase.getEdgeAverageTime(Car.SOUTH, RampBank.ramps101.get(j))),
+								new Edge(vertexList.get(i-1),TrafficHistoryDatabase.getEdgeAverageTime(Car.NORTH, RampBank.ramps101.get(j))),
 								new Edge(vertexList.get(tempLoca), 0)
 							};
-					}
-
-				}
-			}
-			
-
-			
-			for (int j=0; j<RampBank.ramps101.size(); j++){
-				if (RampBank.ramps101.get(j).name.equals(vertexList.get(i).name) && vertexList.get(i).freeway == 101){
-					if (RampBank.ramps101.get(j).getLocation().next == null){
-						vertexList.get(i).adjacencies = new Edge[]{
-							new Edge(vertexList.get(i-1),TrafficHistoryDatabase.getEdgeAverageTime(Car.SOUTH, RampBank.ramps101.get(j))),
-						};
-					} else if (RampBank.ramps101.get(j).getLocation().previous == null){
-						vertexList.get(i).adjacencies = new Edge[]{
-							new Edge(vertexList.get(i+1),TrafficHistoryDatabase.getEdgeAverageTime(Car.NORTH, RampBank.ramps101.get(j))),
-						};	
-					} else if(RampBank.ramps101.get(j).getLocation().branch == null){
-						vertexList.get(i).adjacencies = new Edge[]{
-							new Edge(vertexList.get(i+1),TrafficHistoryDatabase.getEdgeAverageTime(Car.NORTH, RampBank.ramps101.get(j))),
-							new Edge(vertexList.get(i-1),TrafficHistoryDatabase.getEdgeAverageTime(Car.SOUTH, RampBank.ramps101.get(j)))
-						};
-					} else if (RampBank.ramps101.get(j).getLocation().branch != null && RampBank.ramps101.get(j).getBranchRamp() != null){
-						int tempLoca = 0;
-						for (int z=0; z<vertexList.size(); z++){
-							if (vertexList.get(z).getName().equals(RampBank.ramps101.get(j).getBranchRamp().name) && vertexList.get(z).freeway == 101){ //TODO
-								tempLoca = z;
-							}
 						}
-						vertexList.get(i).adjacencies = new Edge[]{
-							new Edge(vertexList.get(i+1),TrafficHistoryDatabase.getEdgeAverageTime(Car.NORTH, RampBank.ramps101.get(j))),
-							new Edge(vertexList.get(i-1),TrafficHistoryDatabase.getEdgeAverageTime(Car.SOUTH, RampBank.ramps101.get(j))),
-							new Edge(vertexList.get(tempLoca), 0)
-						};
+	
 					}
-
 				}
-			}
+//			}
 			
-			for (int j=0; j<RampBank.ramps405.size(); j++){
-				if (RampBank.ramps405.get(j).name.equals(vertexList.get(i).name) && vertexList.get(i).freeway == 405){
-					if (RampBank.ramps405.get(j).getLocation().next == null){
-						vertexList.get(i).adjacencies = new Edge[]{
-							new Edge(vertexList.get(i-1),TrafficHistoryDatabase.getEdgeAverageTime(Car.SOUTH, RampBank.ramps405.get(j))),
-						};
-					} else if (RampBank.ramps405.get(j).getLocation().previous == null){
-						vertexList.get(i).adjacencies = new Edge[]{
-							new Edge(vertexList.get(i+1),TrafficHistoryDatabase.getEdgeAverageTime(Car.NORTH, RampBank.ramps405.get(j))),
-						};	
-					} else if(RampBank.ramps405.get(j).getLocation().branch == null){
-						vertexList.get(i).adjacencies = new Edge[]{
-							new Edge(vertexList.get(i+1),TrafficHistoryDatabase.getEdgeAverageTime(Car.NORTH, RampBank.ramps405.get(j))),
-							new Edge(vertexList.get(i-1),TrafficHistoryDatabase.getEdgeAverageTime(Car.SOUTH, RampBank.ramps405.get(j)))
-						};
-					} else if (RampBank.ramps405.get(j).getLocation().branch != null && RampBank.ramps405.get(j).getBranchRamp() != null){
-						int tempLoca = 0;
-						for (int z=0; z<vertexList.size(); z++){
-							if (vertexList.get(z).getName().equals(RampBank.ramps405.get(j).getBranchRamp().name) && vertexList.get(z).freeway == 405){ //TODO
-								tempLoca = z;
+//			if (i >= 78 && i < 115){
+				for (int j=0; j<RampBank.ramps405.size(); j++){
+					if (RampBank.ramps405.get(j).name.equals(vertexList.get(i).name) && vertexList.get(i).freeway == 405){
+						if (RampBank.ramps405.get(j).next == null){
+							vertexList.get(i).adjacencies = new Edge[]{
+								new Edge(vertexList.get(i-1),TrafficHistoryDatabase.getEdgeAverageTime(Car.NORTH, RampBank.ramps405.get(j))),
+							};
+						} else if (RampBank.ramps405.get(j).previous == null){
+							vertexList.get(i).adjacencies = new Edge[]{
+								new Edge(vertexList.get(i+1),TrafficHistoryDatabase.getEdgeAverageTime(Car.SOUTH, RampBank.ramps405.get(j))),
+							};	
+						} else if(RampBank.ramps405.get(j).branch == null){
+							vertexList.get(i).adjacencies = new Edge[]{
+								new Edge(vertexList.get(i+1),TrafficHistoryDatabase.getEdgeAverageTime(Car.SOUTH, RampBank.ramps405.get(j))),
+								new Edge(vertexList.get(i-1),TrafficHistoryDatabase.getEdgeAverageTime(Car.NORTH, RampBank.ramps405.get(j)))
+							};
+						} else if (RampBank.ramps405.get(j).branch != null && RampBank.ramps405.get(j).getBranchRamp() != null){
+							int tempLoca = 0;
+							for (int z=0; z<vertexList.size(); z++){
+								if (vertexList.get(z).getName().equals(RampBank.ramps405.get(j).getBranchRamp().name) && vertexList.get(z).freeway == 405){ //TODO
+									tempLoca = z;
+								}
 							}
+							vertexList.get(i).adjacencies = new Edge[]{
+								new Edge(vertexList.get(i+1),TrafficHistoryDatabase.getEdgeAverageTime(Car.SOUTH, RampBank.ramps405.get(j))),
+								new Edge(vertexList.get(i-1),TrafficHistoryDatabase.getEdgeAverageTime(Car.NORTH, RampBank.ramps405.get(j))),
+								new Edge(vertexList.get(tempLoca), 0)
+							};
 						}
-						vertexList.get(i).adjacencies = new Edge[]{
-							new Edge(vertexList.get(i+1),TrafficHistoryDatabase.getEdgeAverageTime(Car.NORTH, RampBank.ramps405.get(j))),
-							new Edge(vertexList.get(i-1),TrafficHistoryDatabase.getEdgeAverageTime(Car.SOUTH, RampBank.ramps405.get(j))),
-							new Edge(vertexList.get(tempLoca), 0)
-						};
+	
 					}
-
 				}
-			}
+//			}
 			
-			for (int j=0; j<RampBank.ramps105.size(); j++){
-				if (RampBank.ramps105.get(j).name.equals(vertexList.get(i).name)){
-					if (RampBank.ramps105.get(j).getLocation().next == null && vertexList.get(i).freeway == 105){
-						vertexList.get(i).adjacencies = new Edge[]{
-							new Edge(vertexList.get(i-1),TrafficHistoryDatabase.getEdgeAverageTime(Car.WEST, RampBank.ramps105.get(j))),
-						};
-					} else if (RampBank.ramps105.get(j).getLocation().previous == null){
-						vertexList.get(i).adjacencies = new Edge[]{
-							new Edge(vertexList.get(i+1),TrafficHistoryDatabase.getEdgeAverageTime(Car.EAST, RampBank.ramps105.get(j))),
-						};	
-					} else if(RampBank.ramps105.get(j).getLocation().branch == null){
-						vertexList.get(i).adjacencies = new Edge[]{
-							new Edge(vertexList.get(i+1),TrafficHistoryDatabase.getEdgeAverageTime(Car.EAST, RampBank.ramps105.get(j))),
-							new Edge(vertexList.get(i-1),TrafficHistoryDatabase.getEdgeAverageTime(Car.WEST, RampBank.ramps105.get(j)))
-						};
-					} else if (RampBank.ramps105.get(j).getLocation().branch != null && RampBank.ramps105.get(j).getBranchRamp() != null){
-						int tempLoca = 0;
-						for (int z=0; z<vertexList.size(); z++){
-							if (vertexList.get(z).getName().equals(RampBank.ramps105.get(j).getBranchRamp().name) && vertexList.get(z).freeway == 105){ //TODO
-								tempLoca = z;
+//			if (i >= 115 && i < 145){
+				for (int j=0; j<RampBank.ramps105.size(); j++){
+					
+					if (RampBank.ramps105.get(j).name.equals(vertexList.get(i).name)){
+						if (RampBank.ramps105.get(j).next == null && vertexList.get(i).freeway == 105){
+							vertexList.get(i).adjacencies = new Edge[]{
+								new Edge(vertexList.get(i-1),TrafficHistoryDatabase.getEdgeAverageTime(Car.EAST, RampBank.ramps105.get(j))),
+							};
+						} else if (RampBank.ramps105.get(j).previous == null){
+							vertexList.get(i).adjacencies = new Edge[]{
+								new Edge(vertexList.get(i+1),TrafficHistoryDatabase.getEdgeAverageTime(Car.WEST, RampBank.ramps105.get(j))),
+							};	
+						} else if(RampBank.ramps105.get(j).branch == null){
+							vertexList.get(i).adjacencies = new Edge[]{
+								new Edge(vertexList.get(i+1),TrafficHistoryDatabase.getEdgeAverageTime(Car.WEST, RampBank.ramps105.get(j))),
+								new Edge(vertexList.get(i-1),TrafficHistoryDatabase.getEdgeAverageTime(Car.EAST, RampBank.ramps105.get(j)))
+							};
+						} else if (RampBank.ramps105.get(j).branch != null && RampBank.ramps105.get(j).getBranchRamp() != null){
+							int tempLoca = 0;
+							for (int z=0; z<vertexList.size(); z++){
+								if (vertexList.get(z).getName().equals(RampBank.ramps105.get(j).getBranchRamp().name) && vertexList.get(z).freeway == 105){ //TODO
+									tempLoca = z;
+								}
 							}
+							vertexList.get(i).adjacencies = new Edge[]{
+								new Edge(vertexList.get(i+1),TrafficHistoryDatabase.getEdgeAverageTime(Car.WEST, RampBank.ramps105.get(j))),
+								new Edge(vertexList.get(i-1),TrafficHistoryDatabase.getEdgeAverageTime(Car.EAST, RampBank.ramps105.get(j))),
+								new Edge(vertexList.get(tempLoca), 0)
+							};
 						}
-						vertexList.get(i).adjacencies = new Edge[]{
-							new Edge(vertexList.get(i+1),TrafficHistoryDatabase.getEdgeAverageTime(Car.EAST, RampBank.ramps105.get(j))),
-							new Edge(vertexList.get(i-1),TrafficHistoryDatabase.getEdgeAverageTime(Car.WEST, RampBank.ramps105.get(j))),
-							new Edge(vertexList.get(tempLoca), 0)
-						};
+	
 					}
-
 				}
-			}
-			
+//			}
 		}		
 
 		
 		int startIndex = 0;
 		for (int i =0; i<vertexList.size(); i++){
-			if (fromRamp.getSelectedItem().equals(vertexList.get(i).getName())){
+			if (fromRamp.getSelectedItem().equals(vertexList.get(i).getName()) && fromHighway.getSelectedItem().equals(vertexList.get(i).freewayName)){
 				startIndex = i;
 			}
 		}
