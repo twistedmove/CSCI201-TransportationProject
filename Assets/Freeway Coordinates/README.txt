@@ -1,7 +1,12 @@
 Google Fusion Tables to visualize the coordinates that make up the freeways.
-
+**********************************************************************************
 MAP OF ALL PATHS
 https://www.google.com/fusiontables/DataSource?docid=1K_iEnRAejHJgodmeefYPK-f97wv_MMUppw_APm_a
+
+**********************************************************************************
+MAP OF ALL RAMPS
+https://www.google.com/fusiontables/DataSource?docid=1K_iEnRAejHJgodmeefYPK-f97wv_MMUppw_APm_a#map:id=3
+**********************************************************************************
 
 https://www.google.com/fusiontables/DataSource?docid=1nwMaJqYYjyNE1KzdNMXxeBWcxddozrp7C-gzejqN
 
