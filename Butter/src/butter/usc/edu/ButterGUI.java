@@ -144,7 +144,7 @@ public class ButterGUI extends JFrame implements MouseListener{
 		carTimer = new CarTimer(mapPanel);
 		new Thread(carTimer).start();
 		
-	/*
+	/* TESTING PURPOSES
 		Car c = new Car(1,60, "West", "Western Avenue, Normandie Avenue", "10");
 		Car c1 = new Car(2,90, "South","Tujunga Avenue", "101");
 		Car c2 = new Car(3,30, "East","Crenshaw Boulevard", "105");
@@ -180,7 +180,9 @@ public class ButterGUI extends JFrame implements MouseListener{
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void setupButterGUI(){	
 	
-		// MAP STUFF
+		/** 
+		 * Setting up map panels and dependencies.
+		 */
 				mapPanel = new JPanel();
 				mapPanel.setLocation(0, 0);
 				mapPanel.setSize(903, 672);
@@ -215,7 +217,6 @@ public class ButterGUI extends JFrame implements MouseListener{
 				mapPicPanel.addMouseListener(this);
 				
 				JScrollPane jsp = new JScrollPane(mapPicPanel);
-				//JScrollPane jsp = new JScrollPane(picLabel);
 				jsp.setBounds(6, 5, 895, 667);
 					jsp.setPreferredSize(new Dimension (400,400));
 					jsp.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
@@ -223,7 +224,9 @@ public class ButterGUI extends JFrame implements MouseListener{
 
 					mapPanel.add(jsp);
 		
-				// TO AND FROM SEARCH
+				/** 
+				 * Setting up to / from search dependencies.
+				 */
 					destinationPanel = new JPanel();
 					destinationPanel.setLayout(null);
 					destinationPanel.setBounds(907, 5, 286, 125);
@@ -277,7 +280,9 @@ public class ButterGUI extends JFrame implements MouseListener{
 				destinationPanel.add(fromDestinationPanel);
 				destinationPanel.add(toDestinationPanel);
 						
-				// INFORMATION AREA
+				/** 
+				 * Setting up information text area dependencies.
+				 */
 				JPanel informationArea = new JPanel();
 					informationArea.setBounds(907, 168, 287, 394);
 					informationArea.setBorder (new TitledBorder(new EtchedBorder(), "Information"));
@@ -289,7 +294,9 @@ public class ButterGUI extends JFrame implements MouseListener{
 			    informationArea.add(scrollPane);
 				
 				
-			    // BUTTONS
+			    /** 
+			     * Setting up buttons dependencies.
+			     */
 				searchButton = new JButton();
 				searchButton.setText("Find Route");
 				searchButton.setBounds(907, 134, 287, 30);
@@ -374,7 +381,9 @@ public class ButterGUI extends JFrame implements MouseListener{
 					}
 				});
 				
-				// MENUBAR
+				/**
+				 *  Setting up menubar and about button.
+				 */
 				JMenuBar menuBar = new JMenuBar();
 				setJMenuBar(menuBar);
 				
@@ -413,7 +422,9 @@ public class ButterGUI extends JFrame implements MouseListener{
 			}
 		}
 
-		// Inefficient, but functional!
+		/**
+		 *  Inefficient, but functional!
+		 */
 		for(int i=0; i < vertexList.size(); ++i) {
 			Vertex v = vertexList.get(i);
 			for(Vector<Ramp>  vr : RampBank.allRamps) {
@@ -515,8 +526,6 @@ public class ButterGUI extends JFrame implements MouseListener{
 		boolean foundIndex = false;
 		int startIndex = 0;
 		for (int i =0; i<vertexList.size(); i++){
-//			System.out.println(fromRamp.getSelectedItem() + " == " + vertexList.get(i).getName());
-//			System.out.println(fromHighway.getSelectedItem() + " == " + vertexList.get(i).freewayName);
 			if (fromRamp.getSelectedItem().equals(vertexList.get(i).getName()) && fromHighway.getSelectedItem().equals(vertexList.get(i).freewayName)){
 				startIndex = i;
 				foundIndex = true;
@@ -540,11 +549,12 @@ public class ButterGUI extends JFrame implements MouseListener{
 				jta.setText(jta.getText() + "     Time to Destination: " + (v.minDistance * 60.0) + " minutes \n");
 				path = getShortestPathTo(v);
 				
-				// PATH
+				/**
+				 *  Defining the path into the information box.
+				 */
 				jta.setText(jta.getText() + "\n-------------DIRECTIONS-------------");
 				jta.setText(jta.getText() + "\n");
 				for(int a =0; a<path.size(); a++) {
-					System.out.println(path.size());
 					if (path.size() == 1){
 						jta.setText(jta.getText() + "You are at " + path.get(a) + "!" + "\n");
 					} else if (path.size() == 2){
@@ -587,19 +597,14 @@ public class ButterGUI extends JFrame implements MouseListener{
 
 	
 	public static void computePaths(Vertex source){
-		System.out.println("SOURCE: " + source.name + " ON " + source.freeway + " FREEWAY");
         source.minDistance = 0.;
         PriorityQueue<Vertex> vertexQueue = new PriorityQueue<Vertex>();
 	vertexQueue.add(source);
 
 	while (!vertexQueue.isEmpty()) {
-//		System.out.println("----------------------------------------");
 	    Vertex u = vertexQueue.poll();
-//		System.out.println("CONSIDERING: " + u.name + " ON " + u.freeway + " FREEWAY");
-            // Visit each edge exiting u
             for (Edge e : u.adjacencies)
             {
-//            	System.out.println("\tEDGE: " + e.target.name + " ON " + e.target.freeway + " FREEWAY");
                 Vertex v = e.target;
                 double weight = e.weight;
                 double distanceThroughU = u.minDistance + weight;
@@ -612,7 +617,6 @@ public class ButterGUI extends JFrame implements MouseListener{
 				    vertexQueue.add(v);
 				}
             }
-//            System.out.println("----------------------------------------");
         }
     }
 	

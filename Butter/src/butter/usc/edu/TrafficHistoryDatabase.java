@@ -5,7 +5,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.*;
-import java.util.Vector;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -14,8 +13,6 @@ import java.util.concurrent.locks.ReentrantLock;
  * Create the database if it does not exist. Use for inserting data into database.
  * Extends Thread.
  * Calls to server using CarDeserializer every so often to fetch data.
- * @author LorraineSposto
- *
  */
 public class TrafficHistoryDatabase extends Thread {
 	
@@ -23,10 +20,14 @@ public class TrafficHistoryDatabase extends Thread {
 	private final String PASSWORD = "pass";
 	private String CONNECTION_URL = "jdbc:mysql://localhost:3306/";
 
-	/** The name of the database we are testing with (this default is installed with MySQL) */
+	/**
+	 *  The name of the database we are testing with (this default is installed with MySQL) 
+	 */
 	private final String DATABASE = "traffic_history";
 	
-	/** The name of the table we are testing with */
+	/** 
+	 * The name of the table we are testing with 
+	 */
 	private final static String CURRENT_TABLE = "current_traffic_data";
 	private final static String HISTORICAL_TABLE = "historical_traffic_data";
 	
@@ -55,7 +56,10 @@ public class TrafficHistoryDatabase extends Thread {
 	static DataPullThread dataPullThread;
 	
 	public static final String SERVER_URL = "http://www-scf.usc.edu/~csci201/mahdi_project/project_data.json";
-//	public static final String SERVER_URL = "http://www-scf.usc.edu/~csci201/mahdi_project/test.json";
+/**
+ * TESTING PURPOSES
+ * public static final String SERVER_URL = "http://www-scf.usc.edu/~csci201/mahdi_project/test.json";
+ */
 	
 	class DataPullThread extends Thread {
 		private Lock lock = new ReentrantLock();
@@ -67,10 +71,8 @@ public class TrafficHistoryDatabase extends Thread {
 					updateCurrentRamps();
 				}
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -84,13 +86,10 @@ public class TrafficHistoryDatabase extends Thread {
 		private void updateCurrentRamps() throws SQLException, InterruptedException {
 			this.lock.lock();
 			this.updateCondition.await();
-//			System.out.println("&&&& Attempting to update RAMPS &&&&");
 			boolean gotLock = false;
 			while(!gotLock) {
 				gotLock = ButterGUI.allCarsWrapper.getLock().tryLock();
-//				System.out.println("&&&& Waiting for lock &&&&");
 			}
-//			System.out.println("&&&& Got lock: " + gotLock + " &&&&");
 			try {
 				for(int i=0; i < ButterGUI.allCarsWrapper.allCars.size(); ++i) {
 					String sql = "UPDATE " + CURRENT_TABLE + " SET " + RAMP_LABEL 
@@ -102,7 +101,6 @@ public class TrafficHistoryDatabase extends Thread {
 				}
 			} finally {
 				ButterGUI.allCarsWrapper.getLock().unlock();
-//				System.out.println("&&&& Releasing lock &&&&");
 			}
 			this.lock.unlock();
 		}
@@ -220,22 +218,16 @@ public class TrafficHistoryDatabase extends Thread {
 	 * @throws IOException
 	 */
 	private void getData() throws IOException {
-//		System.out.println("*** Attempting to get data ***");
 		boolean gotLock = false;
 		while(!gotLock) {
 			gotLock = ButterGUI.allCarsWrapper.getLock().tryLock();
-//			System.out.println("*** Waiting for lock ***");
 		}
-//		System.out.println("*** Got lock: " + gotLock + " ***");
 		try {
-//			System.out.println("CALLING SERVER - 10 SECS.");
 			serverCalls++;
-//			System.out.println("CALL " + serverCalls);
 			ButterGUI.allCarsWrapper.allCars = CarDeserializer.deserializeArrayFromURL(SERVER_URL);
 			addNewCarData();
 		} finally {
 			ButterGUI.allCarsWrapper.getLock().unlock();
-//			System.out.println("** Releasing lock **");
 		}
 	}
 	
@@ -246,12 +238,9 @@ public class TrafficHistoryDatabase extends Thread {
 		try {
 			while(true) {
 				getData();
-//				System.out.println("*** SLEEPING ***");
 				Thread.sleep(180000); // 3 minutes = 180000 ms
-//				System.out.println("*** AWAKE ***");
 			}
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		catch (InterruptedException e) {
@@ -283,8 +272,6 @@ public class TrafficHistoryDatabase extends Thread {
 			String sql = "DELETE FROM " + CURRENT_TABLE;
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.execute();
-//			moveCurrentToHistorical();
-//			System.out.println("DELETED");
 			for(Car c : ButterGUI.allCarsWrapper.allCars) {
 				sql = "INSERT INTO " + CURRENT_TABLE + " VALUES (" + c.insertString() + "," + serverCalls + ")";
 				preparedStatement = connection.prepareStatement(sql);
@@ -293,7 +280,6 @@ public class TrafficHistoryDatabase extends Thread {
 				sql = "INSERT INTO " + HISTORICAL_TABLE + " VALUES (" + c.insertString() + "," + serverCalls + ")";
 				preparedStatement = connection.prepareStatement(sql);
 				preparedStatement.executeUpdate();
-//				System.out.println("Inserted a new car.");
 			}
 			System.out.println("Inserted new cars into current table.");
 		} catch (SQLException e) {
@@ -302,7 +288,9 @@ public class TrafficHistoryDatabase extends Thread {
 	}
 	
 	public void dropDatabase() {
-//		Drop the table & database
+		/**
+		 * Drop the table & database
+		 */
 		try {
 			statement = connection.createStatement();
 		    String dropString = "DROP TABLE " + CURRENT_TABLE;
@@ -324,7 +312,6 @@ public class TrafficHistoryDatabase extends Thread {
 	}
 	
 	/**
-	 * 
 	 * @param filename
 	 * @throws IOException 
 	 */
@@ -383,16 +370,12 @@ public class TrafficHistoryDatabase extends Thread {
 			s += resultSet.getDouble(SPEED_LABEL);
 			++num;
 		}
-//		System.out.println("************************");
-//		System.out.println("S: " + s);
-//		System.out.println("NUM: " + num);
 		
 		if(num == 0) {
 			return 0;
 		}
 		else {
 			double avgSpeed = s/num;
-//			System.out.println("AVGSPEED: " + avgSpeed);
 		
 			if(ramp.freeway == 101) {
 				if(direction.equals(Car.NORTH)) {
@@ -407,8 +390,6 @@ public class TrafficHistoryDatabase extends Thread {
 				}
 				
 				if(nextRamp != null) {
-//					System.out.println("\t\t" + ramp.name + "(" + ramp.indexOfCoordinate + ")"
-//							+ " --> " + nextRamp.name + "(" + nextRamp.indexOfCoordinate + ")");
 					if(nextRamp.indexOfCoordinate > ramp.indexOfCoordinate) {
 						for(int i=ramp.indexOfCoordinate; i < nextRamp.indexOfCoordinate; ++i) {
 							distance += PathBank.locations101.get(i).milesToNext;
@@ -434,8 +415,6 @@ public class TrafficHistoryDatabase extends Thread {
 				}
 				
 				if(nextRamp != null) {
-//					System.out.println("\t\t" + ramp.name + "(" + ramp.indexOfCoordinate + ")"
-//							+ " --> " + nextRamp.name + "(" + nextRamp.indexOfCoordinate + ")");
 					if(nextRamp.indexOfCoordinate > ramp.indexOfCoordinate) {
 						for(int i=ramp.indexOfCoordinate; i < nextRamp.indexOfCoordinate; ++i) {
 							distance += PathBank.locations405.get(i).milesToNext;
@@ -461,8 +440,6 @@ public class TrafficHistoryDatabase extends Thread {
 				}
 				
 				if(nextRamp != null) {
-//					System.out.println("\t\t" + ramp.name + "(" + ramp.indexOfCoordinate + ")"
-//							+ " --> " + nextRamp.name + "(" + nextRamp.indexOfCoordinate + ")");
 					if(nextRamp.indexOfCoordinate > ramp.indexOfCoordinate) {
 						for(int i=ramp.indexOfCoordinate; i < nextRamp.indexOfCoordinate; ++i) {
 							distance += PathBank.locations10.get(i).milesToNext;
@@ -488,8 +465,6 @@ public class TrafficHistoryDatabase extends Thread {
 				}
 				
 				if(nextRamp != null) {
-//					System.out.println("\t\t" + ramp.name + "(" + ramp.indexOfCoordinate + ")"
-//							+ " --> " + nextRamp.name + "(" + nextRamp.indexOfCoordinate + ")");
 					if(nextRamp.indexOfCoordinate > ramp.indexOfCoordinate) {
 						for(int i=ramp.indexOfCoordinate; i < nextRamp.indexOfCoordinate; ++i) {
 							distance += PathBank.locations105.get(i).milesToNext;
@@ -502,10 +477,7 @@ public class TrafficHistoryDatabase extends Thread {
 					}
 				}
 			}
-//			System.out.println("DISTANCE: " + distance);
 			double time = distance/avgSpeed;
-//			System.out.println("TIME: " + time);
-//			System.out.println("************************");
 			return time;
 		}
 	}
@@ -518,8 +490,9 @@ public class TrafficHistoryDatabase extends Thread {
 		return s;
 	}
 
-
-//
+/**
+ * TESTING PURPOSES
+ */
 //	public static void main(String[] args) {
 //		Vector<Car> cars = new Vector<Car>();
 //		TrafficHistoryDatabase t;

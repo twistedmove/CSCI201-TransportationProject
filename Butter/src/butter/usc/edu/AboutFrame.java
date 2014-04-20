@@ -46,6 +46,6 @@ public class AboutFrame extends JFrame{
 	@Override
 	public void paint (Graphics g) {
         super.paint(g);
-        g.drawImage(mascot, 125, 30, null); // see javadoc for more info on the parameters            
+        g.drawImage(mascot, 125, 30, null);          
     }
 }

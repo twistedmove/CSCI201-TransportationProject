@@ -2,12 +2,9 @@ package butter.usc.edu;
 
 import java.awt.Point;
 import java.awt.geom.Rectangle2D;
-import java.util.Vector;
 
 /**
  * Car class, so far only holding the essential values of a car as outlined in test.json
- * @author LorraineSposto
- *
  */
 public class Car {
 	private int id;
