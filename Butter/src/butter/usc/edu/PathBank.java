@@ -22,10 +22,10 @@ public class PathBank {
 	
 	public PathBank() throws TxtFormatException {
 		
-		locations101 = FreewayParser.parseFreeway(new File("CSV/101-path.csv"), FREEWAY101);
-		locations105 = FreewayParser.parseFreeway(new File("CSV/105-path.csv"), FREEWAY105);
-		locations10 = FreewayParser.parseFreeway(new File("CSV/10-path.csv"), FREEWAY10);
-		locations405 = FreewayParser.parseFreeway(new File("CSV/405-path.csv"), FREEWAY405);
+		locations101 = FreewayParser.parseFreeway(new File("assets/CSV/101-path.csv"), FREEWAY101);
+		locations105 = FreewayParser.parseFreeway(new File("assets/CSV/105-path.csv"), FREEWAY105);
+		locations10 = FreewayParser.parseFreeway(new File("assets/CSV/10-path.csv"), FREEWAY10);
+		locations405 = FreewayParser.parseFreeway(new File("assets/CSV/405-path.csv"), FREEWAY405);
 		
 		findIntersections();
 		System.out.println("Successfully read in all freeway coordinates.");

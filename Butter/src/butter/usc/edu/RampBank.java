@@ -29,10 +29,10 @@ public class RampBank {
 	public RampBank() {
 		allRamps = new Vector<Vector<Ramp>>();
 		try {
-			ramps101 = FreewayParser.parseRamps(new File("CSV/101-ramps-tabs.txt"), FREEWAY101);
-			ramps105 = FreewayParser.parseRamps(new File("CSV/105-ramps-tabs.txt"), FREEWAY105);
-			ramps10 = FreewayParser.parseRamps(new File("CSV/10-ramps-tabs.txt"), FREEWAY10);
-			ramps405 = FreewayParser.parseRamps(new File("CSV/405-ramps-tabs.txt"), FREEWAY405);
+			ramps101 = FreewayParser.parseRamps(new File("assets/CSV/101-ramps-tabs.csv"), FREEWAY101);
+			ramps105 = FreewayParser.parseRamps(new File("assets/CSV/105-ramps-tabs.csv"), FREEWAY105);
+			ramps10 = FreewayParser.parseRamps(new File("assets/CSV/10-ramps-tabs.csv"), FREEWAY10);
+			ramps405 = FreewayParser.parseRamps(new File("assets/CSV/405-ramps-tabs.csv"), FREEWAY405);
 			System.out.println("Successfully read in ramps.");
 		} catch (TxtFormatException e) {
 			// TODO Auto-generated catch block
@@ -58,22 +58,30 @@ public class RampBank {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		
 		for (int i = 0; i < ramps101.size(); i++) {
-			if(i != 0 ) ramps101.get(i).setPreviousRamp(ramps101.get(i-1));
+			if(i > 0 ) {
+				ramps101.get(i).setPreviousRamp(ramps101.get(i-1));
+			}
 			ramps101.get(i).setLocation(PathBank.locations101.get(ramps101.get(i).getIndexOfCoordinate()));
 		}
 
 		for (int i = 0; i < ramps105.size(); i++) {
-			if(i != 0 )ramps105.get(i).setPreviousRamp(ramps105.get(i-1));
+			if(i > 0 ) {
+				ramps105.get(i).setPreviousRamp(ramps105.get(i-1));
+			}
 			ramps105.get(i).setLocation(PathBank.locations105.get(ramps105.get(i).getIndexOfCoordinate()));
 		}
 
 		for (int i = 0; i < ramps10.size(); i++) {
-			if(i != 0 )ramps10.get(i).setPreviousRamp(ramps10.get(i-1));
+			if(i > 0 ) {
+				ramps10.get(i).setPreviousRamp(ramps10.get(i-1));
+			}
 			ramps10.get(i).setLocation(PathBank.locations10.get(ramps10.get(i).getIndexOfCoordinate()));
 		}
 
 		for (int i = 0; i < ramps405.size(); i++) {
-			if(i != 0 )ramps405.get(i).setPreviousRamp(ramps405.get(i-1));
+			if(i > 0 ) {
+				ramps405.get(i).setPreviousRamp(ramps405.get(i-1));
+			}
 			ramps405.get(i).setLocation(PathBank.locations405.get(ramps405.get(i).getIndexOfCoordinate()));
 		}
 		
@@ -83,6 +91,24 @@ public class RampBank {
 		allRamps.add(ramps405);
 		
 		setBranches();
+		
+//		for(Vector<Ramp> vr : allRamps) {
+//			System.out.println("FREEWAY  " + vr.get(0).freeway);
+//			for (Ramp r : vr) {
+//				System.out.println("---------------------------------------------");
+//				if(r.previous != null) {
+//					System.out.println("Previous: " + r.previous.name);
+//				} else System.out.println("Previous null");
+//				System.out.println("\tRamp: " + r.name);
+//				if(r.next != null) {
+//					System.out.println("\t\tNext: " + r.next.name);
+//				} else System.out.println("\t\tNext null");
+//				if(r.branch != null) {
+//					System.out.println("\t\t\tBranch: " + r.branch.name);
+//				}
+//			}
+//		}
+		
 	}
 	
 	private void setBranches() {

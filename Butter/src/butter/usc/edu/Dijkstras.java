@@ -19,14 +19,34 @@ import java.util.PriorityQueue;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Vector;
 
 class Vertex implements Comparable<Vertex>{
-    public final String name;
+    
+	Ramp ramp;
+	
+	public final String name;
     public int freeway;
     public String freewayName;
-    public Edge[] adjacencies;
+    public Vector<Edge> adjacencies = new Vector<Edge>();
     public double minDistance = Double.POSITIVE_INFINITY;
     public Vertex previous;
+    
+    public Vertex(Ramp r) {
+    	ramp = r;
+    	name = r.name;
+    	freeway = r.freeway;
+    	if (freeway == 10){
+    		this.freewayName = "I-10";
+    	} else if (freeway == 101){
+    		this.freewayName = "US 101";
+    	} else if (freeway == 105){
+    		this.freewayName = "I-105";
+    	} else if (freeway == 405){
+    		this.freewayName = "I-405";
+    	}
+    }
+    
     public Vertex(String argName, int freeway) { 
     	name = argName; 
     	this.freeway = freeway;
