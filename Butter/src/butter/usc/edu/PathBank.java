@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.Vector;
 /*
  * PathBank holds all Locations on the paths for each highway in a vector.
- * @author Kaitlyn
  */
 public class PathBank {
 	public static final int FREEWAY101 = 101;
@@ -17,8 +16,6 @@ public class PathBank {
 	public static Vector<Location> locations10;
 	public static Vector<Location> locations405;
 	public static Vector<Vector<Location>> allLocations;
-	
-	// {latitude, longitude}
 	
 	public PathBank() throws TxtFormatException {
 		
@@ -109,6 +106,7 @@ public class PathBank {
 	}
 	
 }
+
 //	public static Double coordinates101 [][] = {{34.02624,-118.20833},
 //			{34.02605,-118.20785},
 //			{34.02574,-118.20698},

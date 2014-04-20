@@ -10,14 +10,12 @@ public class CarTimer implements Runnable {
 	JPanel mapPanel;
 	public CarTimer(JPanel mp) {
 		super();
-		// TODO Auto-generated constructor stub
 		mapPanel = mp;
 	}
 
 	private void drawingAction() {
 		if(ButterGUI.allCarsWrapper.getLock().tryLock()) {
 			try {
-//				System.out.println("/// Got Lock ///");
 		    	mapPanel.updateUI();
 				for (int i = 0; i < ButterGUI.allCarsWrapper.allCars.size(); i++) { //  
 					ButterGUI.allCarsWrapper.allCars.get(i).updateSpeed();
@@ -29,7 +27,6 @@ public class CarTimer implements Runnable {
 			} 
 			finally {
 				ButterGUI.allCarsWrapper.getLock().unlock();
-//				System.out.println("// Releasing lock //");
 			}
 		}
 	}

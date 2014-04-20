@@ -2,7 +2,6 @@ package butter.usc.edu;
 
 /*
  *  Ramp class, creates a ramp given the name, freeway number, and the index of the coordinate in the respective array of path coordinates. 
- *  @author Kaitlyn
  */
 public class Ramp {
 	String name, branchName;

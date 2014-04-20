@@ -1,32 +1,22 @@
 package butter.usc.edu;
 
 import java.util.ArrayList;
-import java.util.List;
-
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Timestamp;
 import java.util.Vector;
 
-import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import org.jfree.chart.ChartFactory;
-import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.xy.XYSeries;
@@ -34,15 +24,17 @@ import org.jfree.data.xy.XYSeriesCollection;
 
 import javax.swing.border.EtchedBorder;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumn;
 import javax.swing.JTable;
 import javax.swing.JComboBox;
 import javax.swing.JScrollPane;
+import javax.swing.WindowConstants;
 
 import java.awt.GridLayout;
+
 import javax.swing.JLabel;
 
 public class GraphChartWindow extends JFrame{
+	private static final long serialVersionUID = 1L;
 	String selectedFreeway = "All Freeways";
 	BufferedImage theGraph;
 	Object[][] data;
@@ -53,7 +45,7 @@ public class GraphChartWindow extends JFrame{
 		super("Graph");
 		setSize(1196, 814);
 		setLocation(100,100);
-		setDefaultCloseOperation(this.DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setResizable(false);
 		getContentPane().setLayout(null);
 
@@ -68,7 +60,7 @@ public class GraphChartWindow extends JFrame{
 		//Table
 		data = convertTOData();
 
-		Vector cols = new Vector();
+		Vector<String> cols = new Vector<String>();
 		cols.addElement(new String("Car ID"));
 		for(int i = 1; i<data[0].length-1; i++)
 		{
@@ -101,13 +93,13 @@ public class GraphChartWindow extends JFrame{
 
 		//SelectFreeway ComboBox
 		String[] freeways = {"All Freeways", "10", "101", "105", "405"};
-		JComboBox freewayComboBox = new JComboBox(freeways);
+		JComboBox<?> freewayComboBox = new JComboBox<Object>(freeways);
 		freewayComboBox.setBounds(32, 6, 156, 27);
 		getContentPane().add(freewayComboBox);
 		freewayComboBox.setSelectedIndex(0);
 		freewayComboBox.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent ae) {
-				JComboBox cb = (JComboBox)ae.getSource();
+				JComboBox<?> cb = (JComboBox<?>)ae.getSource();
 				selectedFreeway = (String)cb.getSelectedItem();
 				System.out.println("You chose " + selectedFreeway + ".");
 				//Updating everything!
@@ -123,12 +115,12 @@ public class GraphChartWindow extends JFrame{
 		getContentPane().add(numCarsLabel);
 
 		String[] numCarOptions = {"20", "30", "50", "All"};
-		JComboBox numCarsDisplayCombo = new JComboBox(numCarOptions);
+		JComboBox<?> numCarsDisplayCombo = new JComboBox<Object>(numCarOptions);
 		numCarsDisplayCombo.setBounds(1085, 6, 73, 27);
 		getContentPane().add(numCarsDisplayCombo);
 		numCarsDisplayCombo.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent ae) {
-				JComboBox cb = (JComboBox)ae.getSource();
+				JComboBox<?> cb = (JComboBox<?>)ae.getSource();
 				if((String)cb.getSelectedItem() == "All")
 				{
 					showNumCars = -1;
@@ -153,7 +145,7 @@ public class GraphChartWindow extends JFrame{
 	 */
 	void redrawTable()
 	{
-		Vector cols = new Vector();
+		Vector<String> cols = new Vector<String>();
 		cols.addElement(new String("Car ID"));
 		for(int i = 1; i<data[0].length-1; i++)
 		{
@@ -184,38 +176,39 @@ public class GraphChartWindow extends JFrame{
 		final String HISTORICAL_TABLE = "historical_traffic_data";
 
 		Connection connection = null;
-		Statement statement = null;
 		PreparedStatement preparedStatement = null;
 		ResultSet resultSet = null;
 
 		int id = 0;
 		double speed = 0;
-		String direction = null;
-		String ramp = null;
 		String freeway = null;
 		int serverCall = 0;
 
 		ArrayList< ArrayList<Double> > theCars = new ArrayList< ArrayList<Double> >();
 		ArrayList<String> freeways = new ArrayList<String>();
 
-		//Connecting to database
+		/**
+		 * Connecting to database
+		 */
 		try {
 			connection = DriverManager.getConnection(CONNECTION_URL + DATABASE, USERNAME, PASSWORD);
-			System.out.println("Connection to database acquired.");//TODO delete
 		} catch (SQLException e) {System.out.println("Connection to database not acquired.");}
-		//========================
 
-		//Parsing through the database
+		/**
+		 * Parsing through the database
+		 */
 		try {
 			preparedStatement = connection.prepareStatement("SELECT * FROM " + HISTORICAL_TABLE);
 			resultSet = preparedStatement.executeQuery();
-			//Pulling Data
+			/**
+			 * Pulling Data
+			 */
 			while(resultSet.next())
 			{
 				id = resultSet.getInt("id");
 				speed = resultSet.getDouble("speed");
-				direction = resultSet.getString("direction");
-				ramp = resultSet.getString("ramp");
+				resultSet.getString("direction");
+				resultSet.getString("ramp");
 				freeway = resultSet.getString("freeway");
 				serverCall =  resultSet.getInt("serverCalls");
 
@@ -250,7 +243,9 @@ public class GraphChartWindow extends JFrame{
 					theCars.get(i).add(0.0);
 				}
 			}
-			//If "All Freeways" is not selected, delete unneeded data points.
+			/**
+			 * If "All Freeways" is not selected, delete unneeded data points.
+			 */
 			if(!selectedFreeway.equals("All Freeways"))
 			{
 				boolean a = false;
@@ -260,7 +255,10 @@ public class GraphChartWindow extends JFrame{
 					{
 						if(!selectedFreeway.equals(freeways.get(i)))
 						{
-							if(theCars.size() == 1)	//If no cars left in the vector, return empty Object.
+							/**
+							 * If no cars left in the vector, return empty Object.
+							 */
+							if(theCars.size() == 1)	
 							{
 								Object[][] data = {{"0"}};
 								return data;
@@ -274,12 +272,16 @@ public class GraphChartWindow extends JFrame{
 					}
 				}
 			}	
-			//Display the correct number of cars.
+			/**
+			 * Display the correct number of cars.
+			 */
 			int totalSize=showNumCars;
 			if(totalSize == -1)
 				totalSize = theCars.size();
 
-			//Convert 2D ArrayList into Object class.
+			/**
+			 * Convert 2D ArrayList into Object class.
+			 */
 			Object[][] data = new Object[totalSize][serverCall+2];
 			
 			for(int i = 0; i<totalSize; i++)
@@ -292,26 +294,31 @@ public class GraphChartWindow extends JFrame{
 			}
 			return data;
 		} catch (SQLException e) {System.out.println("Unable to grab data.");}
-		//===============
 		 
-		//If connecting to database fails~
+		/**
+		 * If connecting to database fails~
+		 */
 		System.out.println("Could not grab data.");
 		Object[][] data = {{"0"}};
 		return data;
-		//===============
 	}
 
+	/*
 	public static void main(String [] args)	
 	{
 		new GraphChartWindow();
 	}
+	*/
 	//================================================================================================================================================
 	//Other classes
-	//
 	//================================================================================================================================================	
 
-	//------- Graph Display Panel-------
+	/**
+	 * Graph Display Panel
+	 */
 	class ChartPanel extends JPanel{
+		private static final long serialVersionUID = 1L;
+
 		ChartPanel(){}
 
 		protected void paintComponent(Graphics g) {
@@ -320,7 +327,9 @@ public class GraphChartWindow extends JFrame{
 			g.drawImage(theGraph,0,0,null);
 		}
 	}
-	//------ Graph Creator ------
+	/**
+	 * Graph Creator
+	 */
 	public class Graph {
 
 		/**
@@ -347,7 +356,9 @@ public class GraphChartWindow extends JFrame{
 				dataset.addSeries(allLines.get(allLines.size()-1));
 			}
 
-			// Generate the graph
+			/**
+			 * Generate the graph
+			 */
 			JFreeChart chart = ChartFactory.createXYLineChart(
 					"Data Graph", 						// Title
 					"Time Intervals (3 minutes)",		// x-axis Label

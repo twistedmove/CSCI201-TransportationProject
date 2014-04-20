@@ -3,8 +3,8 @@ package butter.usc.edu;
 import java.io.File;
 import java.util.Vector;
 /*
- *  RampBank class: creates all Ramps for all 4 freeways and stores the Ramps in a 2-dimensional vector--a vector of a vector. The String names of the ramps are stored in rampNames, a 2-dimension array
- *  @author Kaitlyn
+ *  RampBank class: creates all Ramps for all 4 freeways and stores the Ramps in a 2-dimensional vector--a vector of a vector. 
+ *  The String names of the ramps are stored in rampNames, a 2-dimension array
  */
 
 public class RampBank {
@@ -32,7 +32,6 @@ public class RampBank {
 	public static int indices10 [];
 	public static int indices405 [];
 	public static int allIndices[][];
-	// See below for variables that hold more data
 
 	public RampBank() {
 		allRamps = new Vector<Vector<Ramp>>();
@@ -43,12 +42,13 @@ public class RampBank {
 			ramps405 = FreewayParser.parseRamps(new File("assets/CSV/405-ramps-tabs.csv"), FREEWAY405);
 			System.out.println("Successfully read in ramps.");
 		} catch (TxtFormatException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
 
-///////////////// SETTING NEXT AND PREVS AND LOCATIONS  ////////////////////////////////////////////////////
+		/**
+		 * SETTING NEXT AND PREVS AND LOCATIONS
+		 */
 		
 		for (int i = 0; i < ramps101.size(); i++) {
 			if(i > 0 ) {
@@ -128,14 +128,12 @@ public class RampBank {
 	}
 	
 	private void setBranches() {
-		System.out.println("-----------------------------");
 		for (int i = 1; i < ramps101.size(); i++) {
 			if(!ramps101.get(i).branchName.equals("NULL")) {
 				for(Vector<Ramp> vr : allRamps) {
 					for(Ramp r : vr) {
 						if (r.name.equals(ramps101.get(i).branchName)) {
 							ramps101.get(i).setBranchRamp(r);
-							System.out.println("Branch set: " + ramps101.get(i).name + " --> " + r.name);
 						}
 					}
 				}
@@ -148,7 +146,6 @@ public class RampBank {
 					for(Ramp r : vr) {
 						if (r.name.equals(ramps10.get(i).branchName)) {
 							ramps10.get(i).setBranchRamp(r);
-							System.out.println("Branch set: " + ramps10.get(i).name + " --> " + r.name);
 						}
 					}
 				}
@@ -161,12 +158,10 @@ public class RampBank {
 					for(Ramp r : vr) {
 						if (r.name.equals(ramps405.get(i).branchName))  {
 							ramps405.get(i).setBranchRamp(r);
-							System.out.println("Branch set: " + ramps405.get(i).name + " --> " + r.name);
 						}
 					}
 				}
 			}
 		}
-		System.out.println("-----------------------------");
 	}
 }

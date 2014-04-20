@@ -116,13 +116,13 @@ public class Dijkstras{
 
 /* 
     public static void main(String[] args){
-      Vertex v0 = new Vertex("Harrisburg");
-		Vertex v1 = new Vertex("Baltimore");
-		Vertex v2 = new Vertex("Washington");
-		Vertex v3 = new Vertex("Philadelphia");
-		Vertex v4 = new Vertex("Binghamton");
-		Vertex v5 = new Vertex("Allentown");
-		Vertex v6 = new Vertex("New York");
+      Vertex v0 = new Vertex("A");
+		Vertex v1 = new Vertex("B");
+		Vertex v2 = new Vertex("C");
+		Vertex v3 = new Vertex("D");
+		Vertex v4 = new Vertex("E");
+		Vertex v5 = new Vertex("F");
+		Vertex v6 = new Vertex("G York");
 		Vertex[] vertices = { v0, v1, v2, v3, v4, v5, v6 };
 		v0.adjacencies = new Edge[]{ new Edge(v1,  79.83),
 		                             new Edge(v5,  81.15) };

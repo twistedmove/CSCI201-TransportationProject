@@ -43,7 +43,6 @@ public class Car {
 		this.freeway = freeway;
 		this.freewayIndex = getFreewayIndex(this);
 		this.rampIndex = getRampIndex(this);
-//		System.out.println("Rampindex: " + RampBank.allRamps.get(freewayIndex).get(rampIndex).l);
 		this.point = RampBank.allRamps.get(freewayIndex).get(rampIndex).l.point;
 		this.coordinateIndex = RampBank.allRamps.get(freewayIndex).get(rampIndex).indexOfCoordinate;
 		milesPerTimeDiv = speed / secPerHour / updatePerSec;
@@ -61,15 +60,7 @@ public class Car {
 		return -1;
 	}
 
-	public static int getRampIndex(Car c) {
-//		for(Vector<Ramp> vr : RampBank.allRamps) {
-//			for(Ramp r : vr) {
-//				if(c.rampName.equals(r.name)) {
-//					
-//				}
-//			}
-//		}
-		
+	public static int getRampIndex(Car c) {		
 		for (int i = 0; i < RampBank.rampNames[c.freewayIndex].length; i++) {
 			if (c.rampName.equals(RampBank.rampNames[c.freewayIndex][i])) {
 				return i;
@@ -255,8 +246,6 @@ public class Car {
 		if (radiansToRotate < 0) {
 			radiansToRotate += 2*Math.PI;
 		}
-		//System.out.println("Rads: " + radiansToRotate + " " + point + " " + aim);
-		//System.out.println("Degrees: " + Math.toDegrees(radiansToRotate));
 
 		return radiansToRotate;
 	}

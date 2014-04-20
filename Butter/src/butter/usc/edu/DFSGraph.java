@@ -49,16 +49,13 @@ public class DFSGraph {
 		int index = nodeList.indexOf(n);
 		int j=0;
 		if (index != -1){
-			System.out.println("What");
 			while(j<size){
 				if (adjacent[index][j] == 1 && ((Node)nodeList.get(j)).visited == false){
 					return (Node)nodeList.get(j);
 				}
 				j++;
 			}
-		} else if (index == -1){
-			System.out.println("NEGATIVE ONE");
-		}
+		} else if (index == -1){}
 		return null;
 	}
 	

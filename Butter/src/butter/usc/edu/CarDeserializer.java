@@ -20,16 +20,13 @@ import com.google.gson.stream.JsonReader;
  * Deserializes a JSONArray of car objects.
  * Contains two static methods: deserializeArrayFromFile(String filename), deserializeArrayFromURL(String url). The latter is probably
  * more practical for our purposes, the former was mostly for testing.
- * @author LorraineSposto
- *
  */
 
 public class CarDeserializer {
 	
 	/**
 	 * Overrides default JsonDeserializer functionality so that variable names do not have to match.
-	 * @author LorraineSposto
-	 *
+	 * @return Car Object
 	 */
 	static class CustomCarDeserializer implements JsonDeserializer<Car> {
 		@Override

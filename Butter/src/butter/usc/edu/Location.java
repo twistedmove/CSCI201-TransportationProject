@@ -5,8 +5,6 @@ import java.io.Serializable;
 
 /**
  * Just a object to package up longitude and latitude pairs.
- * @author LorraineSposto
- *
  */
 public class Location implements Serializable {
 	private static final long serialVersionUID = 1856189671964327747L;
@@ -19,12 +17,10 @@ public class Location implements Serializable {
 	public Location previous;
 	public Location next;
 
-	///////////////////////////////////////////////////////////////////////////////////////////////////
 	public int freeway;
 	public int branchNum;
 	public Location branch;
 	public double milesToBranch;
-	///////////////////////////////////////////////////////////////////////////////////////////////////
 
 	Boolean isFirst = false;
 	Boolean isLast = false;
@@ -83,7 +79,9 @@ public class Location implements Serializable {
 			return getDistanceFromLatLonInM(this.latitude, this.longitude, away.latitude, away.longitude);
 		}
 
-		// If the locations are equal, distance is 0.
+		/**
+		 *  If the locations are equal, distance is 0.
+		 */
 		return 0;
 	}
 
@@ -148,7 +146,7 @@ public class Location implements Serializable {
 	}
 	public static double getDistanceFromLatLonInM(double lat1, double lon1, double lat2, double lon2) {
 		double R = 3958.756; 				// Radius of the earth in miles
-		double dLat = deg2rad(lat2-lat1);  	// deg2rad below
+		double dLat = deg2rad(lat2-lat1); 
 		double dLon = deg2rad(lon2-lon1); 
 		double a = 
 				Math.sin(dLat/2) * Math.sin(dLat/2) +
@@ -159,6 +157,12 @@ public class Location implements Serializable {
 		double d = R * c; 					// Distance in km
 		return d;
 	}
+	
+	/**
+	 * Converts degrees to radians
+	 * @param deg
+	 * @return double radian
+	 */
 	public static double deg2rad(double deg) {
 		return deg * (Math.PI/180);
 	}
