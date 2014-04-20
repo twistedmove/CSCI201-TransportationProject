@@ -65,4 +65,8 @@ public class Ramp {
 		this.l = l;
 	}
 	
+	public Ramp getBranchRamp(){
+		return this.branch;
+	}
+	
 }
