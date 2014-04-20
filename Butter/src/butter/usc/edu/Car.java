@@ -78,7 +78,7 @@ public class Car {
 				return i;
 			}
 		}
-		System.out.println("Ramp not found");
+		System.out.println("Ramp not found:" + c.rampName);
 		return -1;
 	}
 
