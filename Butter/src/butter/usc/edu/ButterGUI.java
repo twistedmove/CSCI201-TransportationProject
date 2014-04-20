@@ -532,21 +532,36 @@ public class ButterGUI extends JFrame implements MouseListener{
 		
 		for (int i=0; i< vertexList.size(); i++) {
 			Vertex v = vertexList.get(i);
-			if (toRamp.getSelectedItem().equals(v.getName()) && !gotDestination){				
+			if (toRamp.getSelectedItem().equals(v.getName()) && !gotDestination){	
+				noCar = true;
 				jta.setText("");
 				jta.setText(jta.getText() + "From: " + fromHighway.getSelectedItem() + " - " + fromRamp.getSelectedItem() + "\n");
 				jta.setText(jta.getText() + "To: " + toHighway.getSelectedItem() + " - " + toRamp.getSelectedItem() + "\n");
-				jta.setText(jta.getText() + "            Time to Destination: " + (v.minDistance * 60.0) + " minutes \n");
+				jta.setText(jta.getText() + "     Time to Destination: " + (v.minDistance * 60.0) + " minutes \n");
 				path = getShortestPathTo(v);
 				
-				System.out.println("---------------------------------------------------------------");
-				System.out.println("---------------------------------------------------------------");
-				System.out.println("PATH");
-				for(Vertex vert : path) {
-					System.out.println("\t" + vert.name + " on " + vert.freeway);
+				// PATH
+				jta.setText(jta.getText() + "\n-------------DIRECTIONS-------------");
+				jta.setText(jta.getText() + "\n");
+				for(int a =0; a<path.size(); a++) {
+					System.out.println(path.size());
+					if (path.size() == 1){
+						jta.setText(jta.getText() + "You are at " + path.get(a) + "!" + "\n");
+					} else if (path.size() == 2){
+						if (a == 0){
+							jta.setText(jta.getText() + "Start from " + path.get(a) + "\n");
+						} else if (a == 1){ 
+							jta.setText(jta.getText() + "Your destination " + path.get(a) + " is the next ramp.\n");
+						}
+					} else if (a == 0){
+						jta.setText(jta.getText() + "Start from " + path.get(a) + " towards " + "\n");
+					} else if (a == path.size()-1){
+						jta.setText(jta.getText() + "Arrived at " + path.get(a) + "\n");
+					} else {
+						jta.setText(jta.getText() + "     ramp " + path.get(a) + " \u2192\n");
+					}
+					
 				}
-				System.out.println("---------------------------------------------------------------");
-				
 				
 				if (locationMarkers.size() > 1){
 					locationMarkers.clear();
