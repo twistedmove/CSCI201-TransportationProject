@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>Butter</name>
+	<name>CSCI201_TeamButter_FinalProject</name>
 	<comment></comment>
 	<projects>
 	</projects>
@@ -18,7 +18,13 @@
 		<link>
 			<name>assets/TrafficHistoryDatabase.java</name>
 			<type>1</type>
-			<locationURI>PROJECT_LOC/src/butter/usc/edu/TrafficHistoryDatabase.java</locationURI>
+			<locationURI>copy_PROJECT_LOC/src/butter/usc/edu/TrafficHistoryDatabase.java</locationURI>
 		</link>
 	</linkedResources>
+	<variableList>
+		<variable>
+			<name>copy_PROJECT_LOC</name>
+			<value>$%7BPARENT-1-PROJECT_LOC%7D/Butter</value>
+		</variable>
+	</variableList>
 </projectDescription>

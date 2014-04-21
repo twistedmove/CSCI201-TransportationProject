@@ -93,13 +93,13 @@ public class GraphChartWindow extends JFrame{
 
 		//SelectFreeway ComboBox
 		String[] freeways = {"All Freeways", "10", "101", "105", "405"};
-		JComboBox<?> freewayComboBox = new JComboBox<Object>(freeways);
+		JComboBox freewayComboBox = new JComboBox(freeways);
 		freewayComboBox.setBounds(32, 6, 156, 27);
 		getContentPane().add(freewayComboBox);
 		freewayComboBox.setSelectedIndex(0);
 		freewayComboBox.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent ae) {
-				JComboBox<?> cb = (JComboBox<?>)ae.getSource();
+				JComboBox cb = (JComboBox)ae.getSource();
 				selectedFreeway = (String)cb.getSelectedItem();
 				System.out.println("You chose " + selectedFreeway + ".");
 				//Updating everything!
@@ -115,12 +115,12 @@ public class GraphChartWindow extends JFrame{
 		getContentPane().add(numCarsLabel);
 
 		String[] numCarOptions = {"20", "30", "50", "All"};
-		JComboBox<?> numCarsDisplayCombo = new JComboBox<Object>(numCarOptions);
+		JComboBox numCarsDisplayCombo = new JComboBox(numCarOptions);
 		numCarsDisplayCombo.setBounds(1085, 6, 73, 27);
 		getContentPane().add(numCarsDisplayCombo);
 		numCarsDisplayCombo.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent ae) {
-				JComboBox<?> cb = (JComboBox<?>)ae.getSource();
+				JComboBox cb = (JComboBox)ae.getSource();
 				if((String)cb.getSelectedItem() == "All")
 				{
 					showNumCars = -1;
