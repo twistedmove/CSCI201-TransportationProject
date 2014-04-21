@@ -117,6 +117,7 @@ public class ButterGUI extends JFrame implements MouseListener{
 		this.addWindowListener(new WindowAdapter() {
 		public void windowClosing(WindowEvent e) {
 			    trafficHistoryDatabase.dropDatabase();
+			    deleteMapJPG();
 			}
 		});
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -376,6 +377,7 @@ public class ButterGUI extends JFrame implements MouseListener{
 					public void actionPerformed(ActionEvent e) {
 						if (JOptionPane.showConfirmDialog(null,"Are you done using Butter?", "Slicing Butter", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE , sliced) == JOptionPane.YES_OPTION){
 							trafficHistoryDatabase.dropDatabase();
+							deleteMapJPG();
 							System.exit(0);
 						}
 					}
@@ -677,6 +679,13 @@ public class ButterGUI extends JFrame implements MouseListener{
 		jta.setText(jta.getText() + "            Freeway: " + c.getFreeway() + "\n");			
 		jta.setText(jta.getText() + "            Direction: " + c.getDirection() + "\n");		
 		jta.setText(jta.getText() + "            Ramp: " + c.getRamp() + "\n");
+	}
+	
+	public void deleteMapJPG(){
+		boolean success = (new File ("map.jpg")).delete();
+     if (success) {
+        System.out.println("The file map.jpg has been successfully deleted."); 
+     }
 	}
 	
 	public void setFocusCar(int carIndex) {
