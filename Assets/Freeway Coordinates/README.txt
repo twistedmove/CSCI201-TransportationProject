@@ -5,7 +5,7 @@ https://www.google.com/fusiontables/DataSource?docid=1K_iEnRAejHJgodmeefYPK-f97w
 
 **********************************************************************************
 MAP OF ALL RAMPS
-https://www.google.com/fusiontables/DataSource?docid=1K_iEnRAejHJgodmeefYPK-f97wv_MMUppw_APm_a#map:id=3
+https://www.google.com/fusiontables/DataSource?docid=1sR8bioxnsrZOE3EB-4lY95_J9cX5hDynhDofwM84#map:id=3
 **********************************************************************************
 
 https://www.google.com/fusiontables/DataSource?docid=1nwMaJqYYjyNE1KzdNMXxeBWcxddozrp7C-gzejqN

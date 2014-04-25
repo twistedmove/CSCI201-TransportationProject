@@ -16,6 +16,8 @@ public class Marker {
 		this.x = xx;
 		this.y = yy;
 		
+		System.out.println(" | x: " + x + " | y : " + y);
+		
 		try {
 			location = ImageIO.read(new File("assets/images/marker.gif"));
 		} catch (IOException ex) {

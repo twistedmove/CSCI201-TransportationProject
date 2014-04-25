@@ -60,7 +60,7 @@ class Vertex implements Comparable<Vertex>{
     		this.freewayName = "I-405";
     	}
     }
-    public String toString() { return name; }
+    public String toString() { return "(" + freeway + ")" + name; }
     public int compareTo(Vertex other){
         return Double.compare(minDistance, other.minDistance);
     }

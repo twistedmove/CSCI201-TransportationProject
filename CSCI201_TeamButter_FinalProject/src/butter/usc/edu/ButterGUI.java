@@ -382,12 +382,12 @@ public class ButterGUI extends JFrame implements MouseListener{
 				exitButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						if (JOptionPane.showConfirmDialog(null,"Are you done using Butter?", "Slicing Butter", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE , sliced) == JOptionPane.YES_OPTION){
-							trafficHistoryDatabase.dropDatabase();
 							try {
 								trafficHistoryDatabase.exportToCSV(EXPORT_FILE);
 							} catch (IOException e1) {
 								JOptionPane.showMessageDialog(ButterGUI.this, "Error exporting data to file.");
 							}
+							trafficHistoryDatabase.dropDatabase();
 							deleteMapJPG();
 							System.exit(0);
 						}
@@ -611,11 +611,12 @@ public class ButterGUI extends JFrame implements MouseListener{
 				if (locationMarkers.size() > 1){
 					locationMarkers.clear();
 				}
-				
+				System.out.println("---");
 				for (int k=0; k<RampBank.allRamps.size(); k++){
 					for (int l=0; l<RampBank.allRamps.get(k).size(); l++){
 						for (int j =0; j<path.size(); j++){
 							if ( RampBank.allRamps.get(k).get(l).name.equals(path.get(j).getName()) && RampBank.allRamps.get(k).get(l).freeway == path.get(j).freeway){
+								System.out.print("Ramp: " + RampBank.allRamps.get(k).get(l).name + "| Freeway: " + RampBank.allRamps.get(k).get(l).freeway);
 								Marker mark = new Marker(RampBank.allRamps.get(k).get(l).getLocation().point.x, RampBank.allRamps.get(k).get(l).getLocation().point.y);
 								locationMarkers.add(mark);
 							}
