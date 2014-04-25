@@ -362,7 +362,7 @@ public class TrafficHistoryDatabase extends Thread {
 		BufferedReader br = new BufferedReader(fr);
 		
 		String line = br.readLine(); // reading the headers
-		System.out.println(line);
+//		System.out.println(line);
 		 // first line of data
 		line = br.readLine();
 		while(line != null) {

@@ -369,9 +369,6 @@ public class ButterGUI extends JFrame implements MouseListener{
 							ioe.getMessage();
 						}
 						
-						
-						
-						
 					}
 				});
 
@@ -421,14 +418,31 @@ public class ButterGUI extends JFrame implements MouseListener{
 				JMenuItem importButton = new JMenuItem("Import historical data");
 				importButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
+						jta.setText(jta.getText() + "Butter - Import Data!" + "\n");
 						try {
-							trafficHistoryDatabase.importFromCSV("test.csv");
-						} catch (IOException e1) {
-							JOptionPane.showMessageDialog(ButterGUI.this, "Error importing data from file.");
-							e1.printStackTrace();
+							JFileChooser jfc = new JFileChooser(); 
+					    	FileNameExtensionFilter csv = new FileNameExtensionFilter("CSV (.csv)", "csv");  
+			            		jfc.addChoosableFileFilter(csv);  
+			            		jfc.setFileFilter(csv);
+			            	int result = jfc.showOpenDialog(null);	
+			            	if(result != JFileChooser.APPROVE_OPTION){
+								jta.setText(jta.getText() + "Butter - Import Canceled!" + "\n");
+								return;
+							} else {
+								File file = jfc.getSelectedFile();
+								String file_name = file.toString();
+								if (!file_name.endsWith(".csv")){
+								    file_name += ".csv";
+								}
+								trafficHistoryDatabase.importFromCSV(file_name);
+								jta.setText(jta.getText() + "Butter - Import Successful!" + "\n");
+							}
+						} catch (IOException ioe){
+							JOptionPane.showMessageDialog(ButterGUI.this, "Error importing data to file.");
+							ioe.getMessage();
 						} catch (SQLException e1) {
-							JOptionPane.showMessageDialog(ButterGUI.this, "Error importing data from file.");
-							e1.printStackTrace();
+							JOptionPane.showMessageDialog(ButterGUI.this, "Error importing data to file.");
+							e1.getMessage();
 						}
 					}
 				});
