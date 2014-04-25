@@ -366,11 +366,7 @@ public class TrafficHistoryDatabase extends Thread {
 		 // first line of data
 		line = br.readLine();
 		while(line != null) {
-//			try{
 			String[] data = line.split("\\t");
-//			for(int i=0; i < data.length; ++i) {
-//				System.out.println(data[i]);
-//			}
 
 			String sql = "INSERT INTO " + HISTORICAL_TABLE + " VALUES (" 
 					+ data[0] + "," // id
@@ -380,14 +376,10 @@ public class TrafficHistoryDatabase extends Thread {
 					+ data[4] + "," // freeway
 					+ "0" + "," // servercall 
 					+  "'" + data[5] + "'" +  ")"; // datetime
-//			System.out.println(sql);
 			preparedStatement = connection.prepareStatement(sql);
-			preparedStatement.execute();
+			preparedStatement.executeUpdate();
 
 			line = br.readLine();
-//			} catch (SQLException e) {
-//				e.printStackTrace();
-//			}
 		}
 		br.close();
 		fr.close();
