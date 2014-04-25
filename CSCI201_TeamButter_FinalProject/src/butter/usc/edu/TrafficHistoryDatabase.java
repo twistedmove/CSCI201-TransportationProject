@@ -1,6 +1,8 @@
 package butter.usc.edu;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -8,6 +10,8 @@ import java.sql.*;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+
+import javax.swing.JOptionPane;
 
 /**
  * Create the database if it does not exist. Use for inserting data into database.
@@ -43,7 +47,8 @@ public class TrafficHistoryDatabase extends Thread {
 	private final static String DIRECTION_LABEL = "direction";
 	private final static String RAMP_LABEL = "ramp";
 	private final static String FREEWAY_LABEL = "freeway";
-	private final String CALLS_LABEL = "serverCalls";
+	private final static String CALLS_LABEL = "serverCalls";
+	private final static String DATETIME_LABEL = "datetime";
 	
 	private int id = 0;
 	private static double speed = 0;
@@ -51,6 +56,7 @@ public class TrafficHistoryDatabase extends Thread {
 	private static String ramp = null;
 	private static String freeway = null;
 	private int serverCall = 0;
+	private Timestamp datetime;
 	
 	int serverCalls;
 	static DataPullThread dataPullThread;
@@ -181,7 +187,8 @@ public class TrafficHistoryDatabase extends Thread {
 					+ DIRECTION_LABEL + " VARCHAR(255),"
 					+ RAMP_LABEL + " TEXT,"
 					+ FREEWAY_LABEL + " INT NOT NULL,"
-					+ CALLS_LABEL + " INT NOT NULL"
+					+ CALLS_LABEL + " INT NOT NULL,"
+					+ DATETIME_LABEL + " DATETIME"
 					+ ")";
 			statement = connection.createStatement();
 			statement.executeUpdate(sql);
@@ -203,7 +210,8 @@ public class TrafficHistoryDatabase extends Thread {
 					+ DIRECTION_LABEL + " VARCHAR(255),"
 					+ RAMP_LABEL + " TEXT,"
 					+ FREEWAY_LABEL + " INT NOT NULL,"
-					+ CALLS_LABEL + " INT NOT NULL"
+					+ CALLS_LABEL + " INT NOT NULL,"
+					+ DATETIME_LABEL + " DATETIME"
 					+ ")";
 			statement = connection.createStatement();
 			statement.executeUpdate(sql);
@@ -259,6 +267,7 @@ public class TrafficHistoryDatabase extends Thread {
 		ramp = resultSet.getString(RAMP_LABEL);
 		freeway = resultSet.getString(FREEWAY_LABEL);
 		serverCall = resultSet.getInt(CALLS_LABEL);
+		datetime = resultSet.getTimestamp(DATETIME_LABEL);
 	}
 	
 	/**
@@ -273,11 +282,11 @@ public class TrafficHistoryDatabase extends Thread {
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.execute();
 			for(Car c : ButterGUI.allCarsWrapper.allCars) {
-				sql = "INSERT INTO " + CURRENT_TABLE + " VALUES (" + c.insertString() + "," + serverCalls + ")";
+				sql = "INSERT INTO " + CURRENT_TABLE + " VALUES (" + c.insertString() + "," + serverCalls + ",NOW())";
 				preparedStatement = connection.prepareStatement(sql);
 				preparedStatement.executeUpdate();
 				
-				sql = "INSERT INTO " + HISTORICAL_TABLE + " VALUES (" + c.insertString() + "," + serverCalls + ")";
+				sql = "INSERT INTO " + HISTORICAL_TABLE + " VALUES (" + c.insertString() + "," + serverCalls + ",NOW())";
 				preparedStatement = connection.prepareStatement(sql);
 				preparedStatement.executeUpdate();
 			}
@@ -312,25 +321,26 @@ public class TrafficHistoryDatabase extends Thread {
 	}
 	
 	/**
+	 * Exports data as a tab delimited csv.
 	 * @param filename
 	 * @throws IOException 
 	 */
 	public void exportToCSV(String filename) throws IOException {
 		FileWriter fw = new FileWriter(new File(filename));
 		PrintWriter pw = new PrintWriter(fw);
-		pw.println(ID_LABEL + "," + SPEED_LABEL + "," + DIRECTION_LABEL + "," + RAMP_LABEL + "," + FREEWAY_LABEL + "," + CALLS_LABEL);
+		pw.println(ID_LABEL + "\t" + SPEED_LABEL + "\t" + DIRECTION_LABEL + "\t" + RAMP_LABEL 
+				+ "\t" + FREEWAY_LABEL + "\t" + DATETIME_LABEL);
 		try {
 			preparedStatement = connection.prepareStatement(SELECT_HISTORICAL_STMT);
 			resultSet = preparedStatement.executeQuery();
 			
 			while(resultSet.next()) {
 				extractData();
-				ramp = escapeCommas(ramp);
 				
-				pw.println(id + "," + speed + "," + direction + ", "
-						+ "" + ramp + ""
-								+ "," + freeway
-										+ "," + serverCall);
+				pw.println(id + "\t" + speed + "\t" + direction + "\t"
+						+ ramp 
+								+ "\t" + freeway
+										+ "\t" + datetime);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -339,6 +349,49 @@ public class TrafficHistoryDatabase extends Thread {
 			pw.close();
 			fw.close();
 		}
+	}
+	
+	/**
+	 * Exports data as a tab delimited csv.
+	 * @param filename
+	 * @throws IOException 
+	 * @throws SQLException 
+	 */
+	public void importFromCSV(String filename) throws IOException, SQLException {
+		FileReader fr = new FileReader(new File(filename));
+		BufferedReader br = new BufferedReader(fr);
+		
+		String line = br.readLine(); // reading the headers
+		System.out.println(line);
+		 // first line of data
+		line = br.readLine();
+		while(line != null) {
+//			try{
+			String[] data = line.split("\\t");
+//			for(int i=0; i < data.length; ++i) {
+//				System.out.println(data[i]);
+//			}
+
+			String sql = "INSERT INTO " + HISTORICAL_TABLE + " VALUES (" 
+					+ data[0] + "," // id
+					+ data[1] + "," // speed
+					+ "'" + data[2] +  "'" + "," // direction
+					+  "'" + data[3] + "'" +  "," // ramp
+					+ data[4] + "," // freeway
+					+ "0" + "," // servercall 
+					+  "'" + data[5] + "'" +  ")"; // datetime
+//			System.out.println(sql);
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.execute();
+
+			line = br.readLine();
+//			} catch (SQLException e) {
+//				e.printStackTrace();
+//			}
+		}
+		br.close();
+		fr.close();
+		JOptionPane.showMessageDialog(null, "Successfully imported data.");
 	}
 	
 	/**
@@ -480,14 +533,6 @@ public class TrafficHistoryDatabase extends Thread {
 			double time = distance/avgSpeed;
 			return time;
 		}
-	}
-	
-	private String escapeCommas(String s) {
-		int index = s.indexOf(", ");
-		if(index > 0) {
-			s = s.replaceAll(",\\s+", " ");
-		}
-		return s;
 	}
 
 /**

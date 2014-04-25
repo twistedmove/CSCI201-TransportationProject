@@ -94,7 +94,7 @@ public class ButterGUI extends JFrame implements MouseListener{
 	private boolean clearLocation;
 	private JButton searchButton;
 	
-	
+	public static final String EXPORT_FILE = "Butter-Export.csv";
 	
 	Image mascot;
 	ImageIcon sliced;
@@ -116,6 +116,11 @@ public class ButterGUI extends JFrame implements MouseListener{
 		this.getContentPane().setLayout(null);
 		this.addWindowListener(new WindowAdapter() {
 		public void windowClosing(WindowEvent e) {
+				try {
+					trafficHistoryDatabase.exportToCSV(EXPORT_FILE);
+				} catch (IOException e1) {
+					JOptionPane.showMessageDialog(ButterGUI.this, "Error exporting data to file.");
+				}
 			    trafficHistoryDatabase.dropDatabase();
 			    deleteMapJPG();
 			}
@@ -360,6 +365,7 @@ public class ButterGUI extends JFrame implements MouseListener{
 								jta.setText(jta.getText() + "Butter - Export Successful!" + "\n");
 							}
 						} catch (IOException ioe){
+							JOptionPane.showMessageDialog(ButterGUI.this, "Error exporting data to file.");
 							ioe.getMessage();
 						}
 						
@@ -377,6 +383,11 @@ public class ButterGUI extends JFrame implements MouseListener{
 					public void actionPerformed(ActionEvent e) {
 						if (JOptionPane.showConfirmDialog(null,"Are you done using Butter?", "Slicing Butter", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE , sliced) == JOptionPane.YES_OPTION){
 							trafficHistoryDatabase.dropDatabase();
+							try {
+								trafficHistoryDatabase.exportToCSV(EXPORT_FILE);
+							} catch (IOException e1) {
+								JOptionPane.showMessageDialog(ButterGUI.this, "Error exporting data to file.");
+							}
 							deleteMapJPG();
 							System.exit(0);
 						}
@@ -400,6 +411,28 @@ public class ButterGUI extends JFrame implements MouseListener{
 					}
 				});
 				menuButter.add(menuItemAbout);	
+				
+				/**
+				 * Import data button
+				 */
+				JMenu inportMenu = new JMenu("Import");
+				menuBar.add(inportMenu);
+				
+				JMenuItem importButton = new JMenuItem("Import historical data");
+				importButton.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						try {
+							trafficHistoryDatabase.importFromCSV("test.csv");
+						} catch (IOException e1) {
+							JOptionPane.showMessageDialog(ButterGUI.this, "Error importing data from file.");
+							e1.printStackTrace();
+						} catch (SQLException e1) {
+							JOptionPane.showMessageDialog(ButterGUI.this, "Error importing data from file.");
+							e1.printStackTrace();
+						}
+					}
+				});
+				inportMenu.add(importButton);	
 				
 				this.getContentPane().add(searchButton);
 				this.getContentPane().add(viewDataButton);
