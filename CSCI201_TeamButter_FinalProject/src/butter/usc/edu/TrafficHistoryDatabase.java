@@ -9,8 +9,6 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import javax.swing.JOptionPane;
-
 /**
  * Create the database if it does not exist. Use for inserting data into database.
  * Extends Thread.
@@ -21,9 +19,6 @@ public class TrafficHistoryDatabase extends Thread {
 	private final String USERNAME = "root";
 	private final String PASSWORD = "pass";
 	private String CONNECTION_URL = "jdbc:mysql://localhost:3306/";
-	
-	private String username = null;
-	private String password = null;
 
 	/**
 	 *  The name of the database we are testing with (this default is installed with MySQL) 
@@ -119,25 +114,8 @@ public class TrafficHistoryDatabase extends Thread {
 		}
 	}
 	
-	private String getUsernameInput() {
-		return JOptionPane.showInputDialog(null, "Enter your SQL server username. No input uses the default username \"root\". ",
-				"SQL Username.", JOptionPane.QUESTION_MESSAGE);
-	}
-	
-	private String getPasswordInput() {
-		return JOptionPane.showInputDialog(null, "Enter your SQL server password. No input uses the default of no password. ", 
-				"SQL Password.", JOptionPane.QUESTION_MESSAGE);
-	}
-	
 	public TrafficHistoryDatabase() throws SQLException {
 		super();
-		
-		username = getUsernameInput();
-		System.out.println("username: (" + username + ")");
-		if(username.equals("")) username = "root";
-		password = getPasswordInput();
-		System.out.println("password: (" + password + ")");
-		
 		createDatabase();
 		createCurrentTrafficTable();
 		createHistoricalTrafficTable();
@@ -154,7 +132,7 @@ public class TrafficHistoryDatabase extends Thread {
 	 */
 	private boolean getConnection() throws SQLException {
 		try {
-			connection = DriverManager.getConnection(CONNECTION_URL + DATABASE, username, password);
+			connection = DriverManager.getConnection(CONNECTION_URL + DATABASE, USERNAME, PASSWORD);
 			System.out.println("Connection to database acquired.");
 			return true;
 		} catch (SQLException e) {
