@@ -1,4 +1,4 @@
-Butter [![Status](https://rawgit.com/bryan/bryan.github.io/master/images/active.svg)](#)
+Butter [![Status](https://rawgit.com/bryan/bryan.github.io/master/images/inactive.svg)](#)
 =======
 
 CSCI 201L Transportation Final Project assigned during Spring 2014 under Professor Jeffrey Miller. The instructions and overview for this final projects can be found [here][1]. The full documentation can be found [here][2].
@@ -44,5 +44,5 @@ Butter is a graphical application visualizing flow of traffic in the Los Angeles
 
 
 [1]: https://github.com/bryan/CSCI201-TransportationProject/blob/master/Assets/Documentation/FinalProject.pdf
-[2]: #
+[2]: https://github.com/bryan/CSCI201-TransportationProject/blob/master/Assets/Documentation/Butter%E2%84%A2.pdf
 [3]: https://github.com/bryan
