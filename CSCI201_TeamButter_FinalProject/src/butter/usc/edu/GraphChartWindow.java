@@ -183,6 +183,7 @@ public class GraphChartWindow extends JFrame{
 		double speed = 0;
 		String freeway = null;
 		int serverCall = 0;
+		java.sql.Timestamp time;
 
 		ArrayList< ArrayList<Double> > theCars = new ArrayList< ArrayList<Double> >();
 		ArrayList<String> freeways = new ArrayList<String>();
@@ -211,6 +212,7 @@ public class GraphChartWindow extends JFrame{
 				resultSet.getString("ramp");
 				freeway = resultSet.getString("freeway");
 				serverCall =  resultSet.getInt("serverCalls");
+				time = resultSet.getTimestamp("datetime");
 
 				int findRightID = -1;
 				for(int i = 0; i< theCars.size(); i++)
@@ -282,13 +284,14 @@ public class GraphChartWindow extends JFrame{
 			/**
 			 * Convert 2D ArrayList into Object class.
 			 */
-			Object[][] data = new Object[totalSize][serverCall+2];
-			
+			//Object[][] data = new Object[totalSize][serverCall+2];
+			Object[][] data = new Object[totalSize][theCars.get(0).size()];
 			for(int i = 0; i<totalSize; i++)
 			{
 				data[i][0] = theCars.get(i).get(0).intValue();
 				for(int j = 1; j<theCars.get(i).size(); j++)
 				{
+					//System.out.println(theCars.get(i).size());
 					data[i][j] = theCars.get(i).get(j);
 				}
 			}
