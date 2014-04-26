@@ -388,7 +388,6 @@ public class TrafficHistoryDatabase extends Thread {
 		}
 		br.close();
 		fr.close();
-		JOptionPane.showMessageDialog(null, "Successfully imported data.");
 	}
 	
 	/**

@@ -436,6 +436,7 @@ public class ButterGUI extends JFrame implements MouseListener{
 								}
 								trafficHistoryDatabase.importFromCSV(file_name);
 								jta.setText(jta.getText() + "Butter - Import Successful!" + "\n");
+//								JOptionPane.showMessageDialog(null, "Successfully imported data.");
 							}
 						} catch (IOException ioe){
 							JOptionPane.showMessageDialog(ButterGUI.this, "Error importing data to file.");
