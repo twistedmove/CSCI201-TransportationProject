@@ -33,7 +33,7 @@ public class CarTimer implements Runnable {
 	
 	@Override
 	public void run() {
-		final int timeSlice = 63;
+		final int timeSlice = 31;
 		
 		System.out.println("Starting CarTimer");
 		Timer timer = new  Timer (timeSlice, new ActionListener () {
