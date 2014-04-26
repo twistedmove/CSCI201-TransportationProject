@@ -125,6 +125,11 @@ public class TrafficHistoryDatabase extends Thread {
 		createDatabase();
 		createCurrentTrafficTable();
 		createHistoricalTrafficTable();
+		try {
+			importFromCSV(ButterGUI.EXPORT_FILE);
+		} catch (IOException e) {
+			System.out.println("No file to read in.");
+		}
 		serverCalls = 0;
 		dataPullThread = new DataPullThread();
 		dataPullThread.start();
