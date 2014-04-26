@@ -125,14 +125,16 @@ public class TrafficHistoryDatabase extends Thread {
 		createDatabase();
 		createCurrentTrafficTable();
 		createHistoricalTrafficTable();
+		
+		serverCalls = 0;
+		dataPullThread = new DataPullThread();
+		dataPullThread.start();
+		
 		try {
 			importFromCSV(ButterGUI.EXPORT_FILE);
 		} catch (IOException e) {
 			System.out.println("No file to read in.");
 		}
-		serverCalls = 0;
-		dataPullThread = new DataPullThread();
-		dataPullThread.start();
 	}
 	
 	/**
@@ -379,7 +381,7 @@ public class TrafficHistoryDatabase extends Thread {
 					+ "'" + data[2] +  "'" + "," // direction
 					+  "'" + data[3] + "'" +  "," // ramp
 					+ data[4] + "," // freeway
-					+ "0" + "," // servercall 
+					+ "1" + "," // servercall 
 					+  "'" + data[5] + "'" +  ")"; // datetime
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.executeUpdate();
